@@ -1,0 +1,74 @@
+{
+  "stages": [
+    {
+      "name": "stage1",
+      "maxConcurrency": "7",
+      "maxAllowedFailures": "1",
+      "memberSelector": {
+        "byLabel": "team=fleet"
+      },
+      "beforeGates": [
+        {
+          "displayName": "stage before gate",
+          "type": "ScheduledStart",
+          "scheduledStartConfiguration": {
+            "startDay": "Monday",
+            "startTime": "03:00",
+            "utcOffset": "+00:00"
+          }
+        }
+      ],
+      "afterGates": [
+        {
+          "displayName": "stage after gate",
+          "type": "Approval"
+        }
+      ],
+      "groups": [
+        {
+          "name": "group1",
+          "maxConcurrency": "100%",
+          "maxAllowedFailures": "0",
+          "beforeGates": [
+            {
+              "displayName": "group before gate",
+              "type": "ScheduledStart",
+              "scheduledStartConfiguration": {
+                "startDay": "Tuesday",
+                "startTime": "08:00",
+                "utcOffset": "+00:00"
+              }
+            }
+          ],
+          "afterGates": [
+            {
+              "displayName": "group after gate",
+              "type": "Approval"
+            }
+          ]
+        },
+        {
+          "name": "group2",
+          "maxConcurrency": "50%",
+          "maxAllowedFailures": "1",
+          "memberSelector": {
+            "byLabel": "team=fleet"
+          },
+          "beforeGates": [
+            {
+              "displayName": "group before gate",
+              "type": "Approval"
+            }
+          ],
+          "afterGates": [
+            {
+              "displayName": "group after gate",
+              "type": "Approval"
+            }
+          ]
+        }
+      ],
+      "afterStageWaitInSeconds": 3600
+    }
+  ]
+}
