@@ -1,0 +1,662 @@
+# --------------------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License. See License.txt in the project root for license information.
+# --------------------------------------------------------------------------------------------
+
+import asyncio
+import ntpath
+import os
+import shlex
+import signal
+import socket
+import subprocess
+import sys
+from typing import List, TextIO
+from urllib.parse import urlparse
+
+import psutil
+import yaml
+from azext_aks_preview._helpers import which
+from azure.cli.command_modules.acs._consts import DecoratorEarlyExitException
+from azure.cli.core.azclierror import (CLIInternalError,
+                                       InvalidArgumentValueError,
+                                       ResourceNotFoundError)
+from azure.cli.core.util import run_az_cmd
+from azure.mgmt.core.tools import (is_valid_resource_id,
+                                   is_valid_resource_name, parse_resource_id)
+from knack.log import get_logger
+from knack.prompting import prompt_y_n
+
+logger = get_logger(__name__)
+
+
+# pylint: disable=too-few-public-methods
+class BastionResource:
+    def __init__(self, name, resource_group, subscription=None):
+        self.name = name
+        self.resource_group = resource_group
+        self.subscription = subscription
+
+
+def aks_bastion_parse_bastion_resource(
+    bastion: str, resource_groups: List[str], subscription_id: str = None
+) -> BastionResource:
+    """Get the bastion resource name from the provided name or node resource group."""
+
+    # validate provided bastion
+    if bastion:
+        if is_valid_resource_id(bastion):
+            parsed_id = parse_resource_id(bastion)
+            return BastionResource(
+                name=parsed_id["name"],
+                resource_group=parsed_id["resource_group"],
+                # the bastion may live in a different subscription than the cluster,
+                # so honor the subscription embedded in the resource ID when present
+                subscription=parsed_id.get("subscription") or subscription_id,
+            )
+        if is_valid_resource_name(bastion):
+            for resource_group in resource_groups:
+                logger.debug(
+                    "Checking bastion '%s' in resource group '%s'.",
+                    bastion,
+                    resource_group,
+                )
+                # check if the bastion exists in the provided resource group
+                show_cmd = [
+                    "network",
+                    "bastion",
+                    "show",
+                    "--resource-group",
+                    resource_group,
+                    "--name",
+                    bastion,
+                    "--output",
+                    "json",
+                ]
+                if subscription_id:
+                    show_cmd.extend(["--subscription", subscription_id])
+                result = run_az_cmd(
+                    show_cmd,
+                    out_file=TextIO(),
+                )
+                if result.exit_code != 0:
+                    logger.debug(
+                        "Failed to find bastion '%s' in resource group '%s'. Error: %s",
+                        bastion,
+                        resource_group,
+                        result.error,
+                    )
+                    continue
+                logger.debug(
+                    "Found bastion resource: %s in resource group: %s",
+                    bastion,
+                    resource_group,
+                )
+                return BastionResource(
+                    name=bastion,
+                    resource_group=resource_group,
+                    subscription=subscription_id,
+                )
+    logger.warning(
+        "No valid bastion resource provided: '%s'. Attempting to locate one from resource groups: '%s'.",
+        bastion,
+        resource_groups,
+    )
+
+    # list bastions in the provided resource groups
+    for resource_group in resource_groups:
+        logger.debug("Searching for bastion in resource group '%s'.", resource_group)
+        list_cmd = [
+            "network",
+            "bastion",
+            "list",
+            "--resource-group",
+            resource_group,
+            "--output",
+            "json",
+        ]
+        if subscription_id:
+            list_cmd.extend(["--subscription", subscription_id])
+        result = run_az_cmd(
+            list_cmd,
+            out_file=TextIO(),
+        )
+        if result.exit_code != 0:
+            logger.debug(
+                "Failed to list bastions in resource group '%s'. Error: %s",
+                resource_group,
+                result.error,
+            )
+            continue
+        bastions = result.result
+        if len(bastions) > 1:
+            logger.warning(
+                "Multiple bastions found in the node resource group. Using the first one."
+            )
+        logger.debug(
+            "Using bastion resource: %s in resource group: %s",
+            bastions[0]["name"],
+            resource_group,
+        )
+        return BastionResource(
+            name=bastions[0]["name"],
+            resource_group=resource_group,
+            subscription=subscription_id,
+        )
+    raise ResourceNotFoundError(
+        "No bastion found in the provided resource groups: "
+        f"{', '.join(resource_groups)}. Please provide a valid bastion name or resource ID."
+    )
+
+
+def aks_bastion_get_local_port(port):
+    """Get an available local port for the bastion tunnel."""
+
+    # validate provided port
+    if port:
+        if not (1 <= port <= 65535):
+            raise InvalidArgumentValueError(
+                f"Invalid port number: {port}. Port must be between 1 and 65535."
+            )
+        # check if the port is already in use
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                s.bind(("", port))
+            except OSError as e:
+                raise InvalidArgumentValueError(f"Port {port} is already in use: {e}")
+        return port
+
+    # find an available port
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("", 0))  # bind to an available port
+        port = s.getsockname()[1]
+        logger.debug("Using local port: %s", port)
+        return port
+
+
+def aks_bastion_extension(yes):
+    """Check if the Azure Bastion extension is installed, and prompt to install it if not."""
+
+    logger.debug("Checking if the bastion extension is installed...")
+    result = run_az_cmd(["extension", "list", "--output", "json"], out_file=TextIO())
+    if result.exit_code != 0:
+        raise CLIInternalError(
+            f"Failed to list installed extensions: {result.error}"
+        )
+    for ext in result.result:
+        if ext["name"] == "bastion":
+            logger.debug("Bastion extension is already installed.")
+            return True
+
+    msg = "The Azure Bastion extension is not installed. Do you want to install it? [y/n]: "
+    if not yes and not prompt_y_n(msg, default="n"):
+        raise DecoratorEarlyExitException(
+            "Bastion extension is required for this operation. "
+            "Please install it using 'az extension add --name bastion'."
+        )
+    logger.debug("Installing bastion extension...")
+    result = run_az_cmd(["extension", "add", "--name", "bastion"], out_file=TextIO())
+    if result.exit_code != 0:
+        raise CLIInternalError(f"Failed to install bastion extension: {result.error}")
+
+
+def aks_bastion_set_kubeconfig(kubeconfig_path, port, cluster_name=None):
+    """Update the kubeconfig file to point to the local port.
+
+    Args:
+        kubeconfig_path: Path to the kubeconfig file
+        port: Local port for the bastion tunnel
+        cluster_name: Name of the AKS cluster. If provided, searches for exact match in existing kubeconfig.
+                      If not provided, uses current context (for newly downloaded kubeconfigs).
+    """
+
+    logger.debug("Updating kubeconfig file: %s to use port: %s", kubeconfig_path, port)
+    with open(kubeconfig_path, "r") as f:
+        data = yaml.load(f, Loader=yaml.SafeLoader)
+
+    # Find the target cluster
+    target_cluster_name = None
+
+    if cluster_name:
+        # For existing kubeconfigs, search for exact match in clusters
+        logger.debug("Searching for cluster '%s' in existing kubeconfig", cluster_name)
+
+        for cluster in data.get("clusters", []):
+            if cluster["name"] == cluster_name:
+                target_cluster_name = cluster_name
+                logger.debug("Found exact match for cluster name: %s", target_cluster_name)
+                break
+
+        if not target_cluster_name:
+            raise CLIInternalError(
+                f"Could not find cluster '{cluster_name}' in the provided kubeconfig. "
+                "The cluster name from Azure might differ from the name in your kubeconfig file."
+            )
+    else:
+        # If cluster_name not provided, use current context
+        current_context = data.get("current-context")
+        if current_context:
+            for context in data.get("contexts", []):
+                if context["name"] == current_context:
+                    target_cluster_name = context["context"]["cluster"]
+                    logger.debug("Using current context cluster: %s", target_cluster_name)
+                    break
+
+    if not target_cluster_name:
+        raise CLIInternalError("Could not determine which cluster to update in kubeconfig")
+
+    # Update the cluster configuration
+    for cluster in data.get("clusters", []):
+        if cluster["name"] == target_cluster_name:
+            server = cluster["cluster"]["server"]
+            hostname = urlparse(server).hostname
+            # update the server URL to point to the local port
+            cluster["cluster"]["server"] = f"https://localhost:{port}/"
+            # set the tls-server-name to the hostname
+            cluster["cluster"]["tls-server-name"] = hostname
+            logger.debug("Updated cluster '%s' to use localhost:%s with tls-server-name=%s",
+                         target_cluster_name, port, hostname)
+            break
+
+    with open(kubeconfig_path, "w") as f:
+        yaml.dump(data, f)
+
+
+async def aks_bastion_runner(
+    bastion_resource, port, mc_id, kubeconfig_path, subscription_id=None, test_hook=None
+):
+    """Run the bastion tunnel and subshell in parallel, cancelling the other if one completes."""
+
+    task1 = asyncio.create_task(
+        _aks_bastion_launch_tunnel(bastion_resource, port, mc_id, subscription_id)
+    )
+    if test_hook:
+        task2 = asyncio.create_task(
+            _aks_bastion_test_hook(kubeconfig_path, port, kubectl_path=test_hook)
+        )
+    else:
+        task2 = asyncio.create_task(_aks_bastion_launch_subshell(kubeconfig_path, port))
+
+    done, pending = await asyncio.wait([task1, task2], return_when=asyncio.FIRST_COMPLETED)
+
+    for task in pending:
+        task.cancel()
+
+    # Wait for the cancellations to finish
+    await asyncio.gather(*pending, return_exceptions=True)
+    await asyncio.gather(*done)
+
+
+def aks_batsion_clean_up():
+    pass
+
+
+def _aks_bastion_get_az_cmd_name():
+    """Resolve the az command for the current platform."""
+
+    executable = which("az.cmd" if sys.platform.startswith("win") else "az")
+    if not executable:
+        raise CLIInternalError("Cannot find Azure CLI executable in PATH.")
+    return executable
+
+
+def _aks_bastion_get_current_shell_cmd():
+    """Get the current shell command being used by the parent process."""
+
+    ppid = os.getppid()
+    parent = psutil.Process(ppid)
+    parent_name = parent.name()
+    logger.debug("Immediate parent process: %s (PID: %s)", parent_name, ppid)
+
+    # On Windows, Azure CLI is often invoked as az.cmd, which means the immediate parent
+    # is cmd.exe but the actual user shell (PowerShell) is the grandparent process
+    if not sys.platform.startswith("win"):
+        logger.debug("Using parent process name as shell: %s", parent_name)
+        return parent_name
+
+    return _get_windows_shell_cmd(parent, parent_name)
+
+
+def _get_windows_shell_cmd(parent, parent_name):
+    """Get the shell command on Windows, handling az.cmd wrapper scenarios."""
+    try:
+        parent_exe = parent.exe()
+        logger.debug("Parent executable path: %s", parent_exe)
+
+        # If the immediate parent is cmd.exe, check if it's wrapping az.cmd for PowerShell
+        if "cmd" in parent_name.lower():
+            return _handle_cmd_parent(parent)
+
+        # For direct PowerShell processes (not wrapped by cmd)
+        if "pwsh" in parent_name.lower() or "powershell" in parent_name.lower():
+            return _handle_powershell_parent(parent_exe, parent_name)
+
+        logger.debug("Other Windows shell detected: %s", parent_name)
+        return parent_exe if parent_exe else parent_name
+
+    except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
+        logger.debug("Cannot access parent process details: %s", e)
+        return parent_name
+
+
+def _handle_cmd_parent(parent):
+    """Handle case where immediate parent is cmd.exe - check for PowerShell grandparent."""
+    try:
+        # Get the grandparent process (parent of cmd.exe)
+        grandparent = parent.parent()
+        if not grandparent:
+            return "cmd"
+
+        grandparent_name = grandparent.name()
+        logger.debug("Detected grandparent process: %s (PID: %s)", grandparent_name, grandparent.pid)
+
+        # If grandparent is PowerShell, that's the actual user shell
+        if "pwsh" in grandparent_name.lower() or "powershell" in grandparent_name.lower():
+            return _get_powershell_executable(grandparent)
+
+        logger.debug("Grandparent is not PowerShell - using cmd as target shell")
+        return "cmd"
+
+    except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
+        # If we can't access grandparent, assume cmd is the actual shell
+        logger.debug("Cannot access grandparent process: %s - using cmd as target shell", e)
+        return "cmd"
+
+
+def _handle_powershell_parent(parent_exe, parent_name):
+    """Handle direct PowerShell parent process."""
+    logger.debug("Direct PowerShell parent detected")
+    return _get_powershell_executable_from_path() or parent_exe or parent_name
+
+
+def _get_powershell_executable(grandparent):
+    """Get PowerShell executable, preferring pwsh over powershell."""
+    logger.debug("Grandparent is PowerShell - using PowerShell as target shell")
+    powershell_cmd = _get_powershell_executable_from_path()
+    if powershell_cmd:
+        return powershell_cmd
+
+    # If we can't find pwsh/powershell in PATH, use the detected grandparent
+    logger.debug("PowerShell not found in PATH, using detected grandparent executable")
+    return grandparent.exe() if grandparent.exe() else grandparent.name()
+
+
+def _get_powershell_executable_from_path():
+    """Try to find PowerShell executable in PATH, preferring pwsh over powershell."""
+    pwsh_path = which("pwsh")
+    if pwsh_path:
+        logger.debug("Found pwsh at: %s", pwsh_path)
+        return pwsh_path
+
+    powershell_path = which("powershell")
+    if powershell_path:
+        logger.debug("Found powershell at: %s", powershell_path)
+        return powershell_path
+
+    return None
+
+
+def _aks_bastion_prepare_shell_cmd(kubeconfig_path):
+    """Prepare the shell command to launch a subshell with KUBECONFIG set."""
+
+    detected_shell = _aks_bastion_get_current_shell_cmd()
+    shell_cmd = which(detected_shell)
+    if not shell_cmd:
+        raise CLIInternalError(f"Cannot find shell executable '{detected_shell}' in PATH.")
+    is_windows = sys.platform.startswith("win")
+    path_module = ntpath if is_windows else os.path
+    shell_name = path_module.basename(shell_cmd).lower()
+    if is_windows:
+        shell_name = path_module.splitext(shell_name)[0]
+    quoted_shell_cmd = f'"{shell_cmd}"' if is_windows else shlex.quote(shell_cmd)
+    updated_shell_cmd = quoted_shell_cmd
+
+    # Handle different shell types
+    if not is_windows and shell_name == "bash" and os.path.exists(os.path.expanduser("~/.bashrc")):
+        export_command = f"export KUBECONFIG={shlex.quote(kubeconfig_path)}"
+        bash_command = (
+            f"{quoted_shell_cmd} --rcfile <(cat ~/.bashrc; "
+            f"printf '%s\\n' {shlex.quote(export_command)})"
+        )
+        updated_shell_cmd = f"{quoted_shell_cmd} -c {shlex.quote(bash_command)}"
+    elif shell_name in ("pwsh", "powershell"):
+        # PowerShell: Set environment variable and start new session
+        # Use proper PowerShell syntax for setting environment variables
+        escaped_path = kubeconfig_path.replace("'", "''")  # Escape single quotes for PowerShell
+        powershell_command = f"$env:KUBECONFIG='{escaped_path}'"
+        quoted_command = f'"{powershell_command}"' if is_windows else shlex.quote(powershell_command)
+        updated_shell_cmd = f"{quoted_shell_cmd} -NoExit -Command {quoted_command}"
+    elif shell_name == "cmd":
+        # CMD: Set environment variable and keep session open
+        updated_shell_cmd = f'{quoted_shell_cmd} /k set "KUBECONFIG={kubeconfig_path}"'
+
+    return shell_cmd, updated_shell_cmd
+
+
+def _aks_bastion_restore_shell(shell_cmd):
+    """Restore the shell settings after the subshell exits."""
+
+    if not sys.platform.startswith("win") and os.path.basename(shell_cmd).lower() == "bash":
+        subprocess.run(["stty", "sane"], stdin=sys.stdin)
+    # PowerShell and CMD on Windows typically don't need special restoration
+    # as they handle terminal state management internally
+
+
+async def _aks_bastion_launch_subshell(kubeconfig_path, port):
+    """Launch a subshell with the KUBECONFIG environment variable set to the provided path."""
+    subshell_process = None
+    try:
+        if await _aks_bastion_validate_tunnel(port):
+            logger.debug("Bastion tunnel is set up successfully.")
+        else:
+            raise CLIInternalError(
+                f"Bastion tunnel failed to set up on port {port}. Please check the logs for more details."
+            )
+
+        env = os.environ.copy()
+        env.update({"KUBECONFIG": kubeconfig_path})
+        shell_cmd, updated_shell_cmd = _aks_bastion_prepare_shell_cmd(kubeconfig_path)
+        shell_executable = None
+        if sys.platform.startswith("win"):
+            shell_executable = which("cmd.exe")
+            if not shell_executable:
+                raise CLIInternalError("Cannot find command processor executable 'cmd.exe' in PATH.")
+        logger.warning(
+            "Launching subshell with command '%s'. Setting env var KUBECONFIG to '%s'.",
+            updated_shell_cmd,
+            kubeconfig_path,
+        )
+        logger.warning(
+            "Use exit or Ctrl-D (i.e. EOF) to exit the subshell."
+        )
+        subshell_process = await asyncio.subprocess.create_subprocess_shell(
+            cmd=updated_shell_cmd,
+            stdin=None,
+            stdout=None,
+            stderr=None,
+            shell=True,
+            env=env,
+            executable=shell_executable,
+        )
+        logger.info("Subshell launched with PID: %s", subshell_process.pid)
+
+        # subshell process must not exit unless it encounters a failure or is deliberately shut down
+        await subshell_process.wait()
+        logger.debug("Subshell exited with code: %s", subshell_process.returncode)
+    except asyncio.CancelledError:
+        # attempt to terminate the subshell process gracefully
+        if subshell_process is not None:
+            logger.info("Subshell was cancelled. Terminating...")
+            subshell_process.terminate()
+            try:
+                await asyncio.wait_for(subshell_process.wait(), timeout=5)
+                logger.info("Subshell exited cleanly after termination.")
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "Subshell did not exit after SIGTERM. Sending SIGKILL..."
+                )
+                subshell_process.kill()
+                await asyncio.wait_for(subshell_process.wait(), timeout=5)
+                logger.warning(
+                    "Subshell forcefully killed with code %s",
+                    subshell_process.returncode,
+                )
+                _aks_bastion_restore_shell(shell_cmd)
+        else:
+            logger.warning("Subshell was cancelled before it could be launched.")
+
+
+async def _aks_bastion_launch_tunnel(bastion_resource, port, mc_id, subscription_id=None):
+    """Launch the bastion tunnel using the provided parameters."""
+
+    tunnel_proces = None
+    try:
+        az_cmd_name = _aks_bastion_get_az_cmd_name()
+        cmd = [
+            az_cmd_name, "network", "bastion", "tunnel",
+            "--resource-group", bastion_resource.resource_group,
+            "--name", bastion_resource.name, "--port", str(port),
+            "--target-resource-id", mc_id, "--resource-port", "443",
+        ]
+        # the bastion may live in a different subscription than the cluster; prefer the
+        # subscription resolved from the bastion resource over the cluster subscription
+        bastion_subscription_id = getattr(bastion_resource, "subscription", None) or subscription_id
+        if bastion_subscription_id:
+            cmd.extend(["--subscription", bastion_subscription_id])
+        logger.warning("Creating bastion tunnel with command: '%s'", subprocess.list2cmdline(cmd))
+
+        # Use start_new_session on Unix to create a new process group
+        # This allows us to kill the entire process tree when cleaning up
+        start_new_session = not sys.platform.startswith("win")
+        tunnel_proces = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdin=asyncio.subprocess.DEVNULL,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+            shell=False,
+            start_new_session=start_new_session,
+        )
+        logger.info("Tunnel launched with PID: %s", tunnel_proces.pid)
+
+        # tunnel process must not exit unless it encounters a failure or is deliberately shut down
+        await tunnel_proces.wait()
+        if tunnel_proces.returncode != 0:
+            raise CLIInternalError(f"Bastion tunnel exited with code {tunnel_proces.returncode}.")
+        logger.debug("Bastion tunnel exited with code %s", tunnel_proces.returncode)
+    except asyncio.CancelledError:
+        # attempt to terminate the tunnel process and all its children
+        if tunnel_proces is not None:
+            logger.info("Tunnel process was cancelled. Terminating process tree...")
+            _aks_bastion_kill_process_tree(tunnel_proces)
+            try:
+                await asyncio.wait_for(tunnel_proces.wait(), timeout=5)
+                logger.info("Tunnel process exited cleanly after termination.")
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "Tunnel process did not exit after SIGTERM. Force killing..."
+                )
+                if sys.platform.startswith("win"):
+                    # On Windows, taskkill /F should have already force-killed
+                    # but try again with kill() as fallback
+                    tunnel_proces.kill()
+                else:
+                    # On Unix, send SIGKILL to the process group
+                    try:
+                        os.killpg(os.getpgid(tunnel_proces.pid), signal.SIGKILL)
+                    except (ProcessLookupError, PermissionError):
+                        tunnel_proces.kill()
+                await asyncio.wait_for(tunnel_proces.wait(), timeout=5)
+                logger.warning(
+                    "Tunnel process forcefully killed with code %s",
+                    tunnel_proces.returncode,
+                )
+        else:
+            logger.warning("Tunnel process was cancelled before it could be launched.")
+
+
+def _aks_bastion_kill_process_tree(process):
+    """Kill a process and all its children.
+
+    On Windows, az.cmd spawns a child Python process, so we need to kill the entire
+    process tree to avoid orphaned processes.
+    """
+    if process is None:
+        return
+
+    pid = process.pid
+    if sys.platform.startswith("win"):
+        # On Windows, use taskkill with /T flag to kill the process tree
+        try:
+            taskkill_path = which("taskkill.exe")
+            if not taskkill_path:
+                logger.warning("Cannot find taskkill.exe in PATH. Terminating the tunnel process directly.")
+                process.terminate()
+                return
+            subprocess.run(
+                [taskkill_path, "/T", "/F", "/PID", str(pid)],
+                capture_output=True,
+                check=False,
+            )
+            logger.debug("Killed process tree for PID %s using taskkill", pid)
+        except Exception as e:  # pylint: disable=broad-except
+            logger.warning("Failed to kill process tree with taskkill: %s", e)
+            # Fallback to terminate/kill
+            process.terminate()
+    else:
+        # On Unix, kill the process group
+        try:
+            os.killpg(os.getpgid(pid), signal.SIGTERM)
+            logger.debug("Sent SIGTERM to process group for PID %s", pid)
+        except (ProcessLookupError, PermissionError) as e:
+            logger.debug("Failed to kill process group: %s", e)
+            process.terminate()
+
+
+async def _aks_bastion_validate_tunnel(port):
+    """Check if the bastion tunnel is active on the specified port."""
+    # give the tunnel some time to establish before checking the port
+    await asyncio.sleep(5)
+
+    # retry for up to 5 times to check if the port is open
+    for attempt in range(5):
+        logger.debug(
+            "Checking if tunnel is active on port %s (attempt %d)...", port, attempt + 1
+        )
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(5)
+            try:
+                s.connect(("localhost", port))
+                logger.info("Tunnel is active on port %s", port)
+                return True
+            except socket.error as e:
+                logger.warning(
+                    "Attempt %d: Tunnel is not active on port %s: %s",
+                    attempt + 1,
+                    port,
+                    e,
+                )
+                await asyncio.sleep(5)
+    logger.error("Tunnel failed to become active on port %s after 5 attempts.", port)
+    return False
+
+
+async def _aks_bastion_test_hook(kubeconfig_path, port, kubectl_path):
+    """Test hook to validate the bastion tunnel and run a kubectl command."""
+    if not await _aks_bastion_validate_tunnel(port):
+        raise CLIInternalError(f"Bastion tunnel failed to set up on port {port}.")
+    executable = which(kubectl_path)
+    if not executable:
+        raise CLIInternalError(f"Cannot find kubectl executable '{kubectl_path}'.")
+    kubectl_process = await asyncio.create_subprocess_exec(
+        executable, "--kubeconfig", kubeconfig_path, "get", "nodes",
+        stdin=asyncio.subprocess.DEVNULL,
+        stdout=asyncio.subprocess.DEVNULL,
+        stderr=asyncio.subprocess.DEVNULL,
+        shell=False,
+    )
+    await asyncio.wait_for(kubectl_process.wait(), timeout=10)
+    if kubectl_process.returncode != 0:
+        raise CLIInternalError(
+            f"Command kubectl failed with return code {kubectl_process.returncode}. "
+        )
