@@ -3,6 +3,17 @@
 Release History
 ===============
 
+1.5.4b1
+++++++
+* ``az aimanager namespace modeldeployment``: Rename the ``--namespace-name`` argument to
+  the shorter ``--namespace``. The ``--ns`` alias is unchanged.
+* ``az aimanager modelsource``, ``az aimanager namespace`` and ``az aimanager namespace
+  modeldeployment``: Rename the ``--aimanager-name`` argument to the shorter ``--aimanager``.
+  The ``--manager`` and ``-m`` aliases are unchanged.
+* ``az aimanager namespace modeldeployment list``: Add ``--all-namespaces``/``-A`` to list
+  model deployments across all readable namespaces of the AI Manager. Callers must now
+  specify exactly one of ``--namespace``/``--ns`` or ``--all-namespaces``/``-A``.
+
 1.5.3b1
 ++++++
 * ``az aimanager list`` and ``az aimanager show``: Improve ``-o table`` output. Drop the
