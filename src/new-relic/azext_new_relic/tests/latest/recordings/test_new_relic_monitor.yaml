@@ -1,0 +1,1753 @@
+interactions:
+- request:
+    body: '{"identity": {"type": "SystemAssigned"}, "location": "eastus", "properties":
+      {"accountCreationSource": "LIFTR", "orgCreationSource": "LIFTR", "planData":
+      {"billingCycle": "MONTHLY", "effectiveDate": "2026-06-01T00:00:00.000Z", "planDetails":
+      "newrelic-pay-as-you-go-free-live@TIDn7ja87drquhy@PUBIDnewrelicinc1635200720692.newrelic_liftr_payg_2025",
+      "usageType": "PAYG"}, "userInfo": {"emailAddress": "test@example.com", "firstName":
+      "Test", "lastName": "User", "phoneNumber": "123456"}}, "tags": {"key6976": "oaxfhf"}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '518'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --name --location --user-info --plan-data --account-creation-source
+        --org-creation-source --tags
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","name":"test-new-relic-monitor","type":"newrelic.observability/monitors","location":"eastus","tags":{"key6976":"oaxfhf"},"systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:26:33.6493563Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:26:33.6493563Z"},"identity":{"principalId":"e46750a2-55c3-459b-be3f-3a0f33f7d215","tenantId":"00000000-0000-0000-0000-000000000000","type":"SystemAssigned"},"properties":{"orgCreationSource":"LIFTR","accountCreationSource":"LIFTR","provisioningState":"Accepted","monitoringStatus":"Enabled","marketplaceSubscriptionStatus":"Active","newRelicAccountProperties":{"userId":null,"accountInfo":null,"organizationInfo":null},"userInfo":{"firstName":"Test","lastName":"User","emailAddress":"test@example.com","phoneNumber":"123456"},"planData":{"usageType":"PAYG","billingCycle":"MONTHLY","planDetails":"newrelic-pay-as-you-go-free-live@TIDn7ja87drquhy@PUBIDnewrelicinc1635200720692.newrelic_liftr_payg_2025","effectiveDate":"2026-06-01T00:00:00Z"},"saaSData":null,"saaSAzureSubscriptionStatus":null,"liftrResourceCategory":"MonitorLogs","liftrResourcePreference":0}}'
+    headers:
+      azure-asyncnotification:
+      - Enabled
+      azure-asyncoperation:
+      - https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240604031180613&c=MIIHlDCCBnygAwIBAgIQbFnfFOz7A_VYWYwd_BJ05zANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBFVVMyIENBIDAxMB4XDTI2MDgxMzIzNDk1NFoXDTI3MDIwOTA1NDk1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhZUPWC_r-S0zyqqusEeSkNqqajuPdy1ZzcQlo4djteyJdwwWNTajAhE0_qUhb8ca-OR_1c9m4sOd9we--hSIuMLXjHhAT7t27MWD-8oa4ZCEMb-76qcQs9HLEUStp7e6RX7LNVjJjLZ8xvkLV7nYiiybkP4E4iYAPDjMhmeu2QH0W2eFB9lq1Nu_iInkGeBK678fHjt_rW6tVcyMHcYpEUVaRZapbCWsfZmBTvk5I7T47dB5_0cqsh13V7f5MEm_Wyn2BAj8lul85GhxL3p8H8jIQEiKqVXnOa_hC5s1xlIKolbh7OW0P33wjATfEXYHJJXUCvWbH92FTFyEJhJZVAgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBSGNhmUvF3CioxAORFLdcLt6G94fzAfBgNVHSMEGDAWgBT87D7bqnwfgh4FuKEG-UPnArMKuTCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L2Vhc3R1czIvY3Jscy9jY21lZWFzdHVzMnBraS9jY21lZWFzdHVzMmljYTAxLzY3L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21lZWFzdHVzMnBraS5lYXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZWVhc3R1czJpY2EwMS82Ny9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jYWNlcnRzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWVlYXN0dXMycGtpLmVhc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21lZWFzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQArBoYZle5U9KReq2R_QLQTC0HpQaitJkId8eDHwRk7WQsLp_JeTtDmTrwkpDAVevurHGj37cSwNzE6fwMZ2qw8TfQyzjACa4kSjTAUyMPumkRas3EHcbtAMTKK_mpum7pBbb0QwWcY3_Iny-txJ0TsAqTbQ9kbGaYBCKXsExLO49xq4Jea64MaxYnk5zhAQ37_kiZbqhegZRfmm0aPdOpq25_lquN-4M4jx_rPWzn1LsMWtiHDldsZf030tHhdS-l4r_WYo_yDs6hAuU6HGacLKshNbbszUNa7q23pSue4dO9tiYywAwnIXStZlJrPbJwnycF6bqWS3ooeTBYUo_A3&s=MWSt1NhBqDkoBHLFwTktIjkjEC4edjlDyNilmwf8G4DliGQ9Z0Z-0b_QCS8QTFViWULTEQe2KyTpZbqc37g7PDWR93VDMyjnM_Om5s8H136KxyfZc1ieLQrlPYt-rf6lUu2Fli1ys7_dm6tYTkrNfFryDTn1v-k2KvArgu_-iif_OG4tY7SdibAXhF4_f3yDLniaw-0dl9NUlvAIcJ-_1h9QAzJ5W0w4vSHkLNcEQEgfcK_cz3AXoTN5WtZICuHjj0I-OSplJ6bETrlGli6k7PIVzHJnA8qgFsSPS3ai89LB2xHKpJv-S-ZrtQvUzF3MGrqIQLaDsRrTP912XYR8XQ&h=o_iGa5hu52wAyT28qERh-sg4kQ3zA5mfhtctabNAu3U
+      cache-control:
+      - no-cache
+      content-length:
+      - '1361'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:26:42 GMT
+      etag:
+      - '"f700462d-0000-0100-0000-6a99c9f00000"'
+      expires:
+      - '-1'
+      location:
+      - https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240604031180613&c=MIIHlDCCBnygAwIBAgIQbFnfFOz7A_VYWYwd_BJ05zANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBFVVMyIENBIDAxMB4XDTI2MDgxMzIzNDk1NFoXDTI3MDIwOTA1NDk1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhZUPWC_r-S0zyqqusEeSkNqqajuPdy1ZzcQlo4djteyJdwwWNTajAhE0_qUhb8ca-OR_1c9m4sOd9we--hSIuMLXjHhAT7t27MWD-8oa4ZCEMb-76qcQs9HLEUStp7e6RX7LNVjJjLZ8xvkLV7nYiiybkP4E4iYAPDjMhmeu2QH0W2eFB9lq1Nu_iInkGeBK678fHjt_rW6tVcyMHcYpEUVaRZapbCWsfZmBTvk5I7T47dB5_0cqsh13V7f5MEm_Wyn2BAj8lul85GhxL3p8H8jIQEiKqVXnOa_hC5s1xlIKolbh7OW0P33wjATfEXYHJJXUCvWbH92FTFyEJhJZVAgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBSGNhmUvF3CioxAORFLdcLt6G94fzAfBgNVHSMEGDAWgBT87D7bqnwfgh4FuKEG-UPnArMKuTCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L2Vhc3R1czIvY3Jscy9jY21lZWFzdHVzMnBraS9jY21lZWFzdHVzMmljYTAxLzY3L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21lZWFzdHVzMnBraS5lYXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZWVhc3R1czJpY2EwMS82Ny9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jYWNlcnRzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWVlYXN0dXMycGtpLmVhc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21lZWFzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQArBoYZle5U9KReq2R_QLQTC0HpQaitJkId8eDHwRk7WQsLp_JeTtDmTrwkpDAVevurHGj37cSwNzE6fwMZ2qw8TfQyzjACa4kSjTAUyMPumkRas3EHcbtAMTKK_mpum7pBbb0QwWcY3_Iny-txJ0TsAqTbQ9kbGaYBCKXsExLO49xq4Jea64MaxYnk5zhAQ37_kiZbqhegZRfmm0aPdOpq25_lquN-4M4jx_rPWzn1LsMWtiHDldsZf030tHhdS-l4r_WYo_yDs6hAuU6HGacLKshNbbszUNa7q23pSue4dO9tiYywAwnIXStZlJrPbJwnycF6bqWS3ooeTBYUo_A3&s=KLVHvaO5bDfe0RlU8oULBo7R0lxgEH6bdPcVXv_xEnwyrJqcckzZR8VokMLb3pLANQfVOdZRqfH5GE7W11QmYXHzCktArw8Q1JBslZXQLaZ2zTNFSIKV1k9pI1txkF8oOry7RYb2uNj87v29MiuUQ3DG96uT6BxdPYNFgBU27DsdsbhJDeMzhWxzMJkAW_l6YVbJ02ISPRVxL-hM5E2J4NldNmU82-Th9-Iiohkjsofj3leTLV7BT0nFfuysAgtuN6G9y3ht-s9oCvpMzyEQ6htcg0fZ_KNe1I_w8xQ3mS0oOD-Ya_h7LxL3qVkdp2_KRh8jYDWbdRPzl2HeRUzpJw&h=o_iGa5hu52wAyT28qERh-sg4kQ3zA5mfhtctabNAu3U
+      mise-correlation-id:
+      - 9d60b4e2-1799-442c-96f9-7cbda7aceaf7
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-async-operation-timeout:
+      - P6D
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/southeastasia/f6f566eb-d08b-4731-ac82-1624e3f0e26e
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-ms-resource-provider-hint:
+      - noPolling
+      x-msedge-ref:
+      - 'Ref A: 3E12CF843C494508A2BBBF915924F595 Ref B: SG2AA1070305062 Ref C: 2026-09-03T19:26:29Z'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --name --location --user-info --plan-data --account-creation-source
+        --org-creation-source --tags
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240604031180613&c=MIIHlDCCBnygAwIBAgIQbFnfFOz7A_VYWYwd_BJ05zANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBFVVMyIENBIDAxMB4XDTI2MDgxMzIzNDk1NFoXDTI3MDIwOTA1NDk1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhZUPWC_r-S0zyqqusEeSkNqqajuPdy1ZzcQlo4djteyJdwwWNTajAhE0_qUhb8ca-OR_1c9m4sOd9we--hSIuMLXjHhAT7t27MWD-8oa4ZCEMb-76qcQs9HLEUStp7e6RX7LNVjJjLZ8xvkLV7nYiiybkP4E4iYAPDjMhmeu2QH0W2eFB9lq1Nu_iInkGeBK678fHjt_rW6tVcyMHcYpEUVaRZapbCWsfZmBTvk5I7T47dB5_0cqsh13V7f5MEm_Wyn2BAj8lul85GhxL3p8H8jIQEiKqVXnOa_hC5s1xlIKolbh7OW0P33wjATfEXYHJJXUCvWbH92FTFyEJhJZVAgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBSGNhmUvF3CioxAORFLdcLt6G94fzAfBgNVHSMEGDAWgBT87D7bqnwfgh4FuKEG-UPnArMKuTCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L2Vhc3R1czIvY3Jscy9jY21lZWFzdHVzMnBraS9jY21lZWFzdHVzMmljYTAxLzY3L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21lZWFzdHVzMnBraS5lYXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZWVhc3R1czJpY2EwMS82Ny9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jYWNlcnRzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWVlYXN0dXMycGtpLmVhc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21lZWFzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQArBoYZle5U9KReq2R_QLQTC0HpQaitJkId8eDHwRk7WQsLp_JeTtDmTrwkpDAVevurHGj37cSwNzE6fwMZ2qw8TfQyzjACa4kSjTAUyMPumkRas3EHcbtAMTKK_mpum7pBbb0QwWcY3_Iny-txJ0TsAqTbQ9kbGaYBCKXsExLO49xq4Jea64MaxYnk5zhAQ37_kiZbqhegZRfmm0aPdOpq25_lquN-4M4jx_rPWzn1LsMWtiHDldsZf030tHhdS-l4r_WYo_yDs6hAuU6HGacLKshNbbszUNa7q23pSue4dO9tiYywAwnIXStZlJrPbJwnycF6bqWS3ooeTBYUo_A3&s=MWSt1NhBqDkoBHLFwTktIjkjEC4edjlDyNilmwf8G4DliGQ9Z0Z-0b_QCS8QTFViWULTEQe2KyTpZbqc37g7PDWR93VDMyjnM_Om5s8H136KxyfZc1ieLQrlPYt-rf6lUu2Fli1ys7_dm6tYTkrNfFryDTn1v-k2KvArgu_-iif_OG4tY7SdibAXhF4_f3yDLniaw-0dl9NUlvAIcJ-_1h9QAzJ5W0w4vSHkLNcEQEgfcK_cz3AXoTN5WtZICuHjj0I-OSplJ6bETrlGli6k7PIVzHJnA8qgFsSPS3ai89LB2xHKpJv-S-ZrtQvUzF3MGrqIQLaDsRrTP912XYR8XQ&h=o_iGa5hu52wAyT28qERh-sg4kQ3zA5mfhtctabNAu3U
+  response:
+    body:
+      string: '{"id":"/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","name":"5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","resourceId":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","status":"Accepted","startTime":"2026-09-03T19:26:38.103853Z"}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '532'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:26:44 GMT
+      etag:
+      - '"3e00bd79-0000-0100-0000-6a99c9ee0000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - ''
+      x-msedge-ref:
+      - 'Ref A: 2185E03407EB4F61AF04A1E46F42501B Ref B: SG2AA1070303034 Ref C: 2026-09-03T19:26:44Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --name --location --user-info --plan-data --account-creation-source
+        --org-creation-source --tags
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240604031180613&c=MIIHlDCCBnygAwIBAgIQbFnfFOz7A_VYWYwd_BJ05zANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBFVVMyIENBIDAxMB4XDTI2MDgxMzIzNDk1NFoXDTI3MDIwOTA1NDk1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhZUPWC_r-S0zyqqusEeSkNqqajuPdy1ZzcQlo4djteyJdwwWNTajAhE0_qUhb8ca-OR_1c9m4sOd9we--hSIuMLXjHhAT7t27MWD-8oa4ZCEMb-76qcQs9HLEUStp7e6RX7LNVjJjLZ8xvkLV7nYiiybkP4E4iYAPDjMhmeu2QH0W2eFB9lq1Nu_iInkGeBK678fHjt_rW6tVcyMHcYpEUVaRZapbCWsfZmBTvk5I7T47dB5_0cqsh13V7f5MEm_Wyn2BAj8lul85GhxL3p8H8jIQEiKqVXnOa_hC5s1xlIKolbh7OW0P33wjATfEXYHJJXUCvWbH92FTFyEJhJZVAgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBSGNhmUvF3CioxAORFLdcLt6G94fzAfBgNVHSMEGDAWgBT87D7bqnwfgh4FuKEG-UPnArMKuTCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L2Vhc3R1czIvY3Jscy9jY21lZWFzdHVzMnBraS9jY21lZWFzdHVzMmljYTAxLzY3L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21lZWFzdHVzMnBraS5lYXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZWVhc3R1czJpY2EwMS82Ny9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jYWNlcnRzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWVlYXN0dXMycGtpLmVhc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21lZWFzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQArBoYZle5U9KReq2R_QLQTC0HpQaitJkId8eDHwRk7WQsLp_JeTtDmTrwkpDAVevurHGj37cSwNzE6fwMZ2qw8TfQyzjACa4kSjTAUyMPumkRas3EHcbtAMTKK_mpum7pBbb0QwWcY3_Iny-txJ0TsAqTbQ9kbGaYBCKXsExLO49xq4Jea64MaxYnk5zhAQ37_kiZbqhegZRfmm0aPdOpq25_lquN-4M4jx_rPWzn1LsMWtiHDldsZf030tHhdS-l4r_WYo_yDs6hAuU6HGacLKshNbbszUNa7q23pSue4dO9tiYywAwnIXStZlJrPbJwnycF6bqWS3ooeTBYUo_A3&s=MWSt1NhBqDkoBHLFwTktIjkjEC4edjlDyNilmwf8G4DliGQ9Z0Z-0b_QCS8QTFViWULTEQe2KyTpZbqc37g7PDWR93VDMyjnM_Om5s8H136KxyfZc1ieLQrlPYt-rf6lUu2Fli1ys7_dm6tYTkrNfFryDTn1v-k2KvArgu_-iif_OG4tY7SdibAXhF4_f3yDLniaw-0dl9NUlvAIcJ-_1h9QAzJ5W0w4vSHkLNcEQEgfcK_cz3AXoTN5WtZICuHjj0I-OSplJ6bETrlGli6k7PIVzHJnA8qgFsSPS3ai89LB2xHKpJv-S-ZrtQvUzF3MGrqIQLaDsRrTP912XYR8XQ&h=o_iGa5hu52wAyT28qERh-sg4kQ3zA5mfhtctabNAu3U
+  response:
+    body:
+      string: '{"id":"/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","name":"5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","resourceId":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","status":"Accepted","startTime":"2026-09-03T19:26:38.103853Z"}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '532'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:27:16 GMT
+      etag:
+      - '"3e00bd79-0000-0100-0000-6a99c9ee0000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - ''
+      x-msedge-ref:
+      - 'Ref A: D30ED07C3F4745B69513E2A5EA2AEA48 Ref B: SG2AA1070301029 Ref C: 2026-09-03T19:27:15Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --name --location --user-info --plan-data --account-creation-source
+        --org-creation-source --tags
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240604031180613&c=MIIHlDCCBnygAwIBAgIQbFnfFOz7A_VYWYwd_BJ05zANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBFVVMyIENBIDAxMB4XDTI2MDgxMzIzNDk1NFoXDTI3MDIwOTA1NDk1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhZUPWC_r-S0zyqqusEeSkNqqajuPdy1ZzcQlo4djteyJdwwWNTajAhE0_qUhb8ca-OR_1c9m4sOd9we--hSIuMLXjHhAT7t27MWD-8oa4ZCEMb-76qcQs9HLEUStp7e6RX7LNVjJjLZ8xvkLV7nYiiybkP4E4iYAPDjMhmeu2QH0W2eFB9lq1Nu_iInkGeBK678fHjt_rW6tVcyMHcYpEUVaRZapbCWsfZmBTvk5I7T47dB5_0cqsh13V7f5MEm_Wyn2BAj8lul85GhxL3p8H8jIQEiKqVXnOa_hC5s1xlIKolbh7OW0P33wjATfEXYHJJXUCvWbH92FTFyEJhJZVAgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBSGNhmUvF3CioxAORFLdcLt6G94fzAfBgNVHSMEGDAWgBT87D7bqnwfgh4FuKEG-UPnArMKuTCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L2Vhc3R1czIvY3Jscy9jY21lZWFzdHVzMnBraS9jY21lZWFzdHVzMmljYTAxLzY3L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21lZWFzdHVzMnBraS5lYXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZWVhc3R1czJpY2EwMS82Ny9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jYWNlcnRzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWVlYXN0dXMycGtpLmVhc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21lZWFzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQArBoYZle5U9KReq2R_QLQTC0HpQaitJkId8eDHwRk7WQsLp_JeTtDmTrwkpDAVevurHGj37cSwNzE6fwMZ2qw8TfQyzjACa4kSjTAUyMPumkRas3EHcbtAMTKK_mpum7pBbb0QwWcY3_Iny-txJ0TsAqTbQ9kbGaYBCKXsExLO49xq4Jea64MaxYnk5zhAQ37_kiZbqhegZRfmm0aPdOpq25_lquN-4M4jx_rPWzn1LsMWtiHDldsZf030tHhdS-l4r_WYo_yDs6hAuU6HGacLKshNbbszUNa7q23pSue4dO9tiYywAwnIXStZlJrPbJwnycF6bqWS3ooeTBYUo_A3&s=MWSt1NhBqDkoBHLFwTktIjkjEC4edjlDyNilmwf8G4DliGQ9Z0Z-0b_QCS8QTFViWULTEQe2KyTpZbqc37g7PDWR93VDMyjnM_Om5s8H136KxyfZc1ieLQrlPYt-rf6lUu2Fli1ys7_dm6tYTkrNfFryDTn1v-k2KvArgu_-iif_OG4tY7SdibAXhF4_f3yDLniaw-0dl9NUlvAIcJ-_1h9QAzJ5W0w4vSHkLNcEQEgfcK_cz3AXoTN5WtZICuHjj0I-OSplJ6bETrlGli6k7PIVzHJnA8qgFsSPS3ai89LB2xHKpJv-S-ZrtQvUzF3MGrqIQLaDsRrTP912XYR8XQ&h=o_iGa5hu52wAyT28qERh-sg4kQ3zA5mfhtctabNAu3U
+  response:
+    body:
+      string: '{"id":"/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","name":"5efbfbe3-c3fa-4212-aa05-c9b50b75d093*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","resourceId":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","status":"Succeeded","startTime":"2026-09-03T19:26:38.103853Z","endTime":"2026-09-03T19:27:37.7335978Z","error":{},"properties":null}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '603'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:27:47 GMT
+      etag:
+      - '"3e00d279-0000-0100-0000-6a99ca290000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - ''
+      x-msedge-ref:
+      - 'Ref A: CDEFE5FF581E4DF496E26167468E3A15 Ref B: SG2AA1070305025 Ref C: 2026-09-03T19:27:47Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --name --location --user-info --plan-data --account-creation-source
+        --org-creation-source --tags
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","name":"test-new-relic-monitor","type":"newrelic.observability/monitors","location":"eastus","tags":{"key6976":"oaxfhf"},"systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:26:33.6493563Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:26:33.6493563Z"},"identity":{"principalId":"e46750a2-55c3-459b-be3f-3a0f33f7d215","tenantId":"00000000-0000-0000-0000-000000000000","type":"SystemAssigned"},"properties":{"orgCreationSource":"LIFTR","accountCreationSource":"LIFTR","provisioningState":"Succeeded","monitoringStatus":"Enabled","marketplaceSubscriptionStatus":"Active","newRelicAccountProperties":{"accountInfo":{"accountId":"8472194"},"organizationInfo":{"organizationId":"f2886261-d821-47a6-859f-e7bede8d4919"}},"userInfo":{"firstName":"Test","lastName":"User","emailAddress":"test@example.com","phoneNumber":"123456"},"planData":{"usageType":"PAYG","billingCycle":"MONTHLY","planDetails":"newrelic-pay-as-you-go-free-live@TIDn7ja87drquhy@PUBIDnewrelicinc1635200720692.newrelic_liftr_payg_2025","effectiveDate":"2026-06-01T00:00:00Z"},"saaSData":{},"liftrResourceCategory":"MonitorLogs","liftrResourcePreference":0}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '1383'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:27:49 GMT
+      etag:
+      - '"f700e82f-0000-0100-0000-6a99ca290000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 7CB42EC0A1C04C91B590D49473DD2EAA Ref B: SG2AA1040515025 Ref C: 2026-09-03T19:27:49Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"properties": {"logRules": {"filteringTags": [], "sendAadLogs": "Enabled",
+      "sendActivityLogs": "Enabled", "sendSubscriptionLogs": "Enabled"}, "metricRules":
+      {"filteringTags": [{"action": "Include", "name": "Environment", "value": "Prod"}],
+      "userEmail": "test@example.com"}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor tag-rule create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '275'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --monitor-name --name --log-rules --metric-rules
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default","name":"default","type":"newrelic.observability/monitors/tagrules","systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:27:51.1085826Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:27:51.1085826Z"},"properties":{"provisioningState":"Succeeded","logRules":{"sendAadLogs":"Enabled","sendSubscriptionLogs":"Enabled","sendActivityLogs":"Enabled","filteringTags":[]},"metricRules":{"sendMetrics":"Disabled","filteringTags":[{"name":"Environment","value":"Prod","action":"Include"}]}}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '762'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:27:56 GMT
+      etag:
+      - '"af00164f-0000-0100-0000-6a99ca3c0000"'
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 89f22df4-b523-46aa-9a35-ba60b9093898
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/southeastasia/d69604ef-f819-4de6-b2b9-22bcd761dd16
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: F6728CCF2C344EA980B4A8F48E5D7A10 Ref B: SG2AA1070303034 Ref C: 2026-09-03T19:27:50Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"properties": {"logRules": {"filteringTags": [], "sendAadLogs": "Enabled",
+      "sendActivityLogs": "Disabled", "sendSubscriptionLogs": "Enabled"}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor tag-rule update
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '144'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --monitor-name --name --log-rules
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PATCH
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default","name":"default","type":"newrelic.observability/monitors/tagrules","systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:27:51.1085826Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:27:58.5921394Z"},"properties":{"provisioningState":"Succeeded","logRules":{"sendAadLogs":"Enabled","sendSubscriptionLogs":"Enabled","sendActivityLogs":"Disabled","filteringTags":[]},"metricRules":{"sendMetrics":"Disabled","filteringTags":[{"name":"Environment","value":"Prod","action":"Include"}]}}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '763'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:27:58 GMT
+      etag:
+      - '"af003f4f-0000-0100-0000-6a99ca3e0000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/818ca3c3-ca01-4769-8675-029beb1935a6
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 11FD774EE7BF4C83AEC658377B180A92 Ref B: SG2AA1040515054 Ref C: 2026-09-03T19:27:58Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor tag-rule list
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --monitor-name
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default","name":"default","type":"newrelic.observability/monitors/tagrules","systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:27:51.1085826Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:27:58.5921394Z"},"properties":{"provisioningState":"Succeeded","logRules":{"sendAadLogs":"Enabled","sendSubscriptionLogs":"Enabled","sendActivityLogs":"Disabled","filteringTags":[]},"metricRules":{"sendMetrics":"Disabled","filteringTags":[{"name":"Environment","value":"Prod","action":"Include"}]}}}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '775'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:27:59 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/3203ae00-568d-4716-87ec-4697143c628f
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 26E1C3BCF6784963AA5ACE21D64BA589 Ref B: SG2AA1070302052 Ref C: 2026-09-03T19:27:59Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor tag-rule show
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --monitor-name --name
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default","name":"default","type":"newrelic.observability/monitors/tagrules","systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:27:51.1085826Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:27:58.5921394Z"},"properties":{"provisioningState":"Succeeded","logRules":{"sendAadLogs":"Enabled","sendSubscriptionLogs":"Enabled","sendActivityLogs":"Disabled","filteringTags":[]},"metricRules":{"sendMetrics":"Disabled","filteringTags":[{"name":"Environment","value":"Prod","action":"Include"}]}}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '763'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:02 GMT
+      etag:
+      - '"af003f4f-0000-0100-0000-6a99ca3e0000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/fe334caf-32dc-4299-b1ab-364238b5e715
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 212ED1F9E377418E9D477001BBA84AE3 Ref B: SG2AA1070306029 Ref C: 2026-09-03T19:28:01Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"userEmail": "test@example.com"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor get-metric-rule
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '33'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --monitor-name --resource-group --user-email
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/getMetricRules?api-version=2026-06-01
+  response:
+    body:
+      string: '{"sendMetrics":"Disabled","filteringTags":[]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '45'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:05 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 55fc6332-4cf2-4f16-bc89-20f9fb6194d9
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/e7902958-d184-4314-aeb9-15fe3a273e82
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 8FFD49AA8F4F44BDB977C4E0922AD384 Ref B: SG2AA1040519042 Ref C: 2026-09-03T19:28:03Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"properties": {"monitoredSubscriptionList": [{"status": "InProgress",
+      "subscriptionId": "/subscriptions/00000000-0000-0000-0000-000000000000"}], "patchOperation":
+      "AddBegin"}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor monitored-subscription create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '176'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --monitor-name --configuration-name --patch-operation --monitored-subscription-list
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default","name":"default","type":"newrelic.observability/monitors/monitoredsubscriptions","systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:28:06.9458906Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:28:06.9458906Z"},"properties":{"patchOperation":"AddBegin","monitoredSubscriptionList":[{"subscriptionId":"/SUBSCRIPTIONS/00000000-0000-0000-0000-000000000000","status":"InProgress","error":null,"tagRules":null}],"provisioningState":"Succeeded"}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '738'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:08 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 8fb4e0d1-90b1-4064-9480-a4efaef66388
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/48550724-2066-480b-a9d9-e318208b2515
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: E598913606094B98B3033CEABC538CFF Ref B: SG2AA1040520062 Ref C: 2026-09-03T19:28:06Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"properties": {"monitoredSubscriptionList": [{"status": "Active", "subscriptionId":
+      "/subscriptions/00000000-0000-0000-0000-000000000000"}], "patchOperation": "AddComplete"}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor monitored-subscription create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '175'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --monitor-name --configuration-name --patch-operation --monitored-subscription-list
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default","name":"default","type":"newrelic.observability/monitors/monitoredsubscriptions","systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:28:10.0058786Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:28:10.0058786Z"},"properties":{"patchOperation":"AddComplete","monitoredSubscriptionList":[{"subscriptionId":"/SUBSCRIPTIONS/00000000-0000-0000-0000-000000000000","status":"Active","error":null,"tagRules":null}],"provisioningState":"Succeeded"}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '737'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:11 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - e1aa5de4-a0f9-4117-9c18-59ed9043887f
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/60e19cce-359e-4906-bb74-bada539c0ded
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 3C77851C4CD443ED8188D117D6153F92 Ref B: SG2AA1070306023 Ref C: 2026-09-03T19:28:09Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor monitored-subscription show
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --monitor-name --configuration-name
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default","name":"default","type":"NewRelic.Observability/monitors/monitoredSubscriptions","properties":{"patchOperation":"AddBegin","monitoredSubscriptionList":[{"subscriptionId":"/SUBSCRIPTIONS/00000000-0000-0000-0000-000000000000","status":"Active","error":null,"tagRules":{"provisioningState":"Accepted","logRules":null,"metricRules":null}}]}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '541'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:14 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 1f7e5805-9118-4fbc-908d-af1e25a0b9df
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/494065c7-43a4-4655-b419-fbbf944de2d7
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: D2B1A81ABA68485387180CA5359D89A5 Ref B: SG2AA1070306036 Ref C: 2026-09-03T19:28:13Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor monitored-subscription list
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --monitor-name
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default","name":"default","type":"NewRelic.Observability/monitors/monitoredSubscriptions","properties":{"patchOperation":"AddBegin","monitoredSubscriptionList":[{"subscriptionId":"/SUBSCRIPTIONS/00000000-0000-0000-0000-000000000000","status":"Active","tagRules":{"provisioningState":"Accepted"}}]}}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '505'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:16 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - c870417e-32d8-4ae6-a084-cc83fe2e29e1
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/b93b77c1-6623-4752-8acf-d575b580a607
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: BC013465964445CEB95AE8426A1D5A11 Ref B: SG2AA1040517023 Ref C: 2026-09-03T19:28:15Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"azureResourceIds": ["abcdefg"], "userEmail": "test@example.com"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor get-metric-statu
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '66'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --monitor-name --user-email --azure-resource-ids
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/getMetricStatus?api-version=2026-06-01
+  response:
+    body:
+      string: '{"azureResourceIds":[]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '23'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:19 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 3038ce73-abbf-429e-99ac-e703aabf2262
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/cfebd30c-01d8-4335-80eb-a6bbac6f755a
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 437CE051C327450694D111D13C4FB89C Ref B: SG2AA1070302023 Ref C: 2026-09-03T19:28:17Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor list
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","name":"test-new-relic-monitor","type":"newrelic.observability/monitors","location":"eastus","tags":{"key6976":"oaxfhf"},"systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:26:33.6493563Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:26:33.6493563Z"},"identity":{"principalId":"e46750a2-55c3-459b-be3f-3a0f33f7d215","tenantId":"00000000-0000-0000-0000-000000000000","type":"SystemAssigned"},"properties":{"orgCreationSource":"LIFTR","accountCreationSource":"LIFTR","provisioningState":"Succeeded","monitoringStatus":"Enabled","marketplaceSubscriptionStatus":"Active","newRelicAccountProperties":{"accountInfo":{"accountId":"8472194"},"organizationInfo":{"organizationId":"f2886261-d821-47a6-859f-e7bede8d4919"}},"userInfo":{"firstName":"Test","lastName":"User","emailAddress":"test@example.com","phoneNumber":"123456"},"planData":{"usageType":"PAYG","billingCycle":"MONTHLY","planDetails":"newrelic-pay-as-you-go-free-live@TIDn7ja87drquhy@PUBIDnewrelicinc1635200720692.newrelic_liftr_payg_2025","effectiveDate":"2026-06-01T00:00:00Z"},"saaSData":{},"liftrResourceCategory":"MonitorLogs","liftrResourcePreference":0}}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '1395'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:21 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-original-request-ids:
+      - 19894ebe-6c39-4d72-b9d9-9f3fce885486
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 1C288E5227F946A7B6CF00CB4CB5EC29 Ref B: SG2AA1070303054 Ref C: 2026-09-03T19:28:21Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"azureResourceIds": ["abcdefg"], "userEmail": "test@example.com"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor list-app-service
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '66'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --monitor-name --user-email --azure-resource-ids
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/listAppServices?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '12'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:24 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - b7265d01-bec0-4c5f-8b0b-f133e3912523
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/89d0089f-2cb4-4171-ba51-3ccc2a648719
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: DECD045FFCB2438C9B3ADA08A65C92FB Ref B: SG2AA1040512052 Ref C: 2026-09-03T19:28:22Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"userEmail": "test@example.com", "vmIds": ["test-vm"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor list-host
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '55'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --resource-group --monitor-name --user-email --vm-ids
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/listHosts?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '12'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:27 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - a54b42e3-f6ee-4f1b-bd7e-e3ae1619c1a1
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/8a830679-f988-42bd-9acb-5891616b0b30
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: CC8229637CFF44F8914BB0E15A0325AE Ref B: SG2AA1040519036 Ref C: 2026-09-03T19:28:25Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor monitored-resource
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --monitor-name --resource-group
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredResources?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[{"id":"/SUBSCRIPTIONS/00000000-0000-0000-0000-000000000000","sendingLogs":"Disabled","reasonForLogsStatus":"DiagnosticSettingsLimitReached"}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '152'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:29 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 36b3716c-e0b5-4935-8560-62c66e0433a6
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/87f32def-a9b5-41d4-94d7-8fb31ee1e2c6
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 3C878A254777468EB5B651B0D1A2AD76 Ref B: SG2AA1040519025 Ref C: 2026-09-03T19:28:28Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor list-linked-resource
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --monitor-name --resource-group
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/listLinkedResources?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[{"id":"/SUBSCRIPTIONS/00000000-0000-0000-0000-000000000000/RESOURCEGROUPS/CLI_TEST_NEW_RELIC_MONITORXVCIZ27CDRK7JLHF5N7XV63SWFD5VOLRKEE4L53ETZMRGNLCV/PROVIDERS/NEWRELIC.OBSERVABILITY/MONITORS/TEST-NEW-RELIC-MONITOR"}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '228'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:33 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - ef45b95e-7fa4-4392-a726-e761d20b7155
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/41389ea0-7e28-46c4-b04f-20ff8b8f1652
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: B87AE6AB17F840ACBE48C8B045211737 Ref B: SG2AA1070305060 Ref C: 2026-09-03T19:28:31Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor list-connected-partner-resource
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --monitor-name --resource-group
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/listConnectedPartnerResources?api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[{"properties":{"accountName":"Account 8472194","accountId":"8472194","azureResourceId":"/SUBSCRIPTIONS/00000000-0000-0000-0000-000000000000/RESOURCEGROUPS/CLI_TEST_NEW_RELIC_MONITORXVCIZ27CDRK7JLHF5N7XV63SWFD5VOLRKEE4L53ETZMRGNLCV/PROVIDERS/NEWRELIC.OBSERVABILITY/MONITORS/TEST-NEW-RELIC-MONITOR","location":"eastus"}}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '330'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:37 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - b0c3d820-e97e-4c33-a8ee-8f7e81106409
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/a30bc319-42cd-4758-bd58-2fc6310d78e6
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 395F54EE7AFB41B6AF4B7EB44BA715C9 Ref B: SG2AA1040519031 Ref C: 2026-09-03T19:28:34Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor get-billing-info
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --monitor-name --resource-group
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/getBillingInfo?api-version=2026-06-01
+  response:
+    body:
+      string: '{"marketplaceSaasInfo":{"marketplaceSubscriptionId":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/Microsoft.SaaS/resources/AzNewRelic_4c419157-ff55-49fe-bb05-1a02fa0f9c6a_test-new-rel","marketplaceSubscriptionName":"AzNewRelic_4c419157-ff55-49fe-bb05-1a02fa0f9c6a_test-new-rel","marketplaceResourceId":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/Microsoft.SaaS/resources/AzNewRelic_4c419157-ff55-49fe-bb05-1a02fa0f9c6a_test-new-rel","marketplaceStatus":"Subscribed","billedAzureSubscriptionId":"00000000-0000-0000-0000-000000000000"},"partnerBillingEntity":{"organizationId":"f2886261-d821-47a6-859f-e7bede8d4919","organizationName":"f2886261-d821-47a6-859f-e7bede8d4919"}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '805'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:41 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 605c1cbf-5343-4274-918d-8f44c0d2e389
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/0069c0a3-a3ac-4b8d-bcd3-355605df6b36
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: E7AD941DF41B4D7F9F76DB5AE2116144 Ref B: SG2AA1070303040 Ref C: 2026-09-03T19:28:38Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor show
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --monitor-name
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor?api-version=2026-06-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","name":"test-new-relic-monitor","type":"newrelic.observability/monitors","location":"eastus","tags":{"key6976":"oaxfhf"},"systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-03T19:26:33.6493563Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-03T19:26:33.6493563Z"},"identity":{"principalId":"e46750a2-55c3-459b-be3f-3a0f33f7d215","tenantId":"00000000-0000-0000-0000-000000000000","type":"SystemAssigned"},"properties":{"orgCreationSource":"LIFTR","accountCreationSource":"LIFTR","provisioningState":"Succeeded","monitoringStatus":"Enabled","marketplaceSubscriptionStatus":"Active","newRelicAccountProperties":{"accountInfo":{"accountId":"8472194"},"organizationInfo":{"organizationId":"f2886261-d821-47a6-859f-e7bede8d4919"}},"userInfo":{"firstName":"Test","lastName":"User","emailAddress":"test@example.com","phoneNumber":"123456"},"planData":{"usageType":"PAYG","billingCycle":"MONTHLY","planDetails":"newrelic-pay-as-you-go-free-live@TIDn7ja87drquhy@PUBIDnewrelicinc1635200720692.newrelic_liftr_payg_2025","effectiveDate":"2026-06-01T00:00:00Z"},"saaSData":{},"liftrResourceCategory":"MonitorLogs","liftrResourcePreference":0}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '1383'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:42 GMT
+      etag:
+      - '"f700e82f-0000-0100-0000-6a99ca290000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 1EF08C265C0C4B389F5DE77E47A8D9F1 Ref B: SG2AA1070303034 Ref C: 2026-09-03T19:28:42Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor vm-host-payload
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --monitor-name --resource-group
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/vmHostPayloads?api-version=2026-06-01
+  response:
+    body:
+      string: '{"ingestionKey":"fake-ingestion-key"}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '59'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:43 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - d853a72f-6b20-4204-bf68-dd4001657af2
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/96e191ce-8e35-437e-8a46-9f8243ca1394
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 38D49CEC12A143F1AF6BDDA61AAAE4E7 Ref B: SG2AA1070302052 Ref C: 2026-09-03T19:28:43Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic account list
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --location --user-email
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts?location=eastus&userEmail=example@example.com&api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472138","properties":{"accountId":"8472138","accountName":"8472138","organizationId":"bcceaeb3-78f5-45a3-a61a-1c7b8380844c","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472194","properties":{"accountId":"8472194","accountName":"8472194","organizationId":"f2886261-d821-47a6-859f-e7bede8d4919","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472068","properties":{"accountId":"8472068","accountName":"8472068","organizationId":"d3c5220b-00ab-4af6-80a0-2e62b004c57b","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472084","properties":{"accountId":"8472084","accountName":"8472084","organizationId":"ee53f379-ac73-4241-97b5-a20b7db4d6fb","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472092","properties":{"accountId":"8472092","accountName":"8472092","organizationId":"afe06038-987d-46d5-bb93-0c8b62858698","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472118","properties":{"accountId":"8472118","accountName":"8472118","organizationId":"680b421a-7793-45ff-8c5d-99d74e04b76f","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472128","properties":{"accountId":"8472128","accountName":"8472128","organizationId":"77cb2fa7-0383-4293-b8ec-a22fb37c062b","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472156","properties":{"accountId":"8472156","accountName":"8472156","organizationId":"b05c0c43-2165-4d45-b604-ca96f9ac42e8","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472146","properties":{"accountId":"8472146","accountName":"8472146","organizationId":"8ca81b91-f022-4784-8547-7749a0b17a4e","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472160","properties":{"accountId":"8472160","accountName":"8472160","organizationId":"362237ec-ae2e-4b9f-8538-882b9b259fda","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8472173","properties":{"accountId":"8472173","accountName":"8472173","organizationId":"8c1b9585-25c7-4bd2-96e2-d5f0976cc766","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8317127","properties":{"accountId":"8317127","accountName":"8317127","organizationId":"8d405725-e1aa-4c39-9e85-234e78705879","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8385730","properties":{"accountId":"8385730","accountName":"8385730","organizationId":"825f8662-b156-4a33-851f-3e7a8a4ad6ff","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8385853","properties":{"accountId":"8385853","accountName":"8385853","organizationId":"1b9ed469-1efc-4182-b2ce-c78cb2525817","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8444534","properties":{"accountId":"8444534","accountName":"8444534","organizationId":"9e0ddb5a-4a10-4327-a51a-1c0a1f6596f4","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8444552","properties":{"accountId":"8444552","accountName":"8444552","organizationId":"8eff13c8-afc9-4fc8-b935-9a7c51300c67","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8444624","properties":{"accountId":"8444624","accountName":"8444624","organizationId":"86555429-ccdc-4d05-a557-be56518906df","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8331081","properties":{"accountId":"8331081","accountName":"8331081","organizationId":"0e7452ec-22af-422b-ac96-dd2fddaf1e75","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8448317","properties":{"accountId":"8448317","accountName":"8448317","organizationId":"0a3d9c76-f32f-4212-bf6a-5e4ccec10ba4","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8448904","properties":{"accountId":"8448904","accountName":"8448904","organizationId":"b1413d33-efbd-432d-89be-8d182e1f98d1","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8448853","properties":{"accountId":"8448853","accountName":"8448853","organizationId":"0697739a-530d-4138-b877-5653c716ad1f","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8462931","properties":{"accountId":"8462931","accountName":"8462931","organizationId":"505e041b-1d5e-4f4d-aca7-a29ce0bd3da5","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8470423","properties":{"accountId":"8470423","accountName":"8470423","organizationId":"1585550d-2cfe-4a79-b7bc-4a417d1f2a67","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8470437","properties":{"accountId":"8470437","accountName":"8470437","organizationId":"98f7217a-10fe-49ed-8e18-e68475a735b9","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8470435","properties":{"accountId":"8470435","accountName":"8470435","organizationId":"9a1d3992-c213-46eb-8b6f-c8cc0bf08d10","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8470449","properties":{"accountId":"8470449","accountName":"8470449","organizationId":"b200b0d2-7a04-45a3-a744-c152750cbbcc","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8463922","properties":{"accountId":"8463922","accountName":"8463922","organizationId":"8952af7e-0be2-47cb-acbb-c3a73838f669","region":"eastus"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/accounts/8463908","properties":{"accountId":"8463908","accountName":"8463908","organizationId":"4359afae-edb0-48dd-bb5c-f4d826b18f2c","region":"eastus"}}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '6899'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:48 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 00fc7e5e-51f3-474e-a6a1-1ea86e984c49
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/southeastasia/687b6f89-2963-4046-afc0-1b755a52164b
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: E307802129D74199ABFA758183C360A9 Ref B: SG2AA1040513023 Ref C: 2026-09-03T19:28:45Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic organization list
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --location --user-email
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/NewRelic.Observability/organizations?location=eastus&userEmail=example@example.com&api-version=2026-06-01
+  response:
+    body:
+      string: '{"value":[]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '12'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:52 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 101e7a77-d9e8-43ba-b598-67b7b3fee849
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/southeastasia/295b8816-59ce-4023-b8d8-7aa70c0f60a0
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 6823B78981BF4B5FA5247E998D2441E3 Ref B: SG2AA1070302060 Ref C: 2026-09-03T19:28:49Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor monitored-subscription delete
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --resource-group --monitor-name --configuration-name --yes
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: DELETE
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/monitoredSubscriptions/default?api-version=2026-06-01
+  response:
+    body:
+      string: ''
+    headers:
+      cache-control:
+      - no-cache
+      date:
+      - Thu, 03 Sep 2026 19:28:55 GMT
+      expires:
+      - '-1'
+      mise-correlation-id:
+      - 1508ee78-e59d-4629-ab73-f5a442978f4b
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/ac7f6314-874e-480c-8da6-f8d2c2da5864
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-deletes:
+      - '199'
+      x-ms-ratelimit-remaining-subscription-global-deletes:
+      - '2999'
+      x-msedge-ref:
+      - 'Ref A: BC8D1A7ECC2246F28A48E5F0272B9CC2 Ref B: SG2AA1070303054 Ref C: 2026-09-03T19:28:54Z'
+    status:
+      code: 204
+      message: No Content
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor tag-rule delete
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --resource-group --monitor-name --name
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: DELETE
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor/tagRules/default?api-version=2026-06-01
+  response:
+    body:
+      string: ''
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '0'
+      date:
+      - Thu, 03 Sep 2026 19:28:56 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/36a7b315-09ff-46f8-b9e0-b28d33f59d40
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-deletes:
+      - '199'
+      x-ms-ratelimit-remaining-subscription-global-deletes:
+      - '2999'
+      x-msedge-ref:
+      - 'Ref A: 9AEA1ECDD1274174A2C487B9ED5142E0 Ref B: SG2AA1070306023 Ref C: 2026-09-03T19:28:56Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor delete
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --resource-group --monitor-name --user-email
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: DELETE
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor?userEmail=example@example.com&api-version=2026-06-01
+  response:
+    body:
+      string: 'null'
+    headers:
+      azure-asyncnotification:
+      - Enabled
+      azure-asyncoperation:
+      - https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240605393986676&c=MIIIJjCCBw6gAwIBAgIQKYrI_-G8focilGMVljTIzTANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBXQ1VTIENBIDAxMB4XDTI2MDgxMTE2NTU0MVoXDTI3MDIwNjIyNTU0MVowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDHXOnBSi89EFmYFHHz8YjTfsSi_rA52hWsPEfIKxyhGOIhG2O761Sp01X84Pl7Qh66Tjalm7gbOxt50vBo25s3yXMvvM-XHEIuIkpB_lLEPKLeU7cELvlXb2fddJRTEIrehzmmX3y9bZBXZ7sPfC3dVh-BZqoy4DhFruSEgypgs5ccLvFmZo_QMNjMEAy9HnEGP4pN1zz_owJcAMfxrb77LRgNioRD6DAgomJng45__m1bx6DuY7BwTn-1rcAk6IA3EKFMWnFJrUrcfxGqCtQyOu4H3IeyIJvAveQKIWNXlLW1j2rj9_FBXSjAf2x8Z2W_Uf6MSEwfwHY6OSj2OzgBAgMBAAGjggUkMIIFIDCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBQiVNiNFh29BGVv1rpUwKmj3ix-gDAfBgNVHSMEGDAWgBQU0jfg9tZ9ft2NurplqwSUJeCWHTCCAfsGA1UdHwSCAfIwggHuMHugeaB3hnVodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwfaB7oHmGd2h0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L3dlc3RjZW50cmFsdXMvY3Jscy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxLzUyL2N1cnJlbnQuY3JsMGygaqBohmZodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwgYGgf6B9hntodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwggIABggrBgEFBQcBAQSCAfIwggHuMH4GCCsGAQUFBzAChnJodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jYWNlcnRzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvY2VydC5jZXIwgYAGCCsGAQUFBzAChnRodHRwOi8vc2Vjb25kYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC93ZXN0Y2VudHJhbHVzL2NhY2VydHMvY2NtZXdlc3RjZW50cmFsdXNwa2kvY2NtZXdlc3RjZW50cmFsdXNpY2EwMS9jZXJ0LmNlcjBvBggrBgEFBQcwAoZjaHR0cDovL2NybC5taWNyb3NvZnQuY29tL3dlc3RjZW50cmFsdXMvY2FjZXJ0cy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxL2NlcnQuY2VyMHgGCCsGAQUFBzAChmxodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEwDQYJKoZIhvcNAQELBQADggEBACfL6ko2AI0X13NZIZ2IxRjP7slNZDlbiuLO5LrBhOgkqnJSG-Pw5KIk-UvFKLF68OMEap_FaihLps8lIqQ6kvqVwWDWVcWPIupCgb3dLBR_f2PfQQScJnTdbHfxgBaRtwJqnu0GZ-DkMcpb6yHcs5IocvlkFxyduqND0Rt0A0YPO02hzx6DJcHUxQfi3msdmfRAkv9MTTHSwQR3alqI2XOlKbjFG6zYusnGGB6tCrUCu9wmI8fIrGBGRE_o_rlSUU2q4kc9lRy3qNbIDi1TToijN2UANJTgK_VQ7T7XTkebugJrsOUXarvc0w9IqNUvO1ojxIFEHo9rJXpNKryiy34&s=VV-lPDhd665t7UFGdCct_KJMo8m_zPoooxdz_kUT0P2C7QsXJiGAazpNSl3xgcm9S2AGo25Sc4Gwsf8hvVqqpMz8xas92jKKjItLtjuj3fqlCMhG8MN5GdNwoA-yOIUpKHKFwdTNu4lKbCVGklmZFUWwnjjUK7nGl2z6Y5dTRfykQ7bdCVvhM6nOq7MT7DVcs1fYX1GHVniYAskCfZiXGJN7VbMHa2iIx9qILtzapeZPn2S668p5K2g_2xMGV0dgMnkx7YglYtZIRdhmmsdDlejm64lI9InLHOMCgr7aIxES3xwkRciCxsvocUgKCndQZ5nQ_4UkwgNx81GhjP4Rhw&h=Sb5EBqthHj5zJU4YUrGwTHqVIc6QPv3RbJtoztifSxQ
+      cache-control:
+      - no-cache
+      content-length:
+      - '4'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:28:59 GMT
+      etag:
+      - '"f7006633-0000-0100-0000-6a99ca7b0000"'
+      expires:
+      - '-1'
+      location:
+      - https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240605394142091&c=MIIIJjCCBw6gAwIBAgIQKYrI_-G8focilGMVljTIzTANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBXQ1VTIENBIDAxMB4XDTI2MDgxMTE2NTU0MVoXDTI3MDIwNjIyNTU0MVowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDHXOnBSi89EFmYFHHz8YjTfsSi_rA52hWsPEfIKxyhGOIhG2O761Sp01X84Pl7Qh66Tjalm7gbOxt50vBo25s3yXMvvM-XHEIuIkpB_lLEPKLeU7cELvlXb2fddJRTEIrehzmmX3y9bZBXZ7sPfC3dVh-BZqoy4DhFruSEgypgs5ccLvFmZo_QMNjMEAy9HnEGP4pN1zz_owJcAMfxrb77LRgNioRD6DAgomJng45__m1bx6DuY7BwTn-1rcAk6IA3EKFMWnFJrUrcfxGqCtQyOu4H3IeyIJvAveQKIWNXlLW1j2rj9_FBXSjAf2x8Z2W_Uf6MSEwfwHY6OSj2OzgBAgMBAAGjggUkMIIFIDCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBQiVNiNFh29BGVv1rpUwKmj3ix-gDAfBgNVHSMEGDAWgBQU0jfg9tZ9ft2NurplqwSUJeCWHTCCAfsGA1UdHwSCAfIwggHuMHugeaB3hnVodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwfaB7oHmGd2h0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L3dlc3RjZW50cmFsdXMvY3Jscy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxLzUyL2N1cnJlbnQuY3JsMGygaqBohmZodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwgYGgf6B9hntodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwggIABggrBgEFBQcBAQSCAfIwggHuMH4GCCsGAQUFBzAChnJodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jYWNlcnRzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvY2VydC5jZXIwgYAGCCsGAQUFBzAChnRodHRwOi8vc2Vjb25kYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC93ZXN0Y2VudHJhbHVzL2NhY2VydHMvY2NtZXdlc3RjZW50cmFsdXNwa2kvY2NtZXdlc3RjZW50cmFsdXNpY2EwMS9jZXJ0LmNlcjBvBggrBgEFBQcwAoZjaHR0cDovL2NybC5taWNyb3NvZnQuY29tL3dlc3RjZW50cmFsdXMvY2FjZXJ0cy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxL2NlcnQuY2VyMHgGCCsGAQUFBzAChmxodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEwDQYJKoZIhvcNAQELBQADggEBACfL6ko2AI0X13NZIZ2IxRjP7slNZDlbiuLO5LrBhOgkqnJSG-Pw5KIk-UvFKLF68OMEap_FaihLps8lIqQ6kvqVwWDWVcWPIupCgb3dLBR_f2PfQQScJnTdbHfxgBaRtwJqnu0GZ-DkMcpb6yHcs5IocvlkFxyduqND0Rt0A0YPO02hzx6DJcHUxQfi3msdmfRAkv9MTTHSwQR3alqI2XOlKbjFG6zYusnGGB6tCrUCu9wmI8fIrGBGRE_o_rlSUU2q4kc9lRy3qNbIDi1TToijN2UANJTgK_VQ7T7XTkebugJrsOUXarvc0w9IqNUvO1ojxIFEHo9rJXpNKryiy34&s=l66iG1EV5mAFp0Ffan1je7XT07w0fdeAByl44nCnt32qq7g1NcpG_9rL2gKENQ7KBG8AiCWfSgsbSkS4MkOAhg5esjHR0RLXKFg-q0QbGoFwsdecvOux6UCdUX7nVqEgZZZ1Ry04GSWmpR9G5ggROMnDlegpL85bYjoLf7YTcoktoui5aW_8UJS3tUPIAwWZZGTGo684uQBDRGxlb6FrNQWFgD_zfEWS6tsfqnJJWCqfAKhOgc4NNFJ3iIu2z-gqME5eLdav6mYIr4ZZtdn788faXirz0PU_6SYCoHoHpzqsxktKmdX0JmEcMIx9x_V-hp6j-enKwaLRCQYX_5l9GQ&h=R3l1a9bss_YA2K6saTuMlua7Ti3EEG4H3y0ThHH6UZk
+      mise-correlation-id:
+      - fa087da5-1b75-49c8-ba30-2900bfa9a482
+      pragma:
+      - no-cache
+      request-context:
+      - appId=cid-v1:99558bd9-e2af-4edd-b8b9-dfc879de6669
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=00000000-0000-0000-0000-000000000000,objectId=00000000-0000-0000-0000-000000000000/westus/842dfabe-4adc-4df5-b8d6-96fb8619686e
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-ms-ratelimit-remaining-subscription-deletes:
+      - '199'
+      x-ms-ratelimit-remaining-subscription-global-deletes:
+      - '2999'
+      x-ms-resource-provider-hint:
+      - noPolling
+      x-msedge-ref:
+      - 'Ref A: B6654F357B874A0C8F0E19C4345C7191 Ref B: SG2AA1040518054 Ref C: 2026-09-03T19:28:58Z'
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor delete
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --monitor-name --user-email
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240605393986676&c=MIIIJjCCBw6gAwIBAgIQKYrI_-G8focilGMVljTIzTANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBXQ1VTIENBIDAxMB4XDTI2MDgxMTE2NTU0MVoXDTI3MDIwNjIyNTU0MVowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDHXOnBSi89EFmYFHHz8YjTfsSi_rA52hWsPEfIKxyhGOIhG2O761Sp01X84Pl7Qh66Tjalm7gbOxt50vBo25s3yXMvvM-XHEIuIkpB_lLEPKLeU7cELvlXb2fddJRTEIrehzmmX3y9bZBXZ7sPfC3dVh-BZqoy4DhFruSEgypgs5ccLvFmZo_QMNjMEAy9HnEGP4pN1zz_owJcAMfxrb77LRgNioRD6DAgomJng45__m1bx6DuY7BwTn-1rcAk6IA3EKFMWnFJrUrcfxGqCtQyOu4H3IeyIJvAveQKIWNXlLW1j2rj9_FBXSjAf2x8Z2W_Uf6MSEwfwHY6OSj2OzgBAgMBAAGjggUkMIIFIDCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBQiVNiNFh29BGVv1rpUwKmj3ix-gDAfBgNVHSMEGDAWgBQU0jfg9tZ9ft2NurplqwSUJeCWHTCCAfsGA1UdHwSCAfIwggHuMHugeaB3hnVodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwfaB7oHmGd2h0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L3dlc3RjZW50cmFsdXMvY3Jscy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxLzUyL2N1cnJlbnQuY3JsMGygaqBohmZodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwgYGgf6B9hntodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwggIABggrBgEFBQcBAQSCAfIwggHuMH4GCCsGAQUFBzAChnJodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jYWNlcnRzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvY2VydC5jZXIwgYAGCCsGAQUFBzAChnRodHRwOi8vc2Vjb25kYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC93ZXN0Y2VudHJhbHVzL2NhY2VydHMvY2NtZXdlc3RjZW50cmFsdXNwa2kvY2NtZXdlc3RjZW50cmFsdXNpY2EwMS9jZXJ0LmNlcjBvBggrBgEFBQcwAoZjaHR0cDovL2NybC5taWNyb3NvZnQuY29tL3dlc3RjZW50cmFsdXMvY2FjZXJ0cy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxL2NlcnQuY2VyMHgGCCsGAQUFBzAChmxodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEwDQYJKoZIhvcNAQELBQADggEBACfL6ko2AI0X13NZIZ2IxRjP7slNZDlbiuLO5LrBhOgkqnJSG-Pw5KIk-UvFKLF68OMEap_FaihLps8lIqQ6kvqVwWDWVcWPIupCgb3dLBR_f2PfQQScJnTdbHfxgBaRtwJqnu0GZ-DkMcpb6yHcs5IocvlkFxyduqND0Rt0A0YPO02hzx6DJcHUxQfi3msdmfRAkv9MTTHSwQR3alqI2XOlKbjFG6zYusnGGB6tCrUCu9wmI8fIrGBGRE_o_rlSUU2q4kc9lRy3qNbIDi1TToijN2UANJTgK_VQ7T7XTkebugJrsOUXarvc0w9IqNUvO1ojxIFEHo9rJXpNKryiy34&s=VV-lPDhd665t7UFGdCct_KJMo8m_zPoooxdz_kUT0P2C7QsXJiGAazpNSl3xgcm9S2AGo25Sc4Gwsf8hvVqqpMz8xas92jKKjItLtjuj3fqlCMhG8MN5GdNwoA-yOIUpKHKFwdTNu4lKbCVGklmZFUWwnjjUK7nGl2z6Y5dTRfykQ7bdCVvhM6nOq7MT7DVcs1fYX1GHVniYAskCfZiXGJN7VbMHa2iIx9qILtzapeZPn2S668p5K2g_2xMGV0dgMnkx7YglYtZIRdhmmsdDlejm64lI9InLHOMCgr7aIxES3xwkRciCxsvocUgKCndQZ5nQ_4UkwgNx81GhjP4Rhw&h=Sb5EBqthHj5zJU4YUrGwTHqVIc6QPv3RbJtoztifSxQ
+  response:
+    body:
+      string: '{"id":"/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","name":"f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","resourceId":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","status":"Deleting","startTime":"2026-09-03T19:28:58.6162582Z"}'
+    headers:
+      azure-asyncnotification:
+      - Enabled
+      azure-asyncoperation:
+      - https://management.azure.com/providers/NewRelic.Observability/locations/eastus/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240605412381270&c=MIIHlDCCBnygAwIBAgIQbFnfFOz7A_VYWYwd_BJ05zANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBFVVMyIENBIDAxMB4XDTI2MDgxMzIzNDk1NFoXDTI3MDIwOTA1NDk1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhZUPWC_r-S0zyqqusEeSkNqqajuPdy1ZzcQlo4djteyJdwwWNTajAhE0_qUhb8ca-OR_1c9m4sOd9we--hSIuMLXjHhAT7t27MWD-8oa4ZCEMb-76qcQs9HLEUStp7e6RX7LNVjJjLZ8xvkLV7nYiiybkP4E4iYAPDjMhmeu2QH0W2eFB9lq1Nu_iInkGeBK678fHjt_rW6tVcyMHcYpEUVaRZapbCWsfZmBTvk5I7T47dB5_0cqsh13V7f5MEm_Wyn2BAj8lul85GhxL3p8H8jIQEiKqVXnOa_hC5s1xlIKolbh7OW0P33wjATfEXYHJJXUCvWbH92FTFyEJhJZVAgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBSGNhmUvF3CioxAORFLdcLt6G94fzAfBgNVHSMEGDAWgBT87D7bqnwfgh4FuKEG-UPnArMKuTCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L2Vhc3R1czIvY3Jscy9jY21lZWFzdHVzMnBraS9jY21lZWFzdHVzMmljYTAxLzY3L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21lZWFzdHVzMnBraS5lYXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZWVhc3R1czJpY2EwMS82Ny9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jYWNlcnRzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWVlYXN0dXMycGtpLmVhc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21lZWFzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQArBoYZle5U9KReq2R_QLQTC0HpQaitJkId8eDHwRk7WQsLp_JeTtDmTrwkpDAVevurHGj37cSwNzE6fwMZ2qw8TfQyzjACa4kSjTAUyMPumkRas3EHcbtAMTKK_mpum7pBbb0QwWcY3_Iny-txJ0TsAqTbQ9kbGaYBCKXsExLO49xq4Jea64MaxYnk5zhAQ37_kiZbqhegZRfmm0aPdOpq25_lquN-4M4jx_rPWzn1LsMWtiHDldsZf030tHhdS-l4r_WYo_yDs6hAuU6HGacLKshNbbszUNa7q23pSue4dO9tiYywAwnIXStZlJrPbJwnycF6bqWS3ooeTBYUo_A3&s=Z6embscV2pOob8t6g6QX9M0QmIzUVOrbn2H8w4qQPI8SFL8VNgoirtVCvNY3QPV2D6_wbtCDt59My7HG-faidWQ_Huyx1x5pEFPTRt8aibFgqKtdHLqtbF0JluhJ4TdZJ5WARtj5R4DVmEXDKc_vHgZWUGqQA07qJgxC8CaAGHMCZb7NqEbWWKRlTNtW6xC8KnzLEXzji0xLtWMLpDnMveO0Z_d1cYATI-kjtC0vifJdwv8WNX4JEqzRQ3Anq-TtLEVQzdySPaDF-Zet0nX0eqWaMc3PLjrDP-CMc1u-hQHtEXDVwyDzQRr9Ey_vQq6QSLfVsvayviKdyhfYFq3FEw&h=DAg6aGXIZB_yX6SrU7iKoGGp5Z5iHWwr_eKL1pcqLn8
+      cache-control:
+      - no-cache
+      content-length:
+      - '533'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:29:00 GMT
+      etag:
+      - '"3e00e579-0000-0100-0000-6a99ca7a0000"'
+      expires:
+      - '-1'
+      location:
+      - https://management.azure.com/providers/NewRelic.Observability/locations/eastus/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240605412537433&c=MIIHlDCCBnygAwIBAgIQbFnfFOz7A_VYWYwd_BJ05zANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBFVVMyIENBIDAxMB4XDTI2MDgxMzIzNDk1NFoXDTI3MDIwOTA1NDk1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhZUPWC_r-S0zyqqusEeSkNqqajuPdy1ZzcQlo4djteyJdwwWNTajAhE0_qUhb8ca-OR_1c9m4sOd9we--hSIuMLXjHhAT7t27MWD-8oa4ZCEMb-76qcQs9HLEUStp7e6RX7LNVjJjLZ8xvkLV7nYiiybkP4E4iYAPDjMhmeu2QH0W2eFB9lq1Nu_iInkGeBK678fHjt_rW6tVcyMHcYpEUVaRZapbCWsfZmBTvk5I7T47dB5_0cqsh13V7f5MEm_Wyn2BAj8lul85GhxL3p8H8jIQEiKqVXnOa_hC5s1xlIKolbh7OW0P33wjATfEXYHJJXUCvWbH92FTFyEJhJZVAgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBSGNhmUvF3CioxAORFLdcLt6G94fzAfBgNVHSMEGDAWgBT87D7bqnwfgh4FuKEG-UPnArMKuTCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L2Vhc3R1czIvY3Jscy9jY21lZWFzdHVzMnBraS9jY21lZWFzdHVzMmljYTAxLzY3L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vZWFzdHVzMi9jcmxzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvNjcvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21lZWFzdHVzMnBraS5lYXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZWVhc3R1czJpY2EwMS82Ny9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvZWFzdHVzMi9jYWNlcnRzL2NjbWVlYXN0dXMycGtpL2NjbWVlYXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9lYXN0dXMyL2NhY2VydHMvY2NtZWVhc3R1czJwa2kvY2NtZWVhc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWVlYXN0dXMycGtpLmVhc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21lZWFzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQArBoYZle5U9KReq2R_QLQTC0HpQaitJkId8eDHwRk7WQsLp_JeTtDmTrwkpDAVevurHGj37cSwNzE6fwMZ2qw8TfQyzjACa4kSjTAUyMPumkRas3EHcbtAMTKK_mpum7pBbb0QwWcY3_Iny-txJ0TsAqTbQ9kbGaYBCKXsExLO49xq4Jea64MaxYnk5zhAQ37_kiZbqhegZRfmm0aPdOpq25_lquN-4M4jx_rPWzn1LsMWtiHDldsZf030tHhdS-l4r_WYo_yDs6hAuU6HGacLKshNbbszUNa7q23pSue4dO9tiYywAwnIXStZlJrPbJwnycF6bqWS3ooeTBYUo_A3&s=PKuIamaR6_X1u6M2_AcpTZXCT4pxRu-mBBZdjZxCcOUyTVM0kuG9kft7jsPaPa3VrxLRlIoOuxXG0R47ugJRPy-DOy_g7hx9yCYotkVhP4_K42oEDi4NpyelvxA-q63OL7ZRPS5hjI1xOtMvikDrWh4-Cx_oyCjIYCYqaA0Fl1Pc3dAURB-YSkVD5bPJB0LyTfg9ZKjkobI4a2UYuPF-HQV1sBkNfbHllJelBzMn_wKJg0i8zN_m24YjQhxcJeJUVmfZiW5G1ZCBhy2IyWNG4woCTaRnVXEE3NrO-QgUhgBKkJWYp7_NhCyw4gnIbuAEbLaML9mJO7EqIZrOYaEwrw&h=WsPC_yMdPsBPK0WLwVdsnOukJ7QKXBDM2jaTIex4M-o
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - ''
+      x-ms-resource-provider-hint:
+      - noPolling
+      x-msedge-ref:
+      - 'Ref A: 237F2B107C294E71A9C7AD24C977D9A4 Ref B: SG2AA1070302062 Ref C: 2026-09-03T19:29:00Z'
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - new-relic monitor delete
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --resource-group --monitor-name --user-email
+      User-Agent:
+      - AZURECLI/2.90.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58?api-version=2026-06-01&t=639240605393986676&c=MIIIJjCCBw6gAwIBAgIQKYrI_-G8focilGMVljTIzTANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBXQ1VTIENBIDAxMB4XDTI2MDgxMTE2NTU0MVoXDTI3MDIwNjIyNTU0MVowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDHXOnBSi89EFmYFHHz8YjTfsSi_rA52hWsPEfIKxyhGOIhG2O761Sp01X84Pl7Qh66Tjalm7gbOxt50vBo25s3yXMvvM-XHEIuIkpB_lLEPKLeU7cELvlXb2fddJRTEIrehzmmX3y9bZBXZ7sPfC3dVh-BZqoy4DhFruSEgypgs5ccLvFmZo_QMNjMEAy9HnEGP4pN1zz_owJcAMfxrb77LRgNioRD6DAgomJng45__m1bx6DuY7BwTn-1rcAk6IA3EKFMWnFJrUrcfxGqCtQyOu4H3IeyIJvAveQKIWNXlLW1j2rj9_FBXSjAf2x8Z2W_Uf6MSEwfwHY6OSj2OzgBAgMBAAGjggUkMIIFIDCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBQiVNiNFh29BGVv1rpUwKmj3ix-gDAfBgNVHSMEGDAWgBQU0jfg9tZ9ft2NurplqwSUJeCWHTCCAfsGA1UdHwSCAfIwggHuMHugeaB3hnVodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwfaB7oHmGd2h0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L3dlc3RjZW50cmFsdXMvY3Jscy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxLzUyL2N1cnJlbnQuY3JsMGygaqBohmZodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vd2VzdGNlbnRyYWx1cy9jcmxzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwgYGgf6B9hntodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvNTIvY3VycmVudC5jcmwwggIABggrBgEFBQcBAQSCAfIwggHuMH4GCCsGAQUFBzAChnJodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdGNlbnRyYWx1cy9jYWNlcnRzL2NjbWV3ZXN0Y2VudHJhbHVzcGtpL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEvY2VydC5jZXIwgYAGCCsGAQUFBzAChnRodHRwOi8vc2Vjb25kYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC93ZXN0Y2VudHJhbHVzL2NhY2VydHMvY2NtZXdlc3RjZW50cmFsdXNwa2kvY2NtZXdlc3RjZW50cmFsdXNpY2EwMS9jZXJ0LmNlcjBvBggrBgEFBQcwAoZjaHR0cDovL2NybC5taWNyb3NvZnQuY29tL3dlc3RjZW50cmFsdXMvY2FjZXJ0cy9jY21ld2VzdGNlbnRyYWx1c3BraS9jY21ld2VzdGNlbnRyYWx1c2ljYTAxL2NlcnQuY2VyMHgGCCsGAQUFBzAChmxodHRwOi8vY2NtZXdlc3RjZW50cmFsdXNwa2kud2VzdGNlbnRyYWx1cy5wa2kuY29yZS53aW5kb3dzLm5ldC9jZXJ0aWZpY2F0ZUF1dGhvcml0aWVzL2NjbWV3ZXN0Y2VudHJhbHVzaWNhMDEwDQYJKoZIhvcNAQELBQADggEBACfL6ko2AI0X13NZIZ2IxRjP7slNZDlbiuLO5LrBhOgkqnJSG-Pw5KIk-UvFKLF68OMEap_FaihLps8lIqQ6kvqVwWDWVcWPIupCgb3dLBR_f2PfQQScJnTdbHfxgBaRtwJqnu0GZ-DkMcpb6yHcs5IocvlkFxyduqND0Rt0A0YPO02hzx6DJcHUxQfi3msdmfRAkv9MTTHSwQR3alqI2XOlKbjFG6zYusnGGB6tCrUCu9wmI8fIrGBGRE_o_rlSUU2q4kc9lRy3qNbIDi1TToijN2UANJTgK_VQ7T7XTkebugJrsOUXarvc0w9IqNUvO1ojxIFEHo9rJXpNKryiy34&s=VV-lPDhd665t7UFGdCct_KJMo8m_zPoooxdz_kUT0P2C7QsXJiGAazpNSl3xgcm9S2AGo25Sc4Gwsf8hvVqqpMz8xas92jKKjItLtjuj3fqlCMhG8MN5GdNwoA-yOIUpKHKFwdTNu4lKbCVGklmZFUWwnjjUK7nGl2z6Y5dTRfykQ7bdCVvhM6nOq7MT7DVcs1fYX1GHVniYAskCfZiXGJN7VbMHa2iIx9qILtzapeZPn2S668p5K2g_2xMGV0dgMnkx7YglYtZIRdhmmsdDlejm64lI9InLHOMCgr7aIxES3xwkRciCxsvocUgKCndQZ5nQ_4UkwgNx81GhjP4Rhw&h=Sb5EBqthHj5zJU4YUrGwTHqVIc6QPv3RbJtoztifSxQ
+  response:
+    body:
+      string: '{"id":"/providers/NewRelic.Observability/locations/EASTUS/operationStatuses/f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","name":"f6d1f647-067b-43c2-b5a2-5f83001fad91*DA7A5B9B9621A9FBF85CC945AAF0119FA2854DF10ADDF5B2AF5546F6580D6F58","resourceId":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_new_relic_monitor000001/providers/NewRelic.Observability/monitors/test-new-relic-monitor","status":"Succeeded","startTime":"2026-09-03T19:28:58.6162582Z","endTime":"2026-09-03T19:29:07.3116975Z","error":{},"properties":null}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '604'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 03 Sep 2026 19:29:32 GMT
+      etag:
+      - '"3e00e879-0000-0100-0000-6a99ca830000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - ''
+      x-msedge-ref:
+      - 'Ref A: CA7F63DED991442EB0F5CF2B8AF19554 Ref B: SG2AA1070306034 Ref C: 2026-09-03T19:29:32Z'
+    status:
+      code: 200
+      message: OK
+version: 1
