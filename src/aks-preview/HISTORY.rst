@@ -11,6 +11,7 @@ To release a new version, please select a new version number (usually plus 1 to 
 
 Pending
 +++++++
+* Allow longer node pool names; the service enforces the actual limit.
 
 22.0.0b13
 +++++++++
