@@ -55,6 +55,10 @@ Pending
 * `az aks create`: Add `--enable-continuous-control-plane-and-addon-monitor` to enable continuous control plane and addon monitor.
 * `az aks update`: Add `--enable-continuous-control-plane-and-addon-monitor` and `--disable-continuous-control-plane-and-addon-monitor` to manage continuous control plane and addon monitor.
 
+19.0.0b25
++++++++
+* `az aks create/update`: Add `--control-plane-scaling-size` parameter to configure control plane scaling profile with available sizes 'H2', 'H4', and 'H8'.
+
 19.0.0b24
 +++++++
 * Vendor new SDK and bump API version to 2026-01-02-preview.
