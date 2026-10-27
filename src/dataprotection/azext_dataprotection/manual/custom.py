@@ -1054,6 +1054,18 @@ def dataprotection_backup_instance_initialize_restoreconfig(datasource_type, exc
             "resource_selectors": resource_selectors
         }
 
+    if datasource_type == "AzureCosmosDB":
+        if not resource_identifiers:
+            raise RequiredArgumentMissingError('--resource-identifiers is required for AzureCosmosDB restore configuration. '
+                                               'Provide the list of database or database/container names to restore.')
+        return {
+            "object_type": "GenericRestoreDatasourceCriteria",
+            "resource_selectors": {
+                "object_type": "ResourceListSelectionCriteria",
+                "resource_identifiers": resource_identifiers
+            }
+        }
+
     if datasource_type != "AzureKubernetesService":
         raise InvalidArgumentValueError("This command is currently not supported for datasource types other than AzureKubernetesService")
 

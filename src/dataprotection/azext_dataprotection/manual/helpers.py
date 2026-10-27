@@ -7,6 +7,7 @@
 # pylint: disable=unnecessary-list-index-lookup
 # pylint: disable=unidiomatic-typecheck
 # pylint: disable=possibly-used-before-assignment
+# pylint: disable=chained-comparison
 
 import uuid
 import re
@@ -581,6 +582,16 @@ def get_resource_criteria_list(datasource_type, restore_configuration, container
         else:
             raise RequiredArgumentMissingError(
                 "Please input parameter restore_configuration for AzureElasticSAN restore.\n"
+                "Use command initialize-restoreconfig for creating the RestoreConfiguration")
+        restore_criteria_list.append(restore_criteria)
+        return restore_criteria_list
+
+    if datasource_type == "AzureCosmosDB":
+        if restore_configuration is not None:
+            restore_criteria = restore_configuration
+        else:
+            raise RequiredArgumentMissingError(
+                "Please input parameter restore_configuration for AzureCosmosDB restore.\n"
                 "Use command initialize-restoreconfig for creating the RestoreConfiguration")
         restore_criteria_list.append(restore_criteria)
         return restore_criteria_list
