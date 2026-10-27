@@ -15,7 +15,7 @@ Pending
 19.0.0b15
 +++++++
 * Fix `NoneType` error when performing operations on automatic clusters that have hosted system components enabled.
-
+* `az aks bastion`: Correctly configure `$KUBECONFIG` values for tunneling traffic into a private AKS cluster.
 
 19.0.0b14
 +++++++
