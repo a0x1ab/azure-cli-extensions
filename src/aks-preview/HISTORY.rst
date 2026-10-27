@@ -12,6 +12,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 
+21.0.0b16
++++++++++
+* `az aks update`: Add parameters `--enable-hosted-system`, `--system-node-subnet-id` and `--node-subnet-id` to support converting an existing Automatic cluster to a Managed System Pool cluster, optionally with BYO VNet.
+
 21.0.0b15
 +++++++++
 * `az aks create` and `az aks update`: Add `--opentelemetry-metrics-port-grpc` and `--opentelemetry-logs-traces-port-grpc` (preview) to configure the gRPC ports for OpenTelemetry metrics and logs/traces collection, in addition to the existing HTTP/protobuf ports.
