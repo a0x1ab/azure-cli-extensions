@@ -12,6 +12,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 
+19.0.0b25
++++++++
+* `az aks create/update`: Add `--outbound-type managedNATGatewayV2` support using Azure NAT Gateway Standard V2 SKU with IPv6, user-provided IPs, and IP prefixes.
+
 19.0.0b24
 +++++++
 * Vendor new SDK and bump API version to 2026-01-02-preview.
