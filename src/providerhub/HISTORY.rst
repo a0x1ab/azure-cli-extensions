@@ -1,0 +1,28 @@
+.. :changelog:
+
+Release History
+===============
+
+1.0.0b3
+++++++
+* Update to API version 2026-02-01-preview.
+* Add support for additional properties to authorized applications, custom rollout, default rollout, manifest, provider registration, and resource type registration operations.
+
+0.2.0
+++++++
+* Support commands for
+    `az providerhub notification-registration`
+    `az providerhub operation`
+    `az providerhub sku`
+* Enable creation of nested resource types and adding extension categories.
+* Refine and update initial release commands.
+
+* [BREAKING CHANGE] `az providerhub default-rollout create`:
+    `--row2-wait-duration` moved to `--row2 wait-duration`
+    `--skip-regions` moved to `--canary skip-regions`
+* [BREAKING CHANGE]: `--provider-type` type changed from enum to string.
+* [BREAKING CHANGE]: `--routing-type` type changed from enum to string.
+
+0.1.0
+++++++
+* Initial release.

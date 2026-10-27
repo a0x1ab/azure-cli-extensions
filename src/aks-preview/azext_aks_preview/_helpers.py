@@ -1,0 +1,628 @@
+# --------------------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License. See License.txt in the project root for license information.
+# --------------------------------------------------------------------------------------------
+from collections.abc import MutableMapping
+
+import errno
+import os
+import platform
+import re
+import stat
+import sys
+import tempfile
+from typing import Dict, List, Mapping, TypeVar
+
+import yaml
+from azext_aks_preview._client_factory import (
+    get_mc_snapshots_client,
+    get_nodepool_snapshots_client,
+)
+
+from azext_aks_preview._consts import (
+    ADDONS,
+    CONST_MONITORING_ADDON_NAME,
+    CONST_K8S_EXTENSION_NAME,
+)
+
+from azure.cli.command_modules.acs._helpers import map_azure_error_to_cli_error
+from azure.cli.command_modules.acs._validators import extract_comma_separated_string
+from azure.cli.core.azclierror import (
+    FileOperationError,
+    InvalidArgumentValueError,
+    ResourceNotFoundError,
+    UnknownError,
+    ValidationError,
+)
+from azure.core.exceptions import AzureError
+from knack.log import get_logger
+from knack.prompting import NoTTYException, prompt_y_n
+from knack.util import CLIError
+
+logger = get_logger(__name__)
+
+# type variables
+ManagedCluster = TypeVar("ManagedCluster")
+allowed_extensions = ["microsoft.dataprotection.kubernetes"]
+
+# Resource identifiers and command controls do not describe FlexNodes capabilities.
+_FLEXNODES_COMMON_PARAMETERS = {
+    "resource_group_name",
+    "cluster_name",
+    "nodepool_name",
+    "machine_name",
+    "vm_set_type",
+    "no_wait",
+    "aks_custom_headers",
+    "yes",
+    "if_match",
+    "if_none_match",
+}
+
+
+def get_user_supplied_argument_options(cmd) -> Dict[str, str]:
+    """Return explicitly supplied command arguments and their canonical option names."""
+    safe_params = set(cmd.cli_ctx.data.get("safe_params") or [])
+    supplied_options = {}
+    for argument_name, argument in getattr(cmd, "arguments", {}).items():
+        options = [option for option in (getattr(argument, "options_list", None) or [])
+                   if isinstance(option, str)]
+        if any(option in safe_params for option in options):
+            supplied_options[argument_name] = next(
+                (option for option in options if option.startswith("--")), options[0]
+            )
+    return supplied_options
+
+
+def validate_flexnodes_options(
+    cmd,
+    command_parameters: Mapping[str, object],
+    supported_parameters: Mapping[str, str],
+) -> None:
+    """Reject explicitly supplied options outside an operation's FlexNodes capabilities."""
+    supplied_options = get_user_supplied_argument_options(cmd)
+    allowed_parameters = _FLEXNODES_COMMON_PARAMETERS | set(supported_parameters)
+    unsupported_options = sorted({
+        option for name, option in supplied_options.items()
+        if name in command_parameters and name not in allowed_parameters
+    })
+    if unsupported_options:
+        raise InvalidArgumentValueError(
+            "The following options are not supported for FlexNodes pools: {}. "
+            "Supported FlexNodes pool options are: {}.".format(
+                ", ".join(unsupported_options), ", ".join(supported_parameters.values())
+            )
+        )
+
+
+def _reset_mapping_fields(model, preserved_fields):
+    model.clear()
+    for field, value in preserved_fields.items():
+        model[field] = value
+    for attr in list(getattr(model, "__dict__", {})):
+        if not attr.startswith("_"):
+            setattr(model, attr, preserved_fields.get(attr))
+
+
+def reset_agentpool_to_name_and_mode(agentpool, mode):
+    """Remove all agent pool fields except the resource name and pool mode."""
+    if isinstance(agentpool, MutableMapping):
+        name = agentpool["name"]
+        properties = agentpool.get("properties")
+        if isinstance(properties, MutableMapping):
+            _reset_mapping_fields(properties, {"mode": mode})
+            preserved_fields = {"name": name, "properties": properties}
+        else:
+            preserved_fields = {"name": name, "mode": mode}
+        _reset_mapping_fields(agentpool, preserved_fields)
+        return agentpool
+
+    properties = getattr(agentpool, "properties", None)
+    if isinstance(properties, MutableMapping):
+        properties.clear()
+        properties["mode"] = mode
+        preserved_attributes = ("name", "properties")
+    else:
+        agentpool.mode = mode
+        preserved_attributes = ("name", "mode")
+    for attr in list(vars(agentpool)):
+        if (
+            attr not in preserved_attributes
+            and not attr.startswith("_")
+            and hasattr(agentpool, attr)
+        ):
+            setattr(agentpool, attr, None)
+    return agentpool
+
+
+def which(binary):
+    """Resolve an explicit executable path or search absolute directories in PATH."""
+    is_windows = platform.system() == 'Windows'
+    binaries = [binary]
+    if is_windows and not os.path.splitext(binary)[1]:
+        extensions = os.getenv('PATHEXT') or '.COM;.EXE;.BAT;.CMD'
+        binaries = [binary + extension for extension in extensions.split(';') if extension]
+
+    explicit_path = bool(os.path.dirname(binary))
+    if explicit_path:
+        parts = ['']
+    else:
+        parts = os.getenv('PATH', '').split(';' if is_windows else ':')
+
+    for part in parts:
+        if is_windows:
+            part = part.strip('"')
+        # Empty, relative and drive-relative entries depend on the working directory.
+        if not explicit_path and (
+            not os.path.isabs(part) or (is_windows and not os.path.splitdrive(part)[0])
+        ):
+            continue
+        for executable in binaries:
+            bin_path = os.path.abspath(os.path.join(part, executable))
+            if os.path.isfile(bin_path) and os.access(bin_path, os.X_OK):
+                return bin_path
+
+    return None
+
+
+def print_or_merge_credentials(path, kubeconfig, overwrite_existing, context_name):
+    """Merge an unencrypted kubeconfig into the file at the specified path, or print it to
+    stdout if the path is "-".
+    """
+    # Special case for printing to stdout
+    if path == "-":
+        print(kubeconfig)
+        return
+
+    # ensure that at least an empty ~/.kube/config exists
+    directory = os.path.dirname(path)
+    if directory and not os.path.exists(directory):
+        try:
+            os.makedirs(directory)
+        except OSError as ex:
+            if ex.errno != errno.EEXIST:
+                raise
+    if not os.path.exists(path):
+        with os.fdopen(os.open(path, os.O_CREAT | os.O_WRONLY, 0o600), 'wt'):
+            pass
+
+    # merge the new kubeconfig into the existing one
+    fd, temp_path = tempfile.mkstemp()
+    additional_file = os.fdopen(fd, 'w+t')
+    try:
+        additional_file.write(kubeconfig)
+        additional_file.flush()
+        _merge_kubernetes_configurations(
+            path, temp_path, overwrite_existing, context_name)
+    except yaml.YAMLError as ex:
+        logger.warning(
+            'Failed to merge credentials to kube config file: %s', ex)
+    finally:
+        additional_file.close()
+        os.remove(temp_path)
+
+
+def uses_kubelogin_devicecode(kubeconfig: str) -> bool:
+    try:
+        config = yaml.safe_load(kubeconfig)
+
+        # Check if users section exists and has at least one user
+        if not config or not config.get('users') or len(config['users']) == 0:
+            return False
+
+        first_user = config['users'][0]
+        user_info = first_user.get('user', {})
+        exec_info = user_info.get('exec', {})
+
+        # Check if command is kubelogin
+        command = exec_info.get('command', '')
+        if 'kubelogin' not in command:
+            return False
+
+        # Check if args contains --login and devicecode
+        args = exec_info.get('args', [])
+        # Join args into a string for easier pattern matching
+        args_str = ' '.join(args)
+        # Check for '--login devicecode' or '-l devicecode'
+        if '--login devicecode' in args_str or '-l devicecode' in args_str:
+            return True
+        return False
+    except (yaml.YAMLError, KeyError, TypeError, AttributeError) as e:
+        # If there's any error parsing the kubeconfig, assume it doesn't require kubelogin
+        logger.debug("Error parsing kubeconfig: %s", str(e))
+        return False
+
+
+def _merge_kubernetes_configurations(existing_file, addition_file, replace, context_name=None):
+    existing = _load_kubernetes_configuration(existing_file)
+    addition = _load_kubernetes_configuration(addition_file)
+
+    if context_name is not None:
+        addition['contexts'][0]['name'] = context_name
+        addition['contexts'][0]['context']['cluster'] = context_name
+        addition['clusters'][0]['name'] = context_name
+        addition['current-context'] = context_name
+
+    # rename the admin context so it doesn't overwrite the user context
+    for ctx in addition.get('contexts', []):
+        try:
+            if ctx['context']['user'].startswith('clusterAdmin'):
+                admin_name = ctx['name'] + '-admin'
+                addition['current-context'] = ctx['name'] = admin_name
+                break
+        except (KeyError, TypeError):
+            continue
+
+    if addition is None:
+        raise CLIError(f'failed to load additional configuration from {addition_file}')
+
+    if existing is None:
+        existing = addition
+    else:
+        _handle_merge(existing, addition, 'clusters', replace)
+        _handle_merge(existing, addition, 'users', replace)
+        _handle_merge(existing, addition, 'contexts', replace)
+        existing['current-context'] = addition['current-context']
+
+    # check that ~/.kube/config is only read- and writable by its owner
+    if platform.system() != "Windows" and not os.path.islink(existing_file):
+        # pylint: disable=consider-using-f-string
+        existing_file_perms = "{:o}".format(stat.S_IMODE(os.lstat(existing_file).st_mode))
+        if not existing_file_perms.endswith("600"):
+            logger.warning(
+                '%s has permissions "%s".\nIt should be readable and writable only by its owner.',
+                existing_file,
+                existing_file_perms,
+            )
+
+    with open(existing_file, 'w+', encoding="utf-8") as stream:
+        yaml.safe_dump(existing, stream, default_flow_style=False)
+
+    current_context = addition.get('current-context', 'UNKNOWN')
+    msg = f'Merged "{current_context}" as current context in {existing_file}'
+    logger.warning(msg)
+
+
+def _load_kubernetes_configuration(filename):
+    try:
+        with open(filename, encoding="utf-8") as stream:
+            return yaml.safe_load(stream)
+    except (IOError, OSError) as ex:
+        if getattr(ex, 'errno', 0) == errno.ENOENT:
+            raise CLIError(f'{filename} does not exist') from ex
+        raise
+    except (yaml.parser.ParserError, UnicodeDecodeError) as ex:
+        raise CLIError(f'Error parsing {filename} ({str(ex)})') from ex
+
+
+def _handle_merge(existing, addition, key, replace):
+    if not addition.get(key, False):
+        return
+    if key not in existing:
+        raise FileOperationError(
+            f"No such key '{key}' in existing config, please confirm whether it is a valid config file. "
+            "May back up this config file, delete it and retry the command."
+        )
+    if not existing.get(key):
+        existing[key] = addition[key]
+        return
+
+    for i in addition[key]:
+        for j in existing[key]:
+            if not i.get('name', False) or not j.get('name', False):
+                continue
+            if i['name'] == j['name']:
+                if replace or i == j:
+                    existing[key].remove(j)
+                else:
+                    msg = 'A different object named {} already exists in your kubeconfig file.\nOverwrite?'
+                    overwrite = False
+                    try:
+                        overwrite = prompt_y_n(msg.format(i['name']))
+                    except NoTTYException:
+                        pass
+                    if overwrite:
+                        existing[key].remove(j)
+                    else:
+                        msg = 'A different object named {} already exists in {} in your kubeconfig file.'
+                        raise CLIError(msg.format(i['name'], key))
+        existing[key].append(i)
+
+
+def _fuzzy_match(query, arr):
+    """
+    will compare all elements in @arr against the @query to see if they are similar
+
+    similar implies one is a substring of the other or the two words are 1 change apart
+
+    Ex. bird and bord are similar
+    Ex. bird and birdwaj are similar
+    Ex. bird and bead are not similar
+    """
+    def similar_word(a, b):
+        a_len = len(a)
+        b_len = len(b)
+        if a_len > b_len:  # @a should always be the shorter string
+            return similar_word(b, a)  # pylint: disable=arguments-out-of-order
+        if a in b:
+            return True
+        if b_len - a_len > 1:
+            return False
+        i = 0
+        j = 0
+        found_difference = False
+        while i < a_len:
+            if a[i] != b[j]:
+                if found_difference:
+                    return False
+                found_difference = True
+                if a_len == b_len:
+                    i += 1
+                j += 1
+            else:
+                i += 1
+                j += 1
+        return True
+
+    matches = []
+
+    for word in arr:
+        if similar_word(query, word):
+            matches.append(word)
+
+    return matches
+
+
+def get_nodepool_snapshot_by_snapshot_id(cli_ctx, snapshot_id):
+    _re_snapshot_resource_id = re.compile(
+        r"/subscriptions/(.*?)/resourcegroups/(.*?)/providers/microsoft.containerservice/snapshots/(.*)",
+        flags=re.IGNORECASE,
+    )
+    snapshot_id = snapshot_id.lower()
+    match = _re_snapshot_resource_id.search(snapshot_id)
+    if match:
+        subscription_id = match.group(1)
+        resource_group_name = match.group(2)
+        snapshot_name = match.group(3)
+        return get_nodepool_snapshot(cli_ctx, subscription_id, resource_group_name, snapshot_name)
+    raise InvalidArgumentValueError(f"Cannot parse snapshot name from provided resource id '{snapshot_id}'.")
+
+
+def get_nodepool_snapshot(cli_ctx, subscription_id, resource_group_name, snapshot_name):
+    snapshot_client = get_nodepool_snapshots_client(cli_ctx, subscription_id=subscription_id)
+    try:
+        snapshot = snapshot_client.get(resource_group_name, snapshot_name)
+    # track 2 sdk raise exception from azure.core.exceptions
+    except AzureError as ex:
+        if "not found" in ex.message:
+            # pylint: disable=raise-missing-from
+            raise ResourceNotFoundError(f"Snapshot '{snapshot_name}' not found.")
+        raise map_azure_error_to_cli_error(ex) from ex
+    return snapshot
+
+
+def get_cluster_snapshot_by_snapshot_id(cli_ctx, snapshot_id):
+    _re_mc_snapshot_resource_id = re.compile(
+        r"/subscriptions/(.*?)/resourcegroups/(.*?)/providers/microsoft.containerservice/managedclustersnapshots/(.*)",
+        flags=re.IGNORECASE,
+    )
+    snapshot_id = snapshot_id.lower()
+    match = _re_mc_snapshot_resource_id.search(snapshot_id)
+    if match:
+        subscription_id = match.group(1)
+        resource_group_name = match.group(2)
+        snapshot_name = match.group(3)
+        return get_cluster_snapshot(cli_ctx, subscription_id, resource_group_name, snapshot_name)
+    raise InvalidArgumentValueError(
+        f"Cannot parse snapshot name from provided resource id {snapshot_id}."
+    )
+
+
+def get_cluster_snapshot(cli_ctx, subscription_id, resource_group_name, snapshot_name):
+    snapshot_client = get_mc_snapshots_client(cli_ctx, subscription_id)
+    try:
+        snapshot = snapshot_client.get(resource_group_name, snapshot_name)
+    # track 2 sdk raise exception from azure.core.exceptions
+    except AzureError as ex:
+        if "not found" in ex.message:
+            # pylint: disable=raise-missing-from
+            raise ResourceNotFoundError(f"Managed cluster snapshot '{snapshot_name}' not found.")
+        raise map_azure_error_to_cli_error(ex) from ex
+    return snapshot
+
+
+def check_is_private_link_cluster(mc: ManagedCluster) -> bool:
+    """Check `mc` object to determine whether private link cluster is enabled.
+    :return: bool
+    """
+    return check_is_private_cluster(mc) and not check_is_apiserver_vnet_integration_cluster(mc)
+
+
+def check_is_private_cluster(mc: ManagedCluster) -> bool:
+    """Check `mc` object to determine whether private cluster is enabled.
+    :return: bool
+    """
+    if mc and mc.api_server_access_profile:
+        return bool(mc.api_server_access_profile.enable_private_cluster)
+    return False
+
+
+def check_is_apiserver_vnet_integration_cluster(mc: ManagedCluster) -> bool:
+    """Check `mc` object to determine whether apiserver vnet integration is enabled.
+    :return: bool
+    """
+    if mc and mc.api_server_access_profile:
+        return bool(mc.api_server_access_profile.enable_vnet_integration)
+    return False
+
+
+def setup_common_safeguards_profile(level, version, excludedNamespaces, mc: ManagedCluster, models) -> ManagedCluster:
+    if (level is not None or version is not None or excludedNamespaces is not None) and mc.safeguards_profile is None:
+        mc.safeguards_profile = models.SafeguardsProfile(
+            level=level,
+            version=version
+        )
+    # replace values with provided values
+    if excludedNamespaces is not None:
+        mc.safeguards_profile.excluded_namespaces = extract_comma_separated_string(
+            excludedNamespaces, enable_strip=True, keep_none=True, default_value=[])
+
+    return mc
+
+
+def process_message_for_run_command(message):
+    result = message.split("\n")
+    if result[-2] != "[stderr]":
+        raise CLIError("Error: " + result[-2])
+
+    for line in result[2:len(result) - 2]:
+        print(line)
+
+
+def check_is_azure_cli_core_editable_installed():
+    try:
+        editable = os.getenv("AZURE_CLI_CORE_EDITABLE", "false").lower() == "true"
+        if editable:
+            return True
+        for path_item in sys.path:
+            egg_link = os.path.join(path_item, 'azure-cli-core.egg-link')
+            if os.path.isfile(egg_link):
+                os.environ["AZURE_CLI_CORE_EDITABLE"] = "true"
+                return True
+    except Exception as ex:  # pylint: disable=broad-except
+        logger.debug("failed to check if azure-cli-core is installed as editable: %s", ex)
+    return False
+
+
+def get_monitoring_addon_key(addon_profiles, monitoring_addon_name):
+    """Return the canonical key for the monitoring addon, normalizing non-standard casing.
+
+    The API response may return the monitoring addon key in any casing (e.g.
+    "omsagent", "omsAgent", "oMSaGent").  This helper performs a
+    case-insensitive lookup and, when a non-standard key is found, re-keys
+    addon_profiles in-place so that subsequent code always uses the canonical
+    monitoring_addon_name (lowercase) form.
+    """
+    if addon_profiles is None:
+        return monitoring_addon_name
+    if monitoring_addon_name in addon_profiles:
+        return monitoring_addon_name
+    target_lower = monitoring_addon_name.lower()
+    for key in list(addon_profiles):
+        if key.lower() == target_lower:
+            addon_profiles[monitoring_addon_name] = addon_profiles.pop(key)
+            return monitoring_addon_name
+    return monitoring_addon_name
+
+
+def check_is_monitoring_addon_enabled(addons, instance):
+    is_monitoring_addon_enabled = False
+    is_monitoring_addon = False
+    try:
+        addon_args = addons.split(',')
+        for addon_arg in addon_args:
+            if addon_arg in ADDONS:
+                addon = ADDONS[addon_arg]
+                if addon == CONST_MONITORING_ADDON_NAME:
+                    is_monitoring_addon = True
+                    break
+        addon_profiles = instance.addon_profiles or {}
+        monitoring_addon_key = get_monitoring_addon_key(addon_profiles, CONST_MONITORING_ADDON_NAME)
+        is_monitoring_addon_enabled = (
+            is_monitoring_addon
+            and monitoring_addon_key in addon_profiles
+            and addon_profiles[monitoring_addon_key].enabled
+        )
+    except Exception as ex:  # pylint: disable=broad-except
+        logger.debug("failed to check monitoring addon enabled: %s", ex)
+    return is_monitoring_addon_enabled
+
+
+def get_k8s_extension_module(module_name):
+    try:
+        # adding the installed extension in the path
+        from azure.cli.core.extension.operations import add_extension_to_path
+        add_extension_to_path(CONST_K8S_EXTENSION_NAME)
+        # import the extension module
+        from importlib import import_module
+        azext_custom = import_module(module_name)
+        return azext_custom
+    except ImportError:
+        raise UnknownError(  # pylint: disable=raise-missing-from
+            "Please add CLI extension `k8s-extension` for performing Azure Extension operations.\n"
+            "Run command `az extension add --name k8s-extension`"
+        )
+
+
+# TODO: Need to should source the set of allowed extensions from the extensions API at some point
+def _check_if_extension_type_is_in_allow_list(extension_type_name):
+    return extension_type_name.lower() in allowed_extensions
+
+
+def raise_validation_error_if_extension_type_not_in_allow_list(extension_type_name):
+    if not _check_if_extension_type_is_in_allow_list(extension_type_name):
+        raise ValidationError(f"Operation failed as extension type {extension_type_name.lower()} " +
+                              f"is not in allowed list of extension types {allowed_extensions}")
+
+
+def filter_hard_taints(node_initialization_taints: List[str]) -> List[str]:
+    filtered_taints = []
+    for taint in node_initialization_taints:
+        if not taint:
+            continue
+        # Parse the taint to get the effect
+        taint_parts = taint.split(":")
+        if len(taint_parts) == 2:
+            effect = taint_parts[-1].strip()
+            # Keep the taint if it has a soft effect (PreferNoSchedule)
+            # or if it's a CriticalAddonsOnly taint - AKS allows those on system pools
+            if effect.lower() == "prefernoschedule" or taint.lower().startswith("criticaladdonsonly"):
+                filtered_taints.append(taint)
+            else:
+                logger.warning('Taint %s with hard effect will be skipped from system pool', taint)
+        else:
+            # If the taint doesn't have a recognizable format, keep it, if it's incorrect - AKS-RP will return an error
+            filtered_taints.append(taint)
+    return filtered_taints
+
+
+def get_all_extension_types_in_allow_list(result):
+    output = []
+    for obj in result:
+        if _check_if_extension_type_is_in_allow_list(obj.name.lower()):
+            output.append(obj)
+    return output
+
+
+def get_all_extensions_in_allow_list(result):
+    output = []
+    for obj in result:
+        if _check_if_extension_type_is_in_allow_list(obj.extension_type.lower()):
+            output.append(obj)
+    return output
+
+
+def get_extension_in_allow_list(result):
+    if _check_if_extension_type_is_in_allow_list(result.extension_type.lower()):
+        return result
+    return None
+
+
+def process_dns_overrides(overrides_dict, target_dict, build_override_func):
+    """Helper function to safely process DNS overrides with null checks.
+
+    Processes DNS override dictionaries from LocalDNS configuration,
+    filtering out null values and applying the build function to valid entries.
+
+    :param overrides_dict: Dictionary containing DNS overrides (can be None)
+    :param target_dict: Target dictionary to populate with processed overrides
+    :param build_override_func: Function to build override objects from dict values
+    """
+    if not isinstance(overrides_dict, dict):
+        raise InvalidArgumentValueError(
+            f"Expected a dictionary for DNS overrides, but got {type(overrides_dict).__name__}: {overrides_dict}"
+        )
+    if overrides_dict is not None:
+        for key, value in overrides_dict.items():
+            if value is not None:
+                target_dict[key] = build_override_func(value)

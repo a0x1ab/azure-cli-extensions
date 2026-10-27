@@ -1,0 +1,24 @@
+.. :changelog:
+
+Release History
+===============
+1.0.2
++++++
+* Migrate code from Azure SDK to AAZ based commands for compute operations (VM, extensions, disks)
+
+1.0.1
++++++
+* Remove DATA_COSMOS_TABLE and DATA_STORAGE references
+
+1.0.0
++++++
+* Remove msrestazure dependency
+
+0.3.0
++++++
+* Add support for setting proxy and debug configuration of the VM Extension for SAP
+
+0.2.2
++++++
+* Fix for https://github.com/Azure/azure-cli-extensions/issues/3019
+* Switched from VM PUT to VM PATCH REST call when adding a VM identity 
