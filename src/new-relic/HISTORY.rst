@@ -1,0 +1,31 @@
+.. :changelog:
+
+Release History
+===============
+
+1.2.0
+++++++
+* Updated New Relic commands to API version 2026-06-01.
+* Added commands to activate, link, and retrieve SaaS resources and refresh ingestion keys.
+* Added monitored-subscription listing and updated PATCH operations
+* Restored legacy parameter aliases (e.g. `-n`/`--name`/`--monitor-name`, `-g`, `-l`, `--rule-set-name`) that were inadvertently dropped during regeneration, to preserve backward compatibility with previously published commands.
+
+1.1.0
+++++++
+* Updated default value of identity argument in monitor create command.
+
+1.0.2
+++++++
+* Updated CLI command descriptions.
+
+1.0.1
+++++++
+* Update module documentation.
+
+1.0.0b1
+++++++
+* Initial release.
+
+1.0.0
+++++++
+* Updating capabilities as per https://github.com/Azure/azure-rest-api-specs/blob/main/specification/newrelic/resource-manager/NewRelic.Observability/stable/2024-01-01/NewRelic.json.
