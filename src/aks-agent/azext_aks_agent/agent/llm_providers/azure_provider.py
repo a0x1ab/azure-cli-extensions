@@ -4,14 +4,22 @@
 # --------------------------------------------------------------------------------------------
 
 
-import requests
 from typing import Tuple
-from urllib.parse import urljoin, urlencode
+from urllib.parse import urlencode, urljoin
+
+import requests
+
 from .base import LLMProvider, is_valid_url, non_empty
 
 
 class AzureProvider(LLMProvider):
-    name = "azure"
+    @property
+    def readable_name(self) -> str:
+        return "Azure Open AI"
+
+    @property
+    def model_route(self) -> str:
+        return "azure"
 
     @property
     def parameter_schema(self):
@@ -19,7 +27,7 @@ class AzureProvider(LLMProvider):
             "MODEL_NAME": {
                 "secret": False,
                 "default": None,
-                "hint": "should be consistent with your deployed name, e.g., gpt-4.1",
+                "hint": "should be consistent with your deployed name, e.g., gpt-5",
                 "validator": non_empty
             },
             "AZURE_API_KEY": {
@@ -31,7 +39,7 @@ class AzureProvider(LLMProvider):
             "AZURE_API_BASE": {
                 "secret": False,
                 "default": None,
-                "hint": "https://{your-custom-endpoint}.openai.azure.com/",
+                "hint": "https://{azure-openai-service-name}.openai.azure.com/",
                 "validator": is_valid_url
             },
             "AZURE_API_VERSION": {
@@ -52,12 +60,16 @@ class AzureProvider(LLMProvider):
             return False, "Missing required Azure parameters.", "retry_input"
 
         # REST API reference: https://learn.microsoft.com/en-us/azure/ai-foundry/openai/api-version-lifecycle?tabs=rest
-        url = urljoin(api_base, "openai/responses")
+        url = urljoin(api_base, f"openai/deployments/{model_name}/chat/completions")
+
         query = {"api-version": api_version}
         full_url = f"{url}?{urlencode(query)}"
-        headers = {"api-key": api_key, "Content-Type": "application/json"}
-        payload = {"model": model_name,
-                   "input": "ping", "max_output_tokens": 16}
+        headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+        payload = {
+            "model": model_name,
+            "messages": [{"role": "user", "content": "ping"}],
+            "max_tokens": 16
+        }
 
         try:
             resp = requests.post(full_url, headers=headers,
