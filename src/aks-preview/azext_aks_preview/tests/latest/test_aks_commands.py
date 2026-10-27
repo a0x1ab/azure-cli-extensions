@@ -13406,7 +13406,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.diskCsiDriver.enabled", False),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
                 self.check("storageProfile.fileCsiDriver.enabled", False),
                 self.check("storageProfile.snapshotController.enabled", False),
             ],
@@ -13421,7 +13420,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.diskCsiDriver.enabled", False),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
                 self.check("storageProfile.fileCsiDriver.enabled", False),
                 self.check("storageProfile.snapshotController.enabled", False),
             ],
@@ -13436,7 +13434,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.diskCsiDriver.enabled", True),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
                 self.check("storageProfile.fileCsiDriver.enabled", True),
                 self.check("storageProfile.snapshotController.enabled", True),
             ],
@@ -13451,7 +13448,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.diskCsiDriver.enabled", True),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
                 self.check("storageProfile.fileCsiDriver.enabled", True),
                 self.check("storageProfile.snapshotController.enabled", True),
             ],
@@ -13466,7 +13462,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.diskCsiDriver.enabled", False),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
                 self.check("storageProfile.fileCsiDriver.enabled", False),
                 self.check("storageProfile.snapshotController.enabled", False),
             ],
@@ -13508,7 +13503,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.diskCsiDriver.enabled", True),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
                 self.check("storageProfile.fileCsiDriver.enabled", True),
                 self.check("storageProfile.snapshotController.enabled", True),
             ],
@@ -13523,7 +13517,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.diskCsiDriver.enabled", True),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
                 self.check("storageProfile.fileCsiDriver.enabled", True),
                 self.check("storageProfile.snapshotController.enabled", True),
             ],
@@ -13675,108 +13668,6 @@ class AzureKubernetesServiceScenarioTest(ScenarioTest):
             checks=[
                 self.check("provisioningState", "Succeeded"),
                 self.check("storageProfile.blobCsiDriver.enabled", True),
-            ],
-        )
-
-        # delete
-        cmd = (
-            "aks delete --resource-group={resource_group} --name={name} --yes --no-wait"
-        )
-        self.cmd(
-            cmd,
-            checks=[
-                self.is_empty(),
-            ],
-        )
-
-    @AllowLargeResponse()
-    @AKSCustomResourceGroupPreparer(
-        random_name_length=17,
-        name_prefix="clitest",
-        location="centraluseuap",
-    )
-    def test_aks_create_with_csi_driver_v2(
-        self, resource_group, resource_group_location
-    ):
-        aks_name = self.create_random_name("cliakstest", 16)
-        self.kwargs.update(
-            {
-                "resource_group": resource_group,
-                "name": aks_name,
-                "ssh_key_value": self.generate_ssh_keys(),
-            }
-        )
-
-        create_cmd = 'aks create --resource-group={resource_group} --name={name} --ssh-key-value={ssh_key_value} -o json \
-                        --disk-driver-version "v2" \
-                        --disable-file-driver \
-                        --disable-snapshot-controller'
-        self.cmd(
-            create_cmd,
-            checks=[
-                self.check("provisioningState", "Succeeded"),
-                self.check("storageProfile.diskCsiDriver.enabled", True),
-                self.check("storageProfile.diskCsiDriver.version", "v2"),
-                self.check("storageProfile.fileCsiDriver.enabled", False),
-                self.check("storageProfile.snapshotController.enabled", False),
-            ],
-        )
-
-        # delete
-        cmd = (
-            "aks delete --resource-group={resource_group} --name={name} --yes --no-wait"
-        )
-        self.cmd(
-            cmd,
-            checks=[
-                self.is_empty(),
-            ],
-        )
-
-    @AllowLargeResponse()
-    @AKSCustomResourceGroupPreparer(
-        random_name_length=17,
-        name_prefix="clitest",
-        location="centraluseuap",
-    )
-    def test_aks_create_and_update_csi_driver_to_v2(
-        self, resource_group, resource_group_location
-    ):
-        aks_name = self.create_random_name("cliakstest", 16)
-        self.kwargs.update(
-            {
-                "resource_group": resource_group,
-                "name": aks_name,
-                "ssh_key_value": self.generate_ssh_keys(),
-            }
-        )
-
-        create_cmd = "aks create --resource-group={resource_group} --name={name} --ssh-key-value={ssh_key_value} -o json \
-                        --disable-disk-driver \
-                        --disable-file-driver \
-                        --disable-snapshot-controller"
-        self.cmd(
-            create_cmd,
-            checks=[
-                self.check("provisioningState", "Succeeded"),
-                self.check("storageProfile.diskCsiDriver.enabled", False),
-                self.check("storageProfile.diskCsiDriver.version", "v1"),
-                self.check("storageProfile.fileCsiDriver.enabled", False),
-                self.check("storageProfile.snapshotController.enabled", False),
-            ],
-        )
-
-        enable_cmd = 'aks update --resource-group={resource_group} --name={name} -o json \
-                        --enable-disk-driver \
-                        --disk-driver-version "v2"'
-        self.cmd(
-            enable_cmd,
-            checks=[
-                self.check("provisioningState", "Succeeded"),
-                self.check("storageProfile.diskCsiDriver.enabled", True),
-                self.check("storageProfile.diskCsiDriver.version", "v2"),
-                self.check("storageProfile.fileCsiDriver.enabled", False),
-                self.check("storageProfile.snapshotController.enabled", False),
             ],
         )
 

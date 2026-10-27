@@ -13,6 +13,10 @@ Pending
 +++++++
 * `az aks nodepool update`: Support `--node-vm-size` to resize VM size of an existing VMSS-based agent pool (preview). Requires AFEC registration `Microsoft.ContainerService/AgentPoolVMSSResize`.
 
+20.0.0b4
++++++++
+* `az aks create/update`: Remove `--disk-driver-version` option for AzureDisk CSI Driver.
+
 20.0.0b3
 ++++++
 * Vendor new SDK and bump API version to 2026-02-02-preview.
