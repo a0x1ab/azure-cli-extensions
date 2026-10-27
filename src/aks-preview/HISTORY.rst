@@ -11,6 +11,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 
 Pending
 +++++++
+
+19.0.0b10
++++++++
+* Fix `NoneType` error when performing operations on automatic clusters that have hosted system components enabled.
 * Vendor new SDK and bump API version to 2025-08-02-preview.
 
 19.0.0b9
