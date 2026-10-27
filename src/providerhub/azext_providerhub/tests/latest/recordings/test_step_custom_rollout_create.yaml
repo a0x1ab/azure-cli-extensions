@@ -1,0 +1,57 @@
+interactions:
+- request:
+    body: '{"properties": {"specification": {"canary": {"regions": ["EastUS2EUAP",
+      "centraluseuap"]}}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - providerhub custom-rollout create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '92'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --provider-namespace --rollout-name --canary
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.5 (Windows-11-10.0.26100-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.ProviderHub/providerRegistrations/Private.VPTest/customRollouts/canaryTesting01?api-version=2026-02-01-preview
+  response:
+    body:
+      string: '{"properties":{"provisioningState":"Succeeded","specification":{"canary":{"regions":["EASTUS2EUAP","CENTRALUSEUAP"]},"releaseScopes":[],"refreshSubscriptionRegistration":false,"skipReleaseScopeValidation":false},"status":{"completedRegions":["EASTUS2EUAP","CENTRALUSEUAP"],"completedRegionsInfo":[{"region":"EASTUS2EUAP","manifestAppliedAt":"2026-09-16T22:43:18.4166438Z","previousCommitId":"104e4f1274c010ed740601e8574c111063accc79","appliedCommitId":"104e4f1274c010ed740601e8574c111063accc79"},{"region":"CENTRALUSEUAP","manifestAppliedAt":"2026-09-16T22:43:18.4024066Z","previousCommitId":"104e4f1274c010ed740601e8574c111063accc79","appliedCommitId":"104e4f1274c010ed740601e8574c111063accc79"}],"failedOrSkippedRegions":{}}},"id":"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.ProviderHub/providerRegistrations/Private.VPTest/customRollouts/canaryTesting01","type":"Microsoft.ProviderHub/providerRegistrations/customRollouts","name":"canaryTesting01","systemData":{"createdBy":"test@example.com","createdByType":"User","createdAt":"2026-09-16T22:42:57.7270735Z","lastModifiedBy":"test@example.com","lastModifiedByType":"User","lastModifiedAt":"2026-09-16T22:42:57.7270735Z"}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '1204'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Wed, 16 Sep 2026 22:43:20 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=a8b084de-bd0c-4bcd-a642-71b9016ddd0a/southcentralus/55e69513-44d2-4eae-a490-617b2b22056f
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '12000'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '800'
+      x-msedge-ref:
+      - 'Ref A: 66DC182203764CAC86718319DDF0DDD0 Ref B: SN4AA2022305021 Ref C: 2026-09-16T22:42:57Z'
+    status:
+      code: 200
+      message: OK
+version: 1
