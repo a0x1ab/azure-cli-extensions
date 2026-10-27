@@ -1422,6 +1422,9 @@ class AgentPoolNetworkProfile(_Model):
     :ivar application_security_groups: The IDs of the application security groups which agent pool
      will associate when created.
     :vartype application_security_groups: list[str]
+    :ivar node_public_ip_prefix_ids: The public IP prefix IDs which VM nodes should use IPs from.
+     At most one IPv4 and one IPv6 prefix may be specified for dual-stack node public IPs.
+    :vartype node_public_ip_prefix_ids: list[str]
     """
 
     node_public_ip_tags: Optional[list["_models.IPTag"]] = rest_field(
@@ -1436,6 +1439,11 @@ class AgentPoolNetworkProfile(_Model):
         name="applicationSecurityGroups", visibility=["read", "create", "update", "delete", "query"]
     )
     """The IDs of the application security groups which agent pool will associate when created."""
+    node_public_ip_prefix_ids: Optional[list[str]] = rest_field(
+        name="nodePublicIPPrefixIDs", visibility=["read", "create", "update", "delete", "query"]
+    )
+    """The public IP prefix IDs which VM nodes should use IPs from. At most one IPv4 and one IPv6
+    prefix may be specified for dual-stack node public IPs."""
 
     @overload
     def __init__(
@@ -1444,6 +1452,7 @@ class AgentPoolNetworkProfile(_Model):
         node_public_ip_tags: Optional[list["_models.IPTag"]] = None,
         allowed_host_ports: Optional[list["_models.PortRange"]] = None,
         application_security_groups: Optional[list[str]] = None,
+        node_public_ip_prefix_ids: Optional[list[str]] = None,
     ) -> None: ...
 
     @overload
