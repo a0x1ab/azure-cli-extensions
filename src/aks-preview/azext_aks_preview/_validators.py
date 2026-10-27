@@ -1144,3 +1144,13 @@ def validate_azure_monitor_logs_enable_disable(namespace):
             "Cannot specify both '--enable-azure-monitor-logs' and '--disable-azure-monitor-logs'. "
             "Use either '--enable-azure-monitor-logs' or '--disable-azure-monitor-logs'."
         )
+
+
+def validate_nat_gateway_managed_outbound_ipv6_count(namespace):
+    """validate NAT gateway profile managed outbound IPv6 count"""
+    if namespace.nat_gateway_managed_outbound_ipv6_count is not None:
+        if (namespace.nat_gateway_managed_outbound_ipv6_count < 1 or
+                namespace.nat_gateway_managed_outbound_ipv6_count > 16):
+            raise InvalidArgumentValueError(
+                "--nat-gateway-managed-outbound-ipv6-count must be in the range [1,16]"
+            )
