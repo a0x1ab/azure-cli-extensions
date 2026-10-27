@@ -1,0 +1,14 @@
+# --------------------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License. See License.txt in the project root for license information.
+# --------------------------------------------------------------------------------------------
+
+
+def _compute_client_factory(cli_ctx):
+    from azure.cli.core.commands.client_factory import get_mgmt_service_client
+    from .vendored_sdks.azure_mgmt_compute._compute_management_client import ComputeManagementClient
+    return get_mgmt_service_client(cli_ctx, ComputeManagementClient)
+
+
+def cf_galleries(cli_ctx, _):
+    return _compute_client_factory(cli_ctx).galleries
