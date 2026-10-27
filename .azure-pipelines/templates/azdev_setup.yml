@@ -1,0 +1,24 @@
+parameters:
+  - name: CLIRepoPath
+    type: string
+    default: '../azure-cli'
+  - name: CLIExtensionRepoPath
+    type: string
+    default: './'
+steps:
+  - bash: |
+      set -ev
+      python -m venv env
+      chmod +x env/bin/activate
+      source ./env/bin/activate
+      git clone -q --single-branch -b dev https://github.com/Azure/azure-cli.git ../azure-cli
+      python -m pip install -U pip
+      pip install --upgrade "git+https://github.com/Azure/azure-cli-dev-tools.git@bb196e370ef0c0c8fcb01ab2e73bf2db7b5821a2#egg=azdev"
+      azdev --version
+      azdev setup -c $CLI_REPO_PATH -r $CLI_EXT_REPO_PATH --debug
+      pip list -v
+      az --version
+    displayName: 'azdev setup'
+    env:
+      CLI_REPO_PATH: ${{ parameters.CLIRepoPath }}
+      CLI_EXT_REPO_PATH: ${{ parameters.CLIExtensionRepoPath }}
