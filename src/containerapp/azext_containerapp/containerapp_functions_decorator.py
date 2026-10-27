@@ -16,6 +16,7 @@ from ._client_factory import handle_raw_exception
 from ._validators import validate_basic_arguments, validate_revision_and_get_name, validate_functionapp_kind
 from ._transformers import process_app_insights_response
 from ._clients import ContainerAppPreviewClient
+from ._utils import get_min_replicas_from_revision
 
 logger = get_logger(__name__)
 
@@ -72,7 +73,7 @@ class ContainerAppFunctionsDecorator(BaseResource):
         )
 
         # Validate revision and get the appropriate revision name
-        revision_name = validate_revision_and_get_name(
+        revision_name, _ = validate_revision_and_get_name(
             cmd=self.cmd,
             resource_group_name=resource_group_name,
             container_app_name=name,
@@ -185,14 +186,17 @@ class ContainerAppFunctionInvocationsDecorator(ContainerAppFunctionsDecorator):
         )
 
         revision_name = self.get_argument_revision_name()
-        revision_name = validate_revision_and_get_name(
+        revision_name, active_revision_mode = validate_revision_and_get_name(
             cmd=self.cmd,
             resource_group_name=self.get_argument_resource_group_name(),
             container_app_name=self.get_argument_container_app_name(),
             provided_revision_name=revision_name
         )
+
         # Update the revision name with the validated value
         self.set_argument_revision_name(revision_name)
+        # Store active revision mode for use in query building
+        self.active_revision_mode = active_revision_mode
         self.validate_function_name_requirement()
 
     def _get_app_insights_id(self, resource_group_name, container_app_name, revision_name):
@@ -267,15 +271,24 @@ class ContainerAppFunctionInvocationsDecorator(ContainerAppFunctionsDecorator):
             # Fetch the app insights resource app id
             app_id = self._get_app_insights_id(resource_group_name, container_app_name, revision_name)
 
-            # Use application insights query to get function invocations summary
-            invocation_summary_query = (
-                f"requests | extend functionNameFromCustomDimension = tostring(customDimensions['faas.name']) "
-                f"| where timestamp >= ago({timespan}) "
-                f"| where cloud_RoleName =~ '{container_app_name}' "
-                f"| where cloud_RoleInstance contains '{revision_name}' "
-                f"| where operation_Name =~ '{function_name}' or functionNameFromCustomDimension =~ '{function_name}' "
-                f"| summarize SuccessCount = coalesce(countif(success == true), 0), ErrorCount = coalesce(countif(success == false), 0)"
-            )
+            # Build query based on active revision mode
+            if self.active_revision_mode.lower() == "single":
+                invocation_summary_query = (
+                    f"requests | extend functionNameFromCustomDimension = tostring(customDimensions['faas.name']) "
+                    f"| where timestamp >= ago({timespan}) "
+                    f"| where cloud_RoleName =~ '{container_app_name}' "
+                    f"| where operation_Name =~ '{function_name}' or functionNameFromCustomDimension =~ '{function_name}' "
+                    f"| summarize SuccessCount = coalesce(countif(success == true), 0), ErrorCount = coalesce(countif(success == false), 0)"
+                )
+            else:
+                invocation_summary_query = (
+                    f"requests | extend functionNameFromCustomDimension = tostring(customDimensions['faas.name']) "
+                    f"| where timestamp >= ago({timespan}) "
+                    f"| where cloud_RoleName =~ '{container_app_name}' "
+                    f"| where cloud_RoleInstance contains '{revision_name}' "
+                    f"| where operation_Name =~ '{function_name}' or functionNameFromCustomDimension =~ '{function_name}' "
+                    f"| summarize SuccessCount = coalesce(countif(success == true), 0), ErrorCount = coalesce(countif(success == false), 0)"
+                )
 
             result = self._execute_app_insights_query(app_id, invocation_summary_query, "getLast30DaySummary")
 
@@ -299,18 +312,30 @@ class ContainerAppFunctionInvocationsDecorator(ContainerAppFunctionsDecorator):
             # Fetch the app insights resource app id
             app_id = self._get_app_insights_id(resource_group_name, container_app_name, revision_name)
 
-            # Use application insights query to get function invocations traces
-            invocation_traces_query = (
-                f"requests | extend functionNameFromCustomDimension = tostring(customDimensions['faas.name']) "
-                f"| project timestamp, id, operation_Name, success, resultCode, duration, operation_Id, functionNameFromCustomDimension, "
-                f"cloud_RoleName, cloud_RoleInstance, invocationId=coalesce(tostring(customDimensions['InvocationId']), tostring(customDimensions['faas.invocation_id'])) "
-                f"| where timestamp > ago({timespan}) "
-                f"| where cloud_RoleName =~ '{container_app_name}' "
-                f"| where cloud_RoleInstance contains '{revision_name}' "
-                f"| where operation_Name =~ '{function_name}' or functionNameFromCustomDimension =~ '{function_name}' "
-                f"| order by timestamp desc | take {limit} "
-                f"| project timestamp, success, resultCode, durationInMilliSeconds=duration, invocationId, operationId=operation_Id, operationName=operation_Name, functionNameFromCustomDimension "
-            )
+            # Build query based on active revision mode
+            if self.active_revision_mode.lower() == "single":
+                invocation_traces_query = (
+                    f"requests | extend functionNameFromCustomDimension = tostring(customDimensions['faas.name']) "
+                    f"| project timestamp, id, operation_Name, success, resultCode, duration, operation_Id, functionNameFromCustomDimension, "
+                    f"cloud_RoleName, cloud_RoleInstance, invocationId=coalesce(tostring(customDimensions['InvocationId']), tostring(customDimensions['faas.invocation_id'])) "
+                    f"| where timestamp > ago({timespan}) "
+                    f"| where cloud_RoleName =~ '{container_app_name}' "
+                    f"| where operation_Name =~ '{function_name}' or functionNameFromCustomDimension =~ '{function_name}' "
+                    f"| order by timestamp desc | take {limit} "
+                    f"| project timestamp, success, resultCode, durationInMilliSeconds=duration, invocationId, operationId=operation_Id, operationName=operation_Name, functionNameFromCustomDimension "
+                )
+            else:
+                invocation_traces_query = (
+                    f"requests | extend functionNameFromCustomDimension = tostring(customDimensions['faas.name']) "
+                    f"| project timestamp, id, operation_Name, success, resultCode, duration, operation_Id, functionNameFromCustomDimension, "
+                    f"cloud_RoleName, cloud_RoleInstance, invocationId=coalesce(tostring(customDimensions['InvocationId']), tostring(customDimensions['faas.invocation_id'])) "
+                    f"| where timestamp > ago({timespan}) "
+                    f"| where cloud_RoleName =~ '{container_app_name}' "
+                    f"| where cloud_RoleInstance contains '{revision_name}' "
+                    f"| where operation_Name =~ '{function_name}' or functionNameFromCustomDimension =~ '{function_name}' "
+                    f"| order by timestamp desc | take {limit} "
+                    f"| project timestamp, success, resultCode, durationInMilliSeconds=duration, invocationId, operationId=operation_Id, operationName=operation_Name, functionNameFromCustomDimension "
+                )
 
             result = self._execute_app_insights_query(app_id, invocation_traces_query, "getInvocationTraces")
 
