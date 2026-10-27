@@ -3028,7 +3028,9 @@ class AKSPreviewManagedClusterCreateDecorator(AKSManagedClusterCreateDecorator):
                         )
                     )
                 else:
-                    acns.security.transit_encryption.type = acns_transit_encryption_type
+                    acns.security.transit_encryption = self.models.AdvancedNetworkingSecurityTransitEncryption(
+                        type=acns_transit_encryption_type
+                    )
             network_profile.advanced_networking = acns
         return mc
 
@@ -4127,7 +4129,9 @@ class AKSPreviewManagedClusterUpdateDecorator(AKSManagedClusterUpdateDecorator):
                         )
                     )
                 else:
-                    acns.security.transit_encryption.type = acns_transit_encryption_type
+                    acns.security.transit_encryption = self.models.AdvancedNetworkingSecurityTransitEncryption(
+                        type=acns_transit_encryption_type
+                    )
             mc.network_profile.advanced_networking = acns
         return mc
 
