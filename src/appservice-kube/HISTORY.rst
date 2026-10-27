@@ -2,6 +2,10 @@
 
 Release History
 ===============
+1.0.0b1
+++++++
+* Remove unused compute SDK client factory and completers
+
 0.1.11
 ++++++
 * Remove msrestazure dependency
