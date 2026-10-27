@@ -11,6 +11,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 
 Pending
 
+19.0.0b11
++++++++
+* `az aks update`: Set CMK property "enabled" to false and remove other CMK properties when enabling PMK on a CMK-disabled cluster
+
 19.0.0b10
 +++++++
 * Vendor new SDK and bump API version to 2025-08-02-preview.
@@ -32,7 +36,7 @@ Pending
 * `az aks create`: Add new parameter `--enable-container-network-logs` to enable container network logs feature for the cluster and deprecate `--enable-retina-flow-logs`.
 * `az aks update`: Add new parameter `--enable-container-network-logs` and `--disable-container-network-logs` to enable/disable container network logs feature for the cluster and deprecate `--enable-retina-flow-logs` and `--disable-retina-flow-logs`.
 * Support `entraid` for parameter `--ssh-access` to support EntraID feature.
-* `az aks update`: Set CMK property "enabled" to false and remove other CMK properties when "--disable-azure-keyvault-kms" is specified
+* `az aks update`: Set CMK property "enabled" to false and remove other CMK properties when disabling CMK on a PMK-enabled cluster
 
 19.0.0b6
 +++++++
