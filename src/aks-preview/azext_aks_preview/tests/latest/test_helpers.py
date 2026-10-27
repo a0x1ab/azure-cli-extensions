@@ -1,0 +1,583 @@
+# --------------------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License. See License.txt in the project root for license information.
+# --------------------------------------------------------------------------------------------
+
+import ntpath
+import os
+import tempfile
+import unittest
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+
+from azext_aks_preview._helpers import (
+    _fuzzy_match,
+    check_is_private_link_cluster,
+    get_cluster_snapshot,
+    get_cluster_snapshot_by_snapshot_id,
+    get_monitoring_addon_key,
+    get_nodepool_snapshot,
+    get_nodepool_snapshot_by_snapshot_id,
+    process_message_for_run_command,
+    filter_hard_taints,
+    reset_agentpool_to_name_and_mode,
+    validate_flexnodes_options,
+    which,
+)
+from azext_aks_preview.__init__ import register_aks_preview_resource_type
+from azext_aks_preview._client_factory import CUSTOM_MGMT_AKS_PREVIEW
+from azext_aks_preview.azurecontainerstorage._helpers import (
+    get_container_storage_extension_installed,
+)
+from azext_aks_preview.managed_cluster_decorator import (
+    AKSPreviewManagedClusterModels,
+)
+from azure.cli.core.azclierror import (
+    BadRequestError,
+    InvalidArgumentValueError,
+    ResourceNotFoundError,
+    CLIError,
+)
+from azure.core.exceptions import AzureError, HttpResponseError
+from azext_aks_preview.tests.latest.mocks import MockCLI, MockCmd
+
+
+class TestWhich(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.directory = directory.name
+        self.tools = os.path.join(self.directory, "installed tools")
+        self.working_directory = os.path.join(self.directory, "working")
+        os.mkdir(self.tools)
+        os.mkdir(self.working_directory)
+        self.binary = "test-tool.exe" if os.name == "nt" else "test-tool"
+        self.installed_binary = self._make_executable(self.tools)
+        self.local_binary = self._make_executable(self.working_directory)
+        old_cwd = os.getcwd()
+        os.chdir(self.working_directory)
+        self.addCleanup(os.chdir, old_cwd)
+
+    def _make_executable(self, directory):
+        path = os.path.join(directory, self.binary)
+        with open(path, "w"):
+            pass
+        os.chmod(path, 0o700)
+        return path
+
+    def test_selects_absolute_path_installation_not_working_directory(self):
+        with patch.dict(os.environ, {"PATH": self.tools}):
+            self.assertEqual(which(self.binary), self.installed_binary)
+
+    def test_ignores_empty_and_relative_path_entries(self):
+        os.mkdir("relative")
+        self._make_executable("relative")
+        path = os.pathsep.join(("", ".", "relative", self.tools))
+        with patch.dict(os.environ, {"PATH": path}):
+            self.assertEqual(which(self.binary), self.installed_binary)
+
+    def test_missing_or_empty_path_does_not_search_working_directory(self):
+        for path in (None, "", ".", os.pathsep):
+            with self.subTest(path=path), patch.dict(os.environ):
+                if path is None:
+                    os.environ.pop("PATH", None)
+                else:
+                    os.environ["PATH"] = path
+                self.assertIsNone(which(self.binary))
+
+    def test_preserves_explicit_absolute_and_relative_paths(self):
+        with patch.dict(os.environ, {"PATH": self.tools}):
+            for path in (self.local_binary, os.path.join(".", self.binary)):
+                with self.subTest(path=path):
+                    self.assertEqual(which(path), self.local_binary)
+
+    def test_missing_explicit_path_does_not_fall_back_to_path(self):
+        with patch.dict(os.environ, {"PATH": self.tools}):
+            self.assertIsNone(which(os.path.join(self.directory, "missing", self.binary)))
+
+    def test_missing_path_installation_does_not_fall_back_to_working_directory(self):
+        with patch.dict(os.environ, {"PATH": self.directory}):
+            self.assertIsNone(which(self.binary))
+
+    def test_ignores_directories_named_like_executables(self):
+        os.remove(self.installed_binary)
+        os.mkdir(self.installed_binary)
+        with patch.dict(os.environ, {"PATH": self.tools}):
+            self.assertIsNone(which(self.binary))
+
+    def test_preserves_path_order(self):
+        with patch.dict(os.environ, {"PATH": os.pathsep.join((self.tools, self.working_directory))}):
+            self.assertEqual(which(self.binary), self.installed_binary)
+
+    @unittest.skipIf(os.name == "nt", "Windows does not use POSIX executable permission bits")
+    def test_ignores_non_executable_files(self):
+        os.chmod(self.installed_binary, 0o600)
+        with patch.dict(os.environ, {"PATH": self.tools}):
+            self.assertIsNone(which(self.binary))
+
+    def test_windows_path_and_extensions(self):
+        environment = {
+            "PATH": ';.;relative;C:relative;\\rooted;"C:\\Program Files\\Tools"',
+            "PATHEXT": ".EXE;.CMD",
+        }
+        for binary, expected in (
+            ("kubectl", r"C:\Program Files\Tools\kubectl.EXE"),
+            ("kubectl.exe", r"C:\Program Files\Tools\kubectl.exe"),
+            ("az.cmd", r"C:\Program Files\Tools\az.cmd"),
+            ("pwsh", r"C:\Program Files\Tools\pwsh.CMD"),
+        ):
+            with self.subTest(binary=binary):
+                mock_os = Mock()
+                mock_os.getenv.side_effect = lambda name, default=None: environment.get(name, default)
+                mock_os.path = Mock(wraps=ntpath)
+                mock_os.path.isfile.side_effect = lambda path: path.lower() == expected.lower()
+                mock_os.access.return_value = True
+                with patch("azext_aks_preview._helpers.platform.system", return_value="Windows"), patch(
+                    "azext_aks_preview._helpers.os", mock_os
+                ):
+                    self.assertEqual(which(binary), expected)
+                for call in mock_os.path.isfile.call_args_list:
+                    self.assertTrue(call.args[0].startswith("C:\\Program Files\\Tools\\"))
+
+
+class TestFuzzyMatch(unittest.TestCase):
+    def setUp(self):
+        self.expected = ['bord', 'birdy', 'fbird', 'bir', 'ird', 'birdwaj']
+
+    def test_fuzzy_match(self):
+        result = _fuzzy_match(
+            "bird", ["plane", "bord", "birdy", "fbird", "bir", "ird", "birdwaj", "bored", "biron", "bead"])
+
+        self.assertCountEqual(result, self.expected)
+        self.assertListEqual(result, self.expected)
+
+
+class TestValidateFlexNodesOptions(unittest.TestCase):
+    @patch(
+        "azext_aks_preview._helpers.get_user_supplied_argument_options",
+        return_value={
+            "resource_group_name": "--resource-group",
+            "machine_name": "--machine-name",
+            "no_wait": "--no-wait",
+            "labels": "--labels",
+            "vm_size": "--vm-size",
+        },
+    )
+    def test_ignores_command_plumbing_and_rejects_unsupported_capability(self, _):
+        with self.assertRaises(InvalidArgumentValueError) as err:
+            validate_flexnodes_options(
+                Mock(),
+                {
+                    "resource_group_name": "rg",
+                    "machine_name": "machine1",
+                    "no_wait": True,
+                    "labels": ["role=edge"],
+                    "vm_size": "Standard_D4s_v3",
+                },
+                {"labels": "--labels"},
+            )
+
+        self.assertIn("--vm-size", str(err.exception))
+        self.assertNotIn("--resource-group", str(err.exception))
+        self.assertNotIn("--machine-name", str(err.exception))
+        self.assertNotIn("--no-wait", str(err.exception))
+
+
+class TestResetAgentPoolToNameAndMode(unittest.TestCase):
+    class HybridAgentPool(dict):
+        pass
+
+    def test_resets_attribute_style_model(self):
+        agentpool = SimpleNamespace(
+            name="pool1",
+            mode="System",
+            count=3,
+            vm_size="Standard_D2s_v3",
+        )
+
+        result = reset_agentpool_to_name_and_mode(agentpool, "ManagedSystem")
+
+        self.assertIs(result, agentpool)
+        self.assertEqual(result.name, "pool1")
+        self.assertEqual(result.mode, "ManagedSystem")
+        self.assertIsNone(result.count)
+        self.assertIsNone(result.vm_size)
+
+    def test_resets_flat_mapping_model(self):
+        agentpool = {
+            "name": "pool1",
+            "mode": "System",
+            "count": 3,
+        }
+
+        result = reset_agentpool_to_name_and_mode(agentpool, "Machines")
+
+        self.assertIs(result, agentpool)
+        self.assertEqual(result, {"name": "pool1", "mode": "Machines"})
+
+    def test_resets_mapping_model_with_properties(self):
+        properties = {
+            "mode": "System",
+            "count": 3,
+        }
+        agentpool = {
+            "name": "pool1",
+            "location": "eastus",
+            "properties": properties,
+        }
+
+        result = reset_agentpool_to_name_and_mode(agentpool, "ManagedSystem")
+
+        self.assertIs(result, agentpool)
+        self.assertEqual(
+            result,
+            {
+                "name": "pool1",
+                "properties": {"mode": "ManagedSystem"},
+            },
+        )
+        self.assertIs(result["properties"], properties)
+
+    def test_resets_hybrid_mapping_and_attribute_model(self):
+        agentpool = self.HybridAgentPool(
+            name="pool1",
+            mode="ManagedSystem",
+            type="VirtualMachineScaleSets",
+        )
+        agentpool.name = "pool1"
+        agentpool.mode = "ManagedSystem"
+        agentpool.type_properties_type = "VirtualMachineScaleSets"
+
+        result = reset_agentpool_to_name_and_mode(agentpool, "ManagedSystem")
+
+        self.assertIs(result, agentpool)
+        self.assertEqual(
+            result,
+            {"name": "pool1", "mode": "ManagedSystem"},
+        )
+        self.assertEqual(result.name, "pool1")
+        self.assertEqual(result.mode, "ManagedSystem")
+        self.assertIsNone(result.type_properties_type)
+
+    def test_resets_hybrid_nested_properties(self):
+        properties = self.HybridAgentPool(
+            mode="System",
+            count=3,
+        )
+        properties.mode = "System"
+        properties.count = 3
+        agentpool = self.HybridAgentPool(
+            name="pool1",
+            location="eastus",
+            properties=properties,
+        )
+        agentpool.name = "pool1"
+        agentpool.location = "eastus"
+        agentpool.properties = properties
+
+        result = reset_agentpool_to_name_and_mode(agentpool, "ManagedSystem")
+
+        self.assertIs(result, agentpool)
+        self.assertEqual(
+            result,
+            {
+                "name": "pool1",
+                "properties": {"mode": "ManagedSystem"},
+            },
+        )
+        self.assertIs(result.properties, properties)
+        self.assertEqual(result.properties.mode, "ManagedSystem")
+        self.assertIsNone(result.properties.count)
+        self.assertIsNone(result.location)
+
+    def test_resets_attribute_model_with_mapping_properties(self):
+        properties = {
+            "mode": "System",
+            "count": 3,
+        }
+        agentpool = SimpleNamespace(
+            name="pool1",
+            location="eastus",
+            properties=properties,
+        )
+
+        result = reset_agentpool_to_name_and_mode(agentpool, "ManagedSystem")
+
+        self.assertIs(result, agentpool)
+        self.assertEqual(result.name, "pool1")
+        self.assertEqual(result.properties, {"mode": "ManagedSystem"})
+        self.assertIs(result.properties, properties)
+        self.assertIsNone(result.location)
+
+
+class GetNodepoolSnapShotTestCase(unittest.TestCase):
+    def test_get_nodepool_snapshot_by_snapshot_id(self):
+        with self.assertRaises(InvalidArgumentValueError):
+            get_nodepool_snapshot_by_snapshot_id("mock_cli_ctx", "")
+
+        mock_snapshot = Mock()
+        with patch(
+            "azext_aks_preview._helpers.get_nodepool_snapshot", return_value=mock_snapshot
+        ) as mock_get_snapshot:
+            snapshot = get_nodepool_snapshot_by_snapshot_id(
+                "mock_cli_ctx",
+                "/subscriptions/test_sub/resourcegroups/test_rg/providers/microsoft.containerservice/snapshots/test_np_snapshot",
+            )
+            self.assertEqual(snapshot, mock_snapshot)
+            mock_get_snapshot.assert_called_once_with("mock_cli_ctx", "test_sub", "test_rg", "test_np_snapshot")
+
+    def test_get_nodepool_snapshot(self):
+        mock_snapshot = Mock()
+        mock_snapshot_operations = Mock(get=Mock(return_value=mock_snapshot))
+        with patch("azext_aks_preview._helpers.get_nodepool_snapshots_client", return_value=mock_snapshot_operations):
+            snapshot = get_nodepool_snapshot("mock_cli_ctx", "test_sub", "mock_rg", "mock_snapshot_name")
+            self.assertEqual(snapshot, mock_snapshot)
+
+        mock_snapshot_operations_2 = Mock(get=Mock(side_effect=AzureError("mock snapshot was not found")))
+        with patch(
+            "azext_aks_preview._helpers.get_nodepool_snapshots_client", return_value=mock_snapshot_operations_2
+        ), self.assertRaises(ResourceNotFoundError):
+            get_nodepool_snapshot("mock_cli_ctx", "test_sub", "mock_rg", "mock_snapshot_name")
+
+        http_response_error = HttpResponseError()
+        http_response_error.status_code = 400
+        http_response_error.message = "test_error_msg"
+        mock_snapshot_operations_3 = Mock(get=Mock(side_effect=http_response_error))
+        with patch(
+            "azext_aks_preview._helpers.get_nodepool_snapshots_client", return_value=mock_snapshot_operations_3
+        ), self.assertRaises(BadRequestError):
+            get_nodepool_snapshot("mock_cli_ctx", "test_sub", "mock_rg", "mock_snapshot_name")
+
+
+class GetManagedClusterSnapShotTestCase(unittest.TestCase):
+    def test_get_cluster_snapshot_by_snapshot_id(self):
+        with self.assertRaises(InvalidArgumentValueError):
+            get_cluster_snapshot_by_snapshot_id("mock_cli_ctx", "")
+
+        mock_snapshot = Mock()
+        with patch(
+            "azext_aks_preview._helpers.get_cluster_snapshot", return_value=mock_snapshot
+        ) as mock_get_snapshot:
+            snapshot = get_cluster_snapshot_by_snapshot_id(
+                "mock_cli_ctx",
+                "/subscriptions/test_sub/resourcegroups/test_rg/providers/microsoft.containerservice/managedclustersnapshots/test_mc_snapshot",
+            )
+            self.assertEqual(snapshot, mock_snapshot)
+            mock_get_snapshot.assert_called_once_with("mock_cli_ctx", "test_sub", "test_rg", "test_mc_snapshot")
+
+    def test_get_cluster_snapshot(self):
+        mock_snapshot = Mock()
+        mock_snapshot_operations = Mock(get=Mock(return_value=mock_snapshot))
+        with patch("azext_aks_preview._helpers.get_mc_snapshots_client", return_value=mock_snapshot_operations):
+            snapshot = get_cluster_snapshot("mock_cli_ctx", "test_sub", "mock_rg", "mock_snapshot_name")
+            self.assertEqual(snapshot, mock_snapshot)
+
+        mock_snapshot_operations_2 = Mock(get=Mock(side_effect=AzureError("mock snapshot was not found")))
+        with patch(
+            "azext_aks_preview._helpers.get_mc_snapshots_client", return_value=mock_snapshot_operations_2
+        ), self.assertRaises(ResourceNotFoundError):
+            get_cluster_snapshot("mock_cli_ctx", "test_sub", "mock_rg", "mock_snapshot_name")
+
+        http_response_error = HttpResponseError()
+        http_response_error.status_code = 400
+        http_response_error.message = "test_error_msg"
+        mock_snapshot_operations_3 = Mock(get=Mock(side_effect=http_response_error))
+        with patch(
+            "azext_aks_preview._helpers.get_mc_snapshots_client", return_value=mock_snapshot_operations_3
+        ), self.assertRaises(BadRequestError):
+            get_cluster_snapshot("mock_cli_ctx", "test_sub", "mock_rg", "mock_snapshot_name")
+
+
+class CheckManagedClusterTestCase(unittest.TestCase):
+    def setUp(self):
+        # manually register CUSTOM_MGMT_AKS_PREVIEW
+        register_aks_preview_resource_type()
+        self.cli_ctx = MockCLI()
+        self.cmd = MockCmd(self.cli_ctx)
+        # store all the models used by nat gateway
+        self.models = AKSPreviewManagedClusterModels(self.cmd, CUSTOM_MGMT_AKS_PREVIEW)
+
+    def test_check_is_private_link_cluster(self):
+        mc_1 = self.models.ManagedCluster(location="test_location")
+        self.assertEqual(check_is_private_link_cluster(mc_1), False)
+
+        mc_2 = self.models.ManagedCluster(location="test_location")
+        api_server_access_profile = self.models.ManagedClusterAPIServerAccessProfile()
+        api_server_access_profile.enable_private_cluster = True
+        api_server_access_profile.enable_vnet_integration = True
+        self.assertEqual(check_is_private_link_cluster(mc_2), False)
+
+        mc_3 = self.models.ManagedCluster(location="test_location")
+        api_server_access_profile = self.models.ManagedClusterAPIServerAccessProfile()
+        api_server_access_profile.enable_private_cluster = True
+        mc_3.api_server_access_profile = api_server_access_profile
+        self.assertEqual(check_is_private_link_cluster(mc_3), True)
+
+
+class CheckProcessRunCommandMessage(unittest.TestCase):
+    def test_process_message_for_run_command(self):
+        successful_message = "Enable succeeded: \n[stdout]\n'Mon Feb 26 20:55:28 UTC 2024 - SUCCESS: Successfully tested DNS resolution to management.azure.com'\n'Mon Feb 26 20:55:29 UTC 2024 - SUCCESS: Successfully retrieved access token'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested management.azure.com with returned status code 200'\n'Mon Feb 26 20:55:30 UTC 2024 - WARNING: No apiserver FQDN provided. Skipping apiserver check.'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested DNS resolution to acs-mirror.azureedge.net'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested acs-mirror.azureedge.net with returned status code 400. This is expected since acs-mirror.azureedge.net is a repository endpoint which requires a full package path to get 200 status code.'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested DNS resolution to packages.microsoft.com'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested packages.microsoft.com with returned status code 200'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested DNS resolution to eastus.data.mcr.microsoft.com'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested eastus.data.mcr.microsoft.com with returned status code 400. This is expected since eastus.data.mcr.microsoft.com is a repository endpoint which requires a full package path to get 200 status code.'\n'Mon Feb 26 20:55:30 UTC 2024 - SUCCESS: Successfully tested DNS resolution to login.microsoftonline.com'\n'Mon Feb 26 20:55:31 UTC 2024 - SUCCESS: Successfully tested login.microsoftonline.com with returned status code 200'\n'Mon Feb 26 20:55:31 UTC 2024 - SUCCESS: Successfully tested DNS resolution to mcr.microsoft.com'\n'Mon Feb 26 20:55:31 UTC 2024 - SUCCESS: Successfully tested mcr.microsoft.com with returned status code 200'\n\n[stderr]\n"
+        processed_message = process_message_for_run_command(successful_message)
+        self.assertEqual(processed_message, None)
+
+        failed_message = "Enable succeeded: \n[stdout]\n\n[stderr]\nbash: /opt/azure/containers/aks-check.sh: No such file or directory\n"
+        err = "Error: bash: /opt/azure/containers/aks-check.sh: No such file or directory"
+        with self.assertRaises(CLIError) as cm:
+            process_message_for_run_command(failed_message)
+        self.assertEqual(str(cm.exception), err)
+
+
+class FilterHardTaintsTestCase(unittest.TestCase):
+    def test_filter_hard_taints_keeps_only_soft_taints(self):
+        input_taints = ["taint1=val1:NoSchedule", "taint2=val2:NoExecute", "taint3=val3:PreferNoSchedule"]
+        expected_filtered_taints = ["taint3=val3:PreferNoSchedule"]
+        self.assertEqual(filter_hard_taints(input_taints), expected_filtered_taints)
+
+    def test_filter_hard_taints_preserves_critical_addons_only_taints(self):
+        input_taints = [
+            "CriticalAddonsOnly=true:NoSchedule",  
+            "CriticalAddonsOnly=true:NoExecute",
+            "taint1=val1:NoSchedule",
+            "taint2=val2:PreferNoSchedule"
+        ]
+        expected_filtered_taints = [
+            "CriticalAddonsOnly=true:NoSchedule", 
+            "CriticalAddonsOnly=true:NoExecute", 
+            "taint2=val2:PreferNoSchedule"
+        ]
+        self.assertEqual(filter_hard_taints(input_taints), expected_filtered_taints)
+    
+    def test_filter_hard_taints_with_empty_list(self):
+        input_taints = []
+        expected_filtered_taints = []
+        self.assertEqual(filter_hard_taints(input_taints), expected_filtered_taints)
+    
+    def test_filter_hard_taints_with_empty_strings(self):
+        input_taints = ["taint1=val1:NoSchedule", "", "taint3=val3:PreferNoSchedule"]
+        expected_filtered_taints = ["taint3=val3:PreferNoSchedule"]
+        self.assertEqual(filter_hard_taints(input_taints), expected_filtered_taints)
+    
+    def test_filter_hard_taints_with_invalid_format(self):
+        input_taints = ["invalid-format", "taint1=val1:NoSchedule", "another-invalid", "taint2=val2:PreferNoSchedule"]
+        expected_filtered_taints = ["invalid-format", "another-invalid", "taint2=val2:PreferNoSchedule"]
+        self.assertEqual(filter_hard_taints(input_taints), expected_filtered_taints)
+    
+    def test_filter_hard_taints_case_insensitive(self):
+        input_taints = ["taint1=val1:noschedule", "taint2=val2:PREFERNOSCHEDULE", "taint3=val3:prefernoschedule"]
+        expected_filtered_taints = ["taint2=val2:PREFERNOSCHEDULE", "taint3=val3:prefernoschedule"]
+        self.assertEqual(filter_hard_taints(input_taints), expected_filtered_taints)
+    
+    def test_filter_hard_taints_mixed_effects(self):
+        input_taints = [
+            "key1=value1:NoSchedule", 
+            "key2=value2:NoExecute", 
+            "key3=value3:PreferNoSchedule",
+            "key4:NoSchedule",
+            "key5:PreferNoSchedule"
+        ]
+        expected_filtered_taints = ["key3=value3:PreferNoSchedule", "key5:PreferNoSchedule"]
+        self.assertEqual(filter_hard_taints(input_taints), expected_filtered_taints)
+
+
+class TestGetMonitoringAddonKey(unittest.TestCase):
+    """Tests for the get_monitoring_addon_key helper."""
+
+    def test_returns_canonical_when_present(self):
+        addon_profiles = {"omsagent": Mock(enabled=True)}
+        result = get_monitoring_addon_key(addon_profiles, "omsagent")
+        self.assertEqual(result, "omsagent")
+        # dict should be unchanged
+        self.assertIn("omsagent", addon_profiles)
+
+    def test_normalizes_camelcase_key(self):
+        addon_profiles = {"omsAgent": Mock(enabled=True)}
+        result = get_monitoring_addon_key(addon_profiles, "omsagent")
+        self.assertEqual(result, "omsagent")
+        # dict should have been re-keyed
+        self.assertIn("omsagent", addon_profiles)
+        self.assertNotIn("omsAgent", addon_profiles)
+
+    def test_normalizes_arbitrary_casing(self):
+        addon_profiles = {"OMSagent": Mock(enabled=True)}
+        result = get_monitoring_addon_key(addon_profiles, "omsagent")
+        self.assertEqual(result, "omsagent")
+        self.assertIn("omsagent", addon_profiles)
+        self.assertNotIn("OMSagent", addon_profiles)
+
+    def test_returns_canonical_when_none_profiles(self):
+        result = get_monitoring_addon_key(None, "omsagent")
+        self.assertEqual(result, "omsagent")
+
+    def test_returns_canonical_when_key_not_present(self):
+        addon_profiles = {"some_other_addon": Mock(enabled=True)}
+        result = get_monitoring_addon_key(addon_profiles, "omsagent")
+        self.assertEqual(result, "omsagent")
+
+    def test_prefers_exact_match_over_case_insensitive(self):
+        # If both canonical and variant exist, canonical wins (no re-keying)
+        addon_profiles = {
+            "omsagent": Mock(enabled=True),
+            "omsAgent": Mock(enabled=False),
+        }
+        result = get_monitoring_addon_key(addon_profiles, "omsagent")
+        self.assertEqual(result, "omsagent")
+        # Both keys should still be present (no re-keying needed)
+        self.assertIn("omsagent", addon_profiles)
+        self.assertIn("omsAgent", addon_profiles)
+
+
+class GetContainerStorageExtensionInstalledTestCase(unittest.TestCase):
+    """Tests for get_container_storage_extension_installed extension_type verification."""
+
+    def _patch_module(self, extension=None, side_effect=None):
+        mock_mod = Mock()
+        if side_effect is not None:
+            mock_mod.show_k8s_extension = Mock(side_effect=side_effect)
+        else:
+            mock_mod.show_k8s_extension = Mock(return_value=extension)
+        return patch(
+            "azext_aks_preview.azurecontainerstorage._helpers.get_k8s_extension_module",
+            return_value=mock_mod,
+        )
+
+    def test_installed_when_type_matches(self):
+        extension = SimpleNamespace(extension_type="microsoft.distributedaccelerator", current_version="1.0.0")
+        with self._patch_module(extension=extension):
+            installed, version = get_container_storage_extension_installed(
+                Mock(), "mock_rg", "mock_cluster", "distributedaccelerator",
+                expected_extension_type="microsoft.distributedaccelerator",
+            )
+        self.assertTrue(installed)
+        self.assertEqual(version, "1.0.0")
+
+    def test_not_installed_when_type_mismatches(self):
+        extension = SimpleNamespace(extension_type="microsoft.somethingelse", current_version="1.0.0")
+        with self._patch_module(extension=extension):
+            installed, version = get_container_storage_extension_installed(
+                Mock(), "mock_rg", "mock_cluster", "distributedaccelerator",
+                expected_extension_type="microsoft.distributedaccelerator",
+            )
+        self.assertFalse(installed)
+        self.assertEqual(version, "")
+
+    def test_installed_ignores_type_when_expected_not_supplied(self):
+        extension = SimpleNamespace(extension_type="microsoft.somethingelse", current_version="1.0.0")
+        with self._patch_module(extension=extension):
+            installed, version = get_container_storage_extension_installed(
+                Mock(), "mock_rg", "mock_cluster", "distributedaccelerator",
+            )
+        self.assertTrue(installed)
+        self.assertEqual(version, "1.0.0")
+
+    def test_not_installed_when_extension_not_found(self):
+        with self._patch_module(side_effect=ResourceNotFoundError("not found")):
+            installed, version = get_container_storage_extension_installed(
+                Mock(), "mock_rg", "mock_cluster", "distributedaccelerator",
+                expected_extension_type="microsoft.distributedaccelerator",
+            )
+        self.assertFalse(installed)
+        self.assertEqual(version, "")
+
+
+if __name__ == "__main__":
+    unittest.main()
