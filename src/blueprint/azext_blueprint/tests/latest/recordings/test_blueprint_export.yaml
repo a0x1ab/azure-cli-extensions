@@ -1,0 +1,632 @@
+interactions:
+- request:
+    body: '{"properties": {"description": "This blueprint sets tag policy and role
+      assignment on the subscription, creates a ResourceGroup, and deploys a resource
+      template and role assignment to that ResourceGroup.", "targetScope": "subscription",
+      "parameters": {"storageAccountType": {"type": "string", "defaultValue": "Standard_LRS",
+      "allowedValues": ["Standard_LRS", "Standard_GRS", "Standard_ZRS", "Premium_LRS"],
+      "metadata": {"displayName": "storage account type.", "description": "storage
+      account type."}}, "tagName": {"type": "string", "metadata": {"displayName":
+      "The name of the tag to provide the policy assignment.", "description": "The
+      name of the tag to provide the policy assignment."}}, "tagValue": {"type": "string",
+      "metadata": {"displayName": "The value of the tag to provide the policy assignment.",
+      "description": "The value of the tag to provide the policy assignment."}}, "contributors":
+      {"type": "array", "metadata": {"description": "List of AAD object IDs that is
+      assigned Contributor role at the subscription", "strongType": "PrincipalId"}},
+      "owners": {"type": "array", "metadata": {"description": "List of AAD object
+      IDs that is assigned Owner role at the resource group", "strongType": "PrincipalId"}}},
+      "resourceGroups": {"storageRG": {"dependsOn": [], "metadata": {"description":
+      "Contains the resource template deployment and a role assignment."}}}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint import
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1369'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --name --input-path -y
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"properties\": {\r\n    \"parameters\": {\r\n      \"storageAccountType\":
+        {\r\n        \"type\": \"string\",\r\n        \"metadata\": {\r\n          \"displayName\":
+        \"storage account type.\",\r\n          \"description\": \"storage account
+        type.\"\r\n        },\r\n        \"defaultValue\": \"Standard_LRS\",\r\n        \"allowedValues\":
+        [\r\n          \"Standard_LRS\",\r\n          \"Standard_GRS\",\r\n          \"Standard_ZRS\",\r\n
+        \         \"Premium_LRS\"\r\n        ]\r\n      },\r\n      \"tagName\": {\r\n
+        \       \"type\": \"string\",\r\n        \"metadata\": {\r\n          \"displayName\":
+        \"The name of the tag to provide the policy assignment.\",\r\n          \"description\":
+        \"The name of the tag to provide the policy assignment.\"\r\n        }\r\n
+        \     },\r\n      \"tagValue\": {\r\n        \"type\": \"string\",\r\n        \"metadata\":
+        {\r\n          \"displayName\": \"The value of the tag to provide the policy
+        assignment.\",\r\n          \"description\": \"The value of the tag to provide
+        the policy assignment.\"\r\n        }\r\n      },\r\n      \"contributors\":
+        {\r\n        \"type\": \"array\",\r\n        \"metadata\": {\r\n          \"description\":
+        \"List of AAD object IDs that is assigned Contributor role at the subscription\",\r\n
+        \         \"strongType\": \"PrincipalId\"\r\n        }\r\n      },\r\n      \"owners\":
+        {\r\n        \"type\": \"array\",\r\n        \"metadata\": {\r\n          \"description\":
+        \"List of AAD object IDs that is assigned Owner role at the resource group\",\r\n
+        \         \"strongType\": \"PrincipalId\"\r\n        }\r\n      }\r\n    },\r\n
+        \   \"resourceGroups\": {\r\n      \"storageRG\": {\r\n        \"metadata\":
+        {\r\n          \"description\": \"Contains the resource template deployment
+        and a role assignment.\"\r\n        },\r\n        \"dependsOn\": []\r\n      }\r\n
+        \   },\r\n    \"targetScope\": \"subscription\",\r\n    \"status\": {\r\n
+        \     \"timeCreated\": \"2026-06-30T19:40:45+00:00\",\r\n      \"lastModified\":
+        \"2026-06-30T19:40:45.6830384+00:00\"\r\n    },\r\n    \"description\": \"This
+        blueprint sets tag policy and role assignment on the subscription, creates
+        a ResourceGroup, and deploys a resource template and role assignment to that
+        ResourceGroup.\"\r\n  },\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002\",\r\n
+        \ \"type\": \"Microsoft.Blueprint/blueprints\",\r\n  \"name\": \"test-imported-bp000002\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '2223'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:44 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus2/abc66fab-09aa-4adc-b731-6997f037245f
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '11999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '799'
+      x-msedge-ref:
+      - 'Ref A: 5427F67F2A3D4D3BB29F5576AEBBF56E Ref B: BL2AA2010205049 Ref C: 2026-06-30T19:40:45Z'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint import
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --name --input-path -y
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"value\": []\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '19'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:46 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus/3cda7f2d-d6e7-4511-81d6-ab8e95712bff
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '16499'
+      x-msedge-ref:
+      - 'Ref A: 269F8D6D443B4F47960F4AB4F2FB5363 Ref B: BL2AA2030101017 Ref C: 2026-06-30T19:40:46Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"kind": "policyAssignment", "properties": {"displayName": "Apply storage
+      tag to resource group", "description": "Apply storage tag and the parameter
+      also used by the template to resource groups", "dependsOn": [], "policyDefinitionId":
+      "/providers/Microsoft.Authorization/policyDefinitions/49c88fc8-6fd1-46fd-a676-f12d1d3a4c71",
+      "parameters": {"tagName": {"value": "StorageType"}, "tagValue": {"value": "[parameters(''storageAccountType'')]"}}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint import
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '443'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --name --input-path -y
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/policyStorageTags?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"properties\": {\r\n    \"policyDefinitionId\": \"/providers/Microsoft.Authorization/policyDefinitions/49c88fc8-6fd1-46fd-a676-f12d1d3a4c71\",\r\n
+        \   \"parameters\": {\r\n      \"tagName\": {\r\n        \"value\": \"StorageType\"\r\n
+        \     },\r\n      \"tagValue\": {\r\n        \"value\": \"[parameters('storageAccountType')]\"\r\n
+        \     }\r\n    },\r\n    \"dependsOn\": [],\r\n    \"displayName\": \"Apply
+        storage tag to resource group\",\r\n    \"description\": \"Apply storage tag
+        and the parameter also used by the template to resource groups\"\r\n  },\r\n
+        \ \"kind\": \"policyAssignment\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/policyStorageTags\",\r\n
+        \ \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n  \"name\": \"policyStorageTags\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '782'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:47 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus/d27baa7c-8452-460c-9af4-bbdf3b89d9da
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '11999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '799'
+      x-msedge-ref:
+      - 'Ref A: B6A652AB1D17445C990A5A5E034F03B1 Ref B: BL2AA2010204019 Ref C: 2026-06-30T19:40:47Z'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"kind": "policyAssignment", "properties": {"displayName": "Apply tag and
+      its default value to resource groups", "description": "Apply tag and its default
+      value to resource groups", "dependsOn": [], "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/49c88fc8-6fd1-46fd-a676-f12d1d3a4c71",
+      "parameters": {"tagName": {"value": "[parameters(''tagName'')]"}, "tagValue":
+      {"value": "[parameters(''tagValue'')]"}}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint import
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '430'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --name --input-path -y
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/policyTags?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"properties\": {\r\n    \"policyDefinitionId\": \"/providers/Microsoft.Authorization/policyDefinitions/49c88fc8-6fd1-46fd-a676-f12d1d3a4c71\",\r\n
+        \   \"parameters\": {\r\n      \"tagName\": {\r\n        \"value\": \"[parameters('tagName')]\"\r\n
+        \     },\r\n      \"tagValue\": {\r\n        \"value\": \"[parameters('tagValue')]\"\r\n
+        \     }\r\n    },\r\n    \"dependsOn\": [],\r\n    \"displayName\": \"Apply
+        tag and its default value to resource groups\",\r\n    \"description\": \"Apply
+        tag and its default value to resource groups\"\r\n  },\r\n  \"kind\": \"policyAssignment\",\r\n
+        \ \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/policyTags\",\r\n
+        \ \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n  \"name\": \"policyTags\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '755'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:48 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus2/877b743c-7184-4f20-be4d-dfd9310e6f2e
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '11999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '799'
+      x-msedge-ref:
+      - 'Ref A: 6AF3CEE80D914E12BF07DC979486E47F Ref B: BL2AA2010205025 Ref C: 2026-06-30T19:40:48Z'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"kind": "roleAssignment", "properties": {"dependsOn": [], "roleDefinitionId":
+      "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+      "principalIds": "[parameters(''contributors'')]"}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint import
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '218'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --name --input-path -y
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/roleContributor?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"properties\": {\r\n    \"roleDefinitionId\": \"/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c\",\r\n
+        \   \"principalIds\": \"[parameters('contributors')]\",\r\n    \"dependsOn\":
+        []\r\n  },\r\n  \"kind\": \"roleAssignment\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/roleContributor\",\r\n
+        \ \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n  \"name\": \"roleContributor\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '486'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:49 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus2/06154369-514a-4a84-a059-c3d5e2ddae74
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '11999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '799'
+      x-msedge-ref:
+      - 'Ref A: 5A5D59752E4147AD9AF0C9849B034070 Ref B: BL2AA2030101019 Ref C: 2026-06-30T19:40:49Z'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"kind": "roleAssignment", "properties": {"dependsOn": [], "roleDefinitionId":
+      "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+      "principalIds": "[parameters(''owners'')]", "resourceGroup": "storageRG"}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint import
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '242'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - --name --input-path -y
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/roleOwner?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"properties\": {\r\n    \"roleDefinitionId\": \"/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635\",\r\n
+        \   \"principalIds\": \"[parameters('owners')]\",\r\n    \"dependsOn\": [],\r\n
+        \   \"resourceGroup\": \"storageRG\"\r\n  },\r\n  \"kind\": \"roleAssignment\",\r\n
+        \ \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/roleOwner\",\r\n
+        \ \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n  \"name\": \"roleOwner\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '503'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:50 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus/599bd41a-993a-4118-9208-5db1e519d6a3
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '11999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '799'
+      x-msedge-ref:
+      - 'Ref A: 35C24729E15C4727AADDFBF6B513DF82 Ref B: BN1AA2051015051 Ref C: 2026-06-30T19:40:50Z'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint export
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --output-path --name --yes
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"properties\": {\r\n    \"parameters\": {\r\n      \"storageAccountType\":
+        {\r\n        \"type\": \"string\",\r\n        \"metadata\": {\r\n          \"displayName\":
+        \"storage account type.\",\r\n          \"description\": \"storage account
+        type.\"\r\n        },\r\n        \"defaultValue\": \"Standard_LRS\",\r\n        \"allowedValues\":
+        [\r\n          \"Standard_LRS\",\r\n          \"Standard_GRS\",\r\n          \"Standard_ZRS\",\r\n
+        \         \"Premium_LRS\"\r\n        ]\r\n      },\r\n      \"tagName\": {\r\n
+        \       \"type\": \"string\",\r\n        \"metadata\": {\r\n          \"displayName\":
+        \"The name of the tag to provide the policy assignment.\",\r\n          \"description\":
+        \"The name of the tag to provide the policy assignment.\"\r\n        }\r\n
+        \     },\r\n      \"tagValue\": {\r\n        \"type\": \"string\",\r\n        \"metadata\":
+        {\r\n          \"displayName\": \"The value of the tag to provide the policy
+        assignment.\",\r\n          \"description\": \"The value of the tag to provide
+        the policy assignment.\"\r\n        }\r\n      },\r\n      \"contributors\":
+        {\r\n        \"type\": \"array\",\r\n        \"metadata\": {\r\n          \"description\":
+        \"List of AAD object IDs that is assigned Contributor role at the subscription\",\r\n
+        \         \"strongType\": \"PrincipalId\"\r\n        }\r\n      },\r\n      \"owners\":
+        {\r\n        \"type\": \"array\",\r\n        \"metadata\": {\r\n          \"description\":
+        \"List of AAD object IDs that is assigned Owner role at the resource group\",\r\n
+        \         \"strongType\": \"PrincipalId\"\r\n        }\r\n      }\r\n    },\r\n
+        \   \"resourceGroups\": {\r\n      \"storageRG\": {\r\n        \"metadata\":
+        {\r\n          \"description\": \"Contains the resource template deployment
+        and a role assignment.\"\r\n        },\r\n        \"dependsOn\": []\r\n      }\r\n
+        \   },\r\n    \"targetScope\": \"subscription\",\r\n    \"status\": {\r\n
+        \     \"timeCreated\": \"2026-06-30T19:40:45+00:00\",\r\n      \"lastModified\":
+        \"2026-06-30T19:40:45.6830384+00:00\"\r\n    },\r\n    \"description\": \"This
+        blueprint sets tag policy and role assignment on the subscription, creates
+        a ResourceGroup, and deploys a resource template and role assignment to that
+        ResourceGroup.\"\r\n  },\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002\",\r\n
+        \ \"type\": \"Microsoft.Blueprint/blueprints\",\r\n  \"name\": \"test-imported-bp000002\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '2223'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:52 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus/e5802fc5-b65f-493e-91e6-36cf8463b06b
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '16499'
+      x-msedge-ref:
+      - 'Ref A: E04940B5FEB24CE394AE3091B869A02B Ref B: BN1AA2051015047 Ref C: 2026-06-30T19:40:52Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint export
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --output-path --name --yes
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"value\": [\r\n    {\r\n      \"properties\": {\r\n        \"policyDefinitionId\":
+        \"/providers/Microsoft.Authorization/policyDefinitions/49c88fc8-6fd1-46fd-a676-f12d1d3a4c71\",\r\n
+        \       \"parameters\": {\r\n          \"tagName\": {\r\n            \"value\":
+        \"StorageType\"\r\n          },\r\n          \"tagValue\": {\r\n            \"value\":
+        \"[parameters('storageAccountType')]\"\r\n          }\r\n        },\r\n        \"dependsOn\":
+        [],\r\n        \"displayName\": \"Apply storage tag to resource group\",\r\n
+        \       \"description\": \"Apply storage tag and the parameter also used by
+        the template to resource groups\"\r\n      },\r\n      \"kind\": \"policyAssignment\",\r\n
+        \     \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/policyStorageTags\",\r\n
+        \     \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n      \"name\":
+        \"policyStorageTags\"\r\n    },\r\n    {\r\n      \"properties\": {\r\n        \"policyDefinitionId\":
+        \"/providers/Microsoft.Authorization/policyDefinitions/49c88fc8-6fd1-46fd-a676-f12d1d3a4c71\",\r\n
+        \       \"parameters\": {\r\n          \"tagName\": {\r\n            \"value\":
+        \"[parameters('tagName')]\"\r\n          },\r\n          \"tagValue\": {\r\n
+        \           \"value\": \"[parameters('tagValue')]\"\r\n          }\r\n        },\r\n
+        \       \"dependsOn\": [],\r\n        \"displayName\": \"Apply tag and its
+        default value to resource groups\",\r\n        \"description\": \"Apply tag
+        and its default value to resource groups\"\r\n      },\r\n      \"kind\":
+        \"policyAssignment\",\r\n      \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/policyTags\",\r\n
+        \     \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n      \"name\":
+        \"policyTags\"\r\n    },\r\n    {\r\n      \"properties\": {\r\n        \"roleDefinitionId\":
+        \"/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c\",\r\n
+        \       \"principalIds\": \"[parameters('contributors')]\",\r\n        \"dependsOn\":
+        []\r\n      },\r\n      \"kind\": \"roleAssignment\",\r\n      \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/roleContributor\",\r\n
+        \     \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n      \"name\":
+        \"roleContributor\"\r\n    },\r\n    {\r\n      \"properties\": {\r\n        \"roleDefinitionId\":
+        \"/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635\",\r\n
+        \       \"principalIds\": \"[parameters('owners')]\",\r\n        \"dependsOn\":
+        [],\r\n        \"resourceGroup\": \"storageRG\"\r\n      },\r\n      \"kind\":
+        \"roleAssignment\",\r\n      \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002/artifacts/roleOwner\",\r\n
+        \     \"type\": \"Microsoft.Blueprint/blueprints/artifacts\",\r\n      \"name\":
+        \"roleOwner\"\r\n    }\r\n  ]\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '2812'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:53 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus/5f4c74cb-13d3-45bd-817f-46540af9ac1b
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '16499'
+      x-msedge-ref:
+      - 'Ref A: BAD7485AD03847C99B6B623DDC463A98 Ref B: BN1AA2051015033 Ref C: 2026-06-30T19:40:53Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate, zstd
+      CommandName:
+      - blueprint delete
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --name -y
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.14.3 (Windows-11-10.0.26200-SP0)
+    method: DELETE
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002?api-version=2018-11-01-preview
+  response:
+    body:
+      string: "{\r\n  \"properties\": {\r\n    \"parameters\": {\r\n      \"storageAccountType\":
+        {\r\n        \"type\": \"string\",\r\n        \"metadata\": {\r\n          \"displayName\":
+        \"storage account type.\",\r\n          \"description\": \"storage account
+        type.\"\r\n        },\r\n        \"defaultValue\": \"Standard_LRS\",\r\n        \"allowedValues\":
+        [\r\n          \"Standard_LRS\",\r\n          \"Standard_GRS\",\r\n          \"Standard_ZRS\",\r\n
+        \         \"Premium_LRS\"\r\n        ]\r\n      },\r\n      \"tagName\": {\r\n
+        \       \"type\": \"string\",\r\n        \"metadata\": {\r\n          \"displayName\":
+        \"The name of the tag to provide the policy assignment.\",\r\n          \"description\":
+        \"The name of the tag to provide the policy assignment.\"\r\n        }\r\n
+        \     },\r\n      \"tagValue\": {\r\n        \"type\": \"string\",\r\n        \"metadata\":
+        {\r\n          \"displayName\": \"The value of the tag to provide the policy
+        assignment.\",\r\n          \"description\": \"The value of the tag to provide
+        the policy assignment.\"\r\n        }\r\n      },\r\n      \"contributors\":
+        {\r\n        \"type\": \"array\",\r\n        \"metadata\": {\r\n          \"description\":
+        \"List of AAD object IDs that is assigned Contributor role at the subscription\",\r\n
+        \         \"strongType\": \"PrincipalId\"\r\n        }\r\n      },\r\n      \"owners\":
+        {\r\n        \"type\": \"array\",\r\n        \"metadata\": {\r\n          \"description\":
+        \"List of AAD object IDs that is assigned Owner role at the resource group\",\r\n
+        \         \"strongType\": \"PrincipalId\"\r\n        }\r\n      }\r\n    },\r\n
+        \   \"resourceGroups\": {\r\n      \"storageRG\": {\r\n        \"metadata\":
+        {\r\n          \"description\": \"Contains the resource template deployment
+        and a role assignment.\"\r\n        },\r\n        \"dependsOn\": []\r\n      }\r\n
+        \   },\r\n    \"targetScope\": \"subscription\",\r\n    \"status\": {\r\n
+        \     \"timeCreated\": \"2026-06-30T19:40:45+00:00\",\r\n      \"lastModified\":
+        \"2026-06-30T19:40:45.6830384+00:00\"\r\n    },\r\n    \"description\": \"This
+        blueprint sets tag policy and role assignment on the subscription, creates
+        a ResourceGroup, and deploys a resource template and role assignment to that
+        ResourceGroup.\"\r\n  },\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Blueprint/blueprints/test-imported-bp000002\",\r\n
+        \ \"type\": \"Microsoft.Blueprint/blueprints\",\r\n  \"name\": \"test-imported-bp000002\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '2223'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 30 Jun 2026 19:40:55 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47,objectId=7a2bb2be-2235-4d75-b601-4578b2d1fcb5/eastus/c30271cd-23b4-48ef-ae0e-81c0d3feea69
+      x-ms-ratelimit-remaining-subscription-deletes:
+      - '799'
+      x-ms-ratelimit-remaining-subscription-global-deletes:
+      - '11999'
+      x-msedge-ref:
+      - 'Ref A: CE34CE762EEB43E9AAD96ED75CACFD05 Ref B: BN1AA2051012045 Ref C: 2026-06-30T19:40:54Z'
+    status:
+      code: 200
+      message: OK
+version: 1
