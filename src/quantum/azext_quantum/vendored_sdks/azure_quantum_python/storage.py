@@ -70,7 +70,7 @@ def get_container_uri(connection_string: str, container_name: str) -> str:
         container.container_name,
         account_key=container.credential.account_key,
         permission=BlobSasPermissions(
-            read=True, add=True, write=True, create=True
+            read=True, add=True, write=True, create=True, list=True
         ),
         expiry=datetime.utcnow() + timedelta(days=14),
     )
