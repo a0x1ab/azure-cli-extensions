@@ -12,6 +12,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 
+19.0.0b25
++++++++
+* Add 'mTLS' as a transit encryption type option for `--acns-transit-encryption-type` in `az aks create/update`
+
 19.0.0b24
 +++++++
 * Vendor new SDK and bump API version to 2026-01-02-preview.
