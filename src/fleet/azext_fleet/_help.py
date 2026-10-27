@@ -1,0 +1,702 @@
+# coding=utf-8
+# --------------------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License. See License.txt in the project root for license information.
+# --------------------------------------------------------------------------------------------
+
+from knack.help_files import helps  # pylint: disable=unused-import
+
+
+helps['fleet'] = """
+    type: group
+    short-summary: Commands to manage fleet.
+"""
+
+helps['fleet create'] = """
+    type: command
+    short-summary: Creates or updates a fleet.
+    parameters:
+        - name: --dns-name-prefix -p
+          type: string
+          short-summary: Prefix for host names that are created. If not specified, generate a host name using the
+                         managed cluster and resource group names.
+    examples:
+        - name: Create a hubless fleet.
+          text: az fleet create -g MyFleetResourceGroup -l MyLocation -n MyFleetName --tags "TagKey=TagValue"
+        - name: Create a hubful fleet.
+          text: az fleet create -g MyFleetResourceGroup -l MyLocation -n MyFleetName --enable-hub --tags "TagKey=TagValue"
+        - name: Create a fleet with a system assigned managed service identity.
+          text: az fleet create -g MyFleetResourceGroup -l MyLocation -n MyFleetName --enable-managed-identity
+        - name: Create a fleet with a user assigned managed service identity.
+          text: az fleet create -g MyFleetResourceGroup -l MyLocation -n MyFleetName --enable-managed-identity --assign-identity "/subscription/00000000-0000-0000-0000-000000000000/resourcegroup/MyFleetResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MyIdentity"
+"""
+
+helps['fleet update'] = """
+    type: command
+    short-summary: Patches a fleet resource.
+    examples:
+        - name: Update a fleet's tags.
+          text: az fleet update -g MyFleetResourceGroup -n MyFleetName --tags Key=Value
+        - name: Update a fleet to use a system assigned managed service identity.
+          text: az fleet update -g MyFleetResourceGroup -n MyFleetName --enable-managed-identity --tags Key=Value
+        - name: Update a fleet to use a user assigned managed service identity.
+          text: az fleet update -g MyFleetResourceGroup -n MyFleetName --enable-managed-identity --assign-identity "/subscription/00000000-0000-0000-0000-000000000000/resourcegroup/MyFleetResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MyIdentity" --tags Key=Value
+"""
+
+helps['fleet show'] = """
+    type: command
+    short-summary: Gets a fleet.
+    examples:
+        - name: Show the details of a fleet.
+          text: az fleet show -g MyFleetResourceGroup -n MyFleetName
+"""
+
+helps['fleet list'] = """
+    type: command
+    short-summary: Lists all fleets.
+    examples:
+        - name: List all fleets within your current subscription.
+          text: az fleet list
+        - name: List all fleets that exist within your current subscription and the chosen resource group.
+          text: az fleet list -g MyResourceGroup
+"""
+
+helps['fleet delete'] = """
+    type: command
+    short-summary: Deletes a fleet.
+    examples:
+        - name: Delete a specific fleet.
+          text: az fleet delete -g MyFleetResourceGroup -n MyFleetName
+"""
+
+helps['fleet get-credentials'] = """
+    type: command
+    short-summary: For hubful fleets, gets the kubeconfig for the fleet's hub cluster. For fleet members, gets kubeconfig from the member's managed cluster.
+    parameters:
+    - name: --member -m
+      type: string
+      short-summary: Specify the fleet member name to get credentials from its associated managed cluster.
+    - name: --overwrite-existing
+      type: bool
+      short-summary: Overwrite any existing cluster entry with the same name.
+    - name: --file -f
+      type: string
+      short-summary: Kubernetes configuration file to update. Use "-" to print YAML to stdout instead.
+    examples:
+        - name: Get a fleet's hub cluster kubeconfig.
+          text: az fleet get-credentials -g MyFleetResourceGroup -n MyFleetName
+        - name: Get a fleet's hub cluster kubeconfig, and save it to a specific file.
+          text: az fleet get-credentials -g MyFleetResourceGroup -n MyFleetName -f ~/mykubeconfigfile.txt
+        - name: Get kubeconfig from a specific fleet member's managed cluster.
+          text: az fleet get-credentials -g MyFleetResourceGroup -n MyFleetName --member MyFleetMember
+"""
+
+helps['fleet reconcile'] = """
+    type: command
+    short-summary: Reconciles a fleet.
+    examples:
+        - name: Reconcile a fleet.
+          text: az fleet reconcile -g MyFleetResourceGroup -n MyFleetName
+"""
+
+helps['fleet wait'] = """
+type: command
+short-summary: Wait for a fleet resource to reach a desired state.
+long-summary: If an operation on fleet was interrupted or was started with `--no-wait`, use this command to wait for it to complete.
+"""
+
+helps['fleet member'] = """
+    type: group
+    short-summary: Commands to manage members.
+"""
+
+helps['fleet member create'] = """
+    type: command
+    short-summary: Creates or updates a member.
+    parameters:
+        - name: --member-cluster-id
+          type: string
+          short-summary: The ARM resource ID of the cluster.
+        - name: --update-group
+          type: string
+          short-summary: Update group of the member.
+    examples:
+        - name: Create an AKS Cluster member and assign it to an update group.
+          text: az fleet member create -g MyFleetResourceGroup -f MyFleetName -n NameOfMember --update-group group1 --member-cluster-id "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ClusterResourceGroupName/providers/Microsoft.ContainerService/managedClusters/ClusterName"
+        - name: Create an Arc Cluster member and assign it to an update group.
+          text: az fleet member create -g MyFleetResourceGroup -f MyFleetName -n NameOfMember --update-group group1 --member-cluster-id "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ClusterResourceGroupName/providers/Microsoft.Kubernetes/connectedClusters/ClusterName"
+"""
+
+helps['fleet member update'] = """
+    type: command
+    short-summary: Update a member.
+    parameters:
+        - name: --update-group
+          type: string
+          short-summary: Update group of the member.
+    examples:
+        - name: Update an existing member's update group.
+          text: az fleet member update -g MyFleetResourceGroup -f MyFleetName -n NameOfMember --update-group group2
+"""
+
+helps['fleet member list'] = """
+    type: command
+    short-summary: Lists a fleet's members.
+    examples:
+        - name: List all members for a given fleet.
+          text: az fleet member list -g MyFleetResourceGroup -f MyFleetName
+        - name: List members filtered by a cluster mesh profile.
+          text: az fleet member list -g MyFleetResourceGroup -f MyFleetName --cluster-mesh-profile MyClusterMeshProfile
+"""
+
+helps['fleet member show'] = """
+    type: command
+    short-summary: Gets a fleet member.
+    examples:
+        - name: Show the details of a specific fleet member.
+          text: az fleet member show -g MyFleetResourceGroup -f MyFleetName -n NameOfMember
+"""
+
+helps['fleet member delete'] = """
+    type: command
+    short-summary: Deletes a fleet member.
+    examples:
+        - name: Delete a specific fleet member.
+          text: az fleet member delete -g MyFleetResourceGroup -f MyFleetName -n NameOfMember
+"""
+
+helps['fleet member reconcile'] = """
+    type: command
+    short-summary: Reconciles a member.
+    examples:
+        - name: Reconcile a member.
+          text: az fleet member reconcile -g MyFleetResourceGroup -f MyFleetName -n NameOfMember
+"""
+
+helps['fleet member wait'] = """
+    type: command
+    short-summary: Wait for a member resource to reach a desired state.
+    long-summary: If an operation on member was interrupted or was started with `--no-wait`, use this command to wait for it to complete.
+"""
+
+helps['fleet updaterun'] = """
+    type: group
+    short-summary: Commands to manage update runs.
+"""
+
+helps['fleet updaterun create'] = """
+    type: command
+    short-summary: Creates or updates an update run.
+    parameters:
+        - name: --upgrade-type
+          type: string
+          short-summary: Specify the upgrade type of members. Acceptable values are 'Full', 'ControlPlaneOnly', and 'NodeImageOnly'.
+        - name: --kubernetes-version
+          type: string
+          short-summary: Specify the kubernetes version to upgrade member(s) to, when --upgrade-type is set to 'Full' or 'ControlPlaneOnly'. Acceptable format is x.x.x (eg. 1.2.3).
+        - name: --stages
+          type: string
+          short-summary: Path to a JSON file that defines stages to upgrade a fleet. See examples for reference.
+    examples:
+        - name: Create an update run for a fleet with 'Full' upgrade type.
+          text: az fleet updaterun create -g MyResourceGroup -f MyFleet -n MyUpdateRun --upgrade-type Full --kubernetes-version 1.25.0 --node-image-selection Latest
+        - name: Create an update run for a fleet with 'NodeImageOnly' upgrade type.
+          text: az fleet updaterun create -g MyResourceGroup -f MyFleet -n MyUpdateRun --upgrade-type NodeImageOnly --node-image-selection Latest
+        - name: Create an update run for a fleet with 'Full' upgrade type & stages.
+          text: |
+            az fleet updaterun create -g MyResourceGroup -f MyFleet -n MyUpdateRun --upgrade-type Full --kubernetes-version 1.25.0 --node-image-selection Latest --stages ./test/stages.json
+
+                The following JSON structure represents example contents of the parameter '--stages ./test/stages.json'.
+                A stages array is composed of one or more stages, each containing one or more groups and/or a memberSelector.
+                Each group contains the 'name' property, which represents the group to which a cluster belongs (see 'az fleet member create --help').
+                Stages and groups can optionally include a 'memberSelector' to filter members by label. A 'memberSelector' contains a 'byLabel' property with a Kubernetes-style label selector string (e.g., "env=production"). When set on a group, it overrides name-based matching.
+                Stage memberSelector: pre-filters members for the entire stage. Only matching members are candidates for group-level matching.
+                Group memberSelector: selects members by label instead of matching by FleetMember.Group name. When set, overrides name-based matching.
+                Stages have an optional 'afterStageWaitInSeconds' integer property, acting as a delay between stage execution.
+                Stages and groups have an optional 'maxConcurrency' string property that sets the maximum number of concurrent upgrades allowed. It acts as a ceiling (not a quota)—actual concurrency may be lower due to other limits or member conditions. Minimum is 1.
+                Stage maxConcurrency: applies across all groups in the stage (total concurrent upgrades for the whole stage).
+                Group maxConcurrency: applies within a single group, and is additionally constrained by the stage limit (effective max is min(group cluster count, stage maxConcurrency)). Minimum is 1.
+                Stages and groups also have an optional 'maxAllowedFailures' string property.
+                Stage maxAllowedFailures: The maximum number of member (cluster) upgrade failures tolerated in this stage. Accepts a non-negative integer (e.g. '3') or a percentage (e.g. '25%'). Defaults to 0 if unset, meaning any failure fails the stage.
+                Group maxAllowedFailures: The maximum number of member (cluster) upgrade failures tolerated in this group. Accepts a non-negative integer (e.g. '3') or a percentage (e.g. '25%'). Defaults to 0 if unset, meaning any failure fails the group.
+                Value formats:
+                  Fixed count (e.g., 3)
+                  Percentage (e.g., 25%, 1–100) of the relevant cluster total (stage total for stage, group total for group).
+                  Examples: 0, 3, 25%, 100%
+
+                Example stages JSON, with optional properties maxConcurrency, maxAllowedFailures and before/after gates:
+               {
+                  "stages": [
+                    {
+                      "name": "stage1",
+                      "memberSelector": { "byLabel": "env=staging" },
+                      "maxConcurrency": "7%",
+                      "maxAllowedFailures": "50%",
+                      "beforeGates": [
+                        {
+                          "displayName": "stage before gate",
+                          "type": "Approval"
+                        }
+                      ],
+                      "afterGates": [
+                        {
+                          "displayName": "stage after gate",
+                          "type": "Approval"
+                        }
+                      ],
+                      "groups": [
+                        {
+                          "name": "group-a1",
+                          "memberSelector": { "byLabel": "tier=frontend" },
+                          "maxConcurrency": "100%",
+                          "maxAllowedFailures": "5",
+                          "beforeGates": [
+                            {
+                              "displayName": "group before gate",
+                              "type": "Approval"
+                            }
+                          ],
+                          "afterGates": [
+                            {
+                              "displayName": "group after gate",
+                              "type": "Approval"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "group-a2",
+                          "memberSelector": { "byLabel": "tier=backend" },
+                          "maxConcurrency": "1",
+                          "maxAllowedFailures": "25%",
+                          "beforeGates": [
+                            {
+                              "displayName": "group before gate",
+                              "type": "Approval"
+                            }
+                          ],
+                          "afterGates": [
+                            {
+                              "displayName": "group after gate",
+                              "type": "Approval"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "group-a3",
+                          "maxConcurrency": "1",
+                          "beforeGates": [
+                            {
+                              "displayName": "group before gate",
+                              "type": "Approval"
+                            }
+                          ],
+                          "afterGates": [
+                            {
+                              "displayName": "group after gate",
+                              "type": "Approval"
+                            }
+                          ]
+                        }
+                      ],
+                      "afterStageWaitInSeconds": 3600
+                    },
+                    {
+                      "name": "stage2",
+                      "memberSelector": { "byLabel": "env=production" },
+                      "beforeGates": [
+                        {
+                          "displayName": "Wait until Friday evening",
+                          "type": "ScheduledStart",
+                          "scheduledStartConfiguration": {
+                            "startDay": "Friday",
+                            "startTime": "18:00",
+                            "utcOffset": "-05:00"
+                          }
+                        }
+                      ],
+                      "groups": [
+                        {
+                          "name": "group-b1"
+                        },
+                        {
+                          "name": "group-b2"
+                        },
+                        {
+                          "name": "group-b3"
+                        }
+                      ]
+                    }
+                  ]
+                }
+"""
+
+helps['fleet updaterun show'] = """
+    type: command
+    short-summary: Shows an update run.
+    examples:
+        - name: Show the details of an update run.
+          text: az fleet updaterun show -g MyFleetResourceGroup -f MyFleetName -n NameofUpdateRun
+"""
+
+helps['fleet updaterun list'] = """
+    type: command
+    short-summary: Lists a fleet's update runs.
+    examples:
+        - name: Show the details of an update run.
+          text: az fleet updaterun list -g MyFleetResourceGroup -f MyFleetName
+"""
+
+helps['fleet updaterun delete'] = """
+    type: command
+    short-summary: Deletes an update run.
+    examples:
+        - name: Delete an update run.
+          text: az fleet updaterun delete -g MyFleetResourceGroup -f MyFleetName -n NameofUpdateRun
+"""
+
+helps['fleet updaterun start'] = """
+    type: command
+    short-summary: Starts an update run.
+    examples:
+        - name: Start an update run.
+          text: az fleet updaterun start -g MyFleetResourceGroup -f MyFleetName -n NameofUpdateRun
+"""
+
+helps['fleet updaterun stop'] = """
+    type: command
+    short-summary: Stops an update run.
+    examples:
+        - name: Stop an update run.
+          text: az fleet updaterun stop -g MyFleetResourceGroup -f MyFleetName -n NameofUpdateRun
+"""
+
+helps['fleet updaterun skip'] = """
+    type: command
+    short-summary: Sets targets to be skipped within an UpdateRun.
+    parameters:
+        - name: --targets
+          type: string array
+          short-summary: Space-separated list of targets to skip.  Targets must be of the form 'targetType:targetName' such as Group:MyGroup. Valid target types are ('Member', 'Group', 'Stage', 'AfterStageWait'). The target type is case-sensitive.
+    examples:
+        - name: Set two targets to be skipped.
+          text: az fleet updaterun skip -g MyFleetResourceGroup -f MyFleetName -n NameofUpdateRun --targets Group:my-group-name Stage:my-stage-name
+"""
+
+helps['fleet updaterun wait'] = """
+    type: command
+    short-summary: Wait for an update run resource to reach a desired state.
+    long-summary: If an operation on an update run was interrupted or was started with `--no-wait`, use this command to wait for it to complete.
+"""
+
+helps['fleet updatestrategy'] = """
+    type: group
+    short-summary: Commands to manage update strategies.
+"""
+
+helps['fleet updatestrategy create'] = """
+    type: command
+    short-summary: Creates or updates an update strategy.
+    parameters:
+        - name: --stages
+          type: string
+          short-summary: Path to a JSON file that defines the update strategy.
+    examples:
+        - name: Create an update strategy from a JSON file.
+          text: az fleet updatestrategy create -g MyFleetResourceGroup -f MyFleetName -n MyUpdateStrategy --stages MyUpdateStrategyFile.json
+"""
+
+helps['fleet updatestrategy show'] = """
+    type: command
+    short-summary: Shows an update strategy.
+    examples:
+        - name: Show the details of an update strategy.
+          text: az fleet updatestrategy show -g MyFleetResourceGroup -f MyFleetName -n MyUpdateStrategy
+"""
+
+helps['fleet updatestrategy list'] = """
+    type: command
+    short-summary: Lists the fleet's update strategies.
+    examples:
+        - name: List all update strategies for a given fleet.
+          text: az fleet updatestrategy list -g MyFleetResourceGroup -f MyFleetName
+"""
+
+helps['fleet updatestrategy delete'] = """
+    type: command
+    short-summary: Deletes a update strategy.
+    examples:
+        - name: Delete an update strategy.
+          text: az fleet updatestrategy delete -g MyFleetResourceGroup -f MyFleetName -n MyUpdateStrategy
+"""
+
+helps['fleet updatestrategy wait'] = """
+    type: command
+    short-summary: Wait for a update strategy resource to reach a desired state.
+    long-summary: If an operation on an update strategy was interrupted or was started with `--no-wait`, use this command to wait for it to complete.
+"""
+
+helps['fleet autoupgradeprofile'] = """
+    type: group
+    short-summary: Commands to manage auto upgrade profiles.
+"""
+
+helps['fleet autoupgradeprofile create'] = """
+    type: command
+    short-summary: Creates or updates an auto upgrade profile.
+    examples:
+        - name: Create an auto upgrade profile with channel 'Rapid' and disabled by default.
+          text: az fleet autoupgradeprofile create -g MyFleetResourceGroup -f MyFleetName -n MyAutoUpgradeProfileName -c Rapid --disabled
+        - name: Create an auto upgrade profile with channel 'NodeImage'.
+          text: az fleet autoupgradeprofile create -g MyFleetResourceGroup -f MyFleetName -n MyAutoUpgradeProfileName -c NodeImage
+"""
+
+helps['fleet autoupgradeprofile delete'] = """
+    type: command
+    short-summary: Deletes an auto upgrade profile.
+    examples:
+        - name: Delete an auto upgrade profile.
+          text: az fleet autoupgradeprofile delete -g MyFleetResourceGroup -f MyFleetName -n MyAutoUpgradeProfileName
+"""
+
+helps['fleet autoupgradeprofile show'] = """
+    type: command
+    short-summary: Shows an auto upgrade profile.
+    examples:
+        - name: Show the details of an auto upgrade profile.
+          text: az fleet autoupgradeprofile show -g MyFleetResourceGroup -f MyFleetName -n MyAutoUpgradeProfileName
+"""
+
+helps['fleet autoupgradeprofile list'] = """
+    type: command
+    short-summary: Lists all auto upgrade profiles for a given fleet.
+    examples:
+        - name: List auto upgrade profiles of a fleet.
+          text: az fleet autoupgradeprofile list -g MyFleetResourceGroup -f MyFleetName
+"""
+
+helps['fleet autoupgradeprofile generate-update-run'] = """
+    type: command
+    short-summary: Generates an update run for a given auto upgrade profile.
+    examples:
+        - name: Generates an update run for a given auto upgrade profile.
+          text: az fleet autoupgradeprofile generate-update-run -g MyFleetResourceGroup -f MyFleetName --auto-upgrade-profile-name MyAutoUpgradeProfileName
+"""
+
+helps['fleet autoupgradeprofile wait'] = """
+    type: command
+    short-summary: Wait for an auto upgrade resource to reach a desired state.
+    long-summary: If an operation on an auto upgrade profile was interrupted or was started with `--no-wait`, use this command to wait for it to complete.
+"""
+
+helps['fleet gate'] = """
+    type: group
+    short-summary: Commands to manage gates.
+"""
+
+helps['fleet gate list'] = """
+    type: command
+    short-summary: Lists all gates under a fleet.
+    examples:
+        - name: Lists all gates under a fleet.
+          text: az fleet gate list -g MyFleetResourceGroup --fleet-name MyFleetName
+        - name: List all gates, filtering on gate state. Valid values are ('Pending', 'Skipped', 'Completed').
+          text: az fleet gate list -g MyFleetResourceGroup --fleet-name MyFleetName --state Pending
+        - name: List all gates, filtering on gate type. Valid values are ('Approval', 'ScheduledStart').
+          text: az fleet gate list -g MyFleetResourceGroup --fleet-name MyFleetName --gate-type ScheduledStart
+        - name: List pending ScheduledStart gates.
+          text: az fleet gate list -g MyFleetResourceGroup --fleet-name MyFleetName --gate-type ScheduledStart --state Pending
+"""
+
+helps['fleet gate show'] = """
+    type: command
+    short-summary: Shows a specific gate.
+    examples:
+        - name: Shows a specific gate.
+          text: az fleet gate show -g MyFleetResourceGroup -f MyFleetName -n 3fa85f64-5717-4562-b3fc-2c963f66afa6
+"""
+
+helps['fleet gate update'] = """
+    type: command
+    short-summary: Updates a gate. Currently only the gate state can be updated. Valid values are ('Completed').
+    examples:
+        - name: Updates a gate.
+          text: az fleet gate update -g MyFleetResourceGroup --fleet-name MyFleetName --gate-name 3fa85f64-5717-4562-b3fc-2c963f66afa6 --state "Completed"
+"""
+
+helps['fleet gate approve'] = """
+    type: command
+    short-summary: Approves a gate, and sets the gate state to Completed. This modifies the gate state in the same way as the general-purpose update command, however it's simpler to use.
+    examples:
+        - name: Approves a gate.
+          text: az fleet gate approve -g MyFleetResourceGroup --fleet-name MyFleetName --gate-name 3fa85f64-5717-4562-b3fc-2c963f66afa6
+"""
+
+helps['fleet namespace'] = """
+    type: group
+    short-summary: Commands to manage fleet managed namespaces.
+"""
+
+helps['fleet namespace create'] = """
+    type: command
+    short-summary: Creates a fleet managed namespace.
+    examples:
+        - name: Create a basic fleet managed namespace.
+          text: az fleet namespace create -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace
+        - name: Create a fleet managed namespace with tags.
+          text: az fleet namespace create -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --tags environment=production key=value
+        - name: Create a fleet managed namespace with resource limits and policies.
+          text: az fleet namespace create -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --annotations key=value --labels key=value --cpu-requests 1m --cpu-limits 4m --memory-requests 1Mi --memory-limits 4Mi --ingress-policy AllowAll --egress-policy DenyAll --delete-policy Keep --adoption-policy Never
+        - name: Create a fleet managed namespace on specific member clusters.
+          text: az fleet namespace create -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --member-cluster-names team-01 team-02 team-03 team-04
+        - name: Create a fleet managed namespace with a rollout update strategy.
+          text: az fleet namespace create -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --member-cluster-names team-01 team-02 --rollout-update-strategy MyUpdateStrategy
+"""
+
+helps['fleet namespace update'] = """
+    type: command
+    short-summary: Updates a fleet managed namespace.
+    examples:
+        - name: Update tags for a fleet managed namespace.
+          text: az fleet namespace update -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --tags environment=production
+        - name: Update labels and annotations.
+          text: az fleet namespace update -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --labels "env=production team=devops" --annotations "owner=team-a"
+        - name: Update resource quotas.
+          text: az fleet namespace update -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --cpu-requests 1m --cpu-limits 4m --memory-requests 1Mi --memory-limits 4Mi
+        - name: Update network and lifecycle policies.
+          text: az fleet namespace update -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --ingress-policy AllowAll --egress-policy DenyAll --adoption-policy IfIdentical --delete-policy Delete
+        - name: Update member cluster placement.
+          text: az fleet namespace update -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --member-cluster-names team-01 team-02 team-03
+        - name: Update with a rollout update strategy.
+          text: az fleet namespace update -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --rollout-update-strategy my-update-strategy
+"""
+
+helps['fleet namespace list'] = """
+    type: command
+    short-summary: Lists a fleet's managed namespaces.
+    examples:
+        - name: List all managed namespaces for a given fleet.
+          text: az fleet namespace list -g MyFleetResourceGroup -f MyFleetName
+"""
+
+helps['fleet namespace show'] = """
+    type: command
+    short-summary: Gets a fleet managed namespace.
+    examples:
+        - name: Show the details of a specific managed namespace.
+          text: az fleet namespace show -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace
+"""
+
+helps['fleet namespace delete'] = """
+    type: command
+    short-summary: Deletes a fleet managed namespace.
+    examples:
+        - name: Delete a specific managed namespace.
+          text: az fleet namespace delete -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace
+"""
+
+helps['fleet namespace wait'] = """
+    type: command
+    short-summary: Wait for a fleet managed namespace to reach a desired state.
+    long-summary: If an operation on a fleet managed namespace was interrupted or was started with `--no-wait`, use this command to wait for it to complete.
+"""
+
+helps['fleet namespace get-credentials'] = """
+    type: command
+    short-summary: Get kubeconfig for a fleet namespace, with the namespace context pre-configured.
+    parameters:
+    - name: --member -m
+      type: string
+      short-summary: Specify the fleet member name to get credentials from its associated managed cluster.
+    - name: --context
+      type: string
+      short-summary: If specified, overwrite the default context name.
+    - name: --overwrite-existing
+      type: bool
+      short-summary: Overwrite any existing cluster entry with the same name.
+    - name: --file
+      type: string
+      short-summary: Kubernetes configuration file to update. Use "-" to print YAML to stdout instead.
+    examples:
+        - name: Get kubeconfig for a fleet namespace from the hub cluster.
+          text: az fleet namespace get-credentials -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace
+        - name: Get kubeconfig for a fleet namespace from a specific fleet member.
+          text: az fleet namespace get-credentials -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --member MyFleetMember
+        - name: Save kubeconfig to a specific file.
+          text: az fleet namespace get-credentials -g MyFleetResourceGroup -f MyFleetName -n MyManagedNamespace --file ~/my-namespace-config
+"""
+
+helps['fleet clustermeshprofile'] = """
+    type: group
+    short-summary: Commands to manage cluster mesh profiles.
+"""
+
+helps['fleet clustermeshprofile create'] = """
+    type: command
+    short-summary: Create or update a cluster mesh profile.
+    parameters:
+        - name: --member-selector --selector -s
+          type: string
+          short-summary: "Kubernetes-style label selector for selecting Fleet members, e.g. 'env=production'."
+    examples:
+        - name: Create a cluster mesh profile with a label selector.
+          text: az fleet clustermeshprofile create -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile --selector "env=production"
+        - name: Create a cluster mesh profile without a selector (no members selected initially).
+          text: az fleet clustermeshprofile create -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile
+"""
+
+helps['fleet clustermeshprofile show'] = """
+    type: command
+    short-summary: Get a cluster mesh profile.
+    examples:
+        - name: Show the details of a cluster mesh profile.
+          text: az fleet clustermeshprofile show -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile
+"""
+
+helps['fleet clustermeshprofile list'] = """
+    type: command
+    short-summary: List all cluster mesh profiles for a fleet.
+    examples:
+        - name: List all cluster mesh profiles for a given fleet.
+          text: az fleet clustermeshprofile list -g MyFleetResourceGroup -f MyFleetName
+"""
+
+helps['fleet clustermeshprofile delete'] = """
+    type: command
+    short-summary: Delete a cluster mesh profile. Members must be disconnected from the profile before it can be deleted.
+    examples:
+        - name: Delete a specific cluster mesh profile.
+          text: az fleet clustermeshprofile delete -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile
+"""
+
+helps['fleet clustermeshprofile apply'] = """
+    type: command
+    short-summary: Apply the cluster mesh profile to selected fleet members.
+    examples:
+        - name: Apply a cluster mesh profile.
+          text: az fleet clustermeshprofile apply -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile
+        - name: Preview what changes would be made without actually applying.
+          text: az fleet clustermeshprofile apply -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile --what-if --output table
+"""
+
+helps['fleet clustermeshprofile list-members'] = """
+    type: command
+    short-summary: List fleet members for a cluster mesh profile.
+    long-summary: |
+        Without --selector, lists members currently applied to the mesh profile.
+        With --selector, lists members that would match the profile's label selector (i.e. candidates for the next apply).
+    examples:
+        - name: List members currently applied to the mesh.
+          text: az fleet clustermeshprofile list-members -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile
+        - name: List members that would match the profile's selector.
+          text: az fleet clustermeshprofile list-members -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile --selector
+"""
+
+helps['fleet clustermeshprofile wait'] = """
+    type: command
+    short-summary: Wait for a cluster mesh profile to reach a desired state.
+    examples:
+        - name: Wait for the cluster mesh profile to reach Connected state after apply.
+          text: az fleet clustermeshprofile wait -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile --custom "properties.status.state=='Connected'"
+        - name: Wait for the cluster mesh profile to be created.
+          text: az fleet clustermeshprofile wait -g MyFleetResourceGroup -f MyFleetName -n MyClusterMeshProfile --created
+"""
