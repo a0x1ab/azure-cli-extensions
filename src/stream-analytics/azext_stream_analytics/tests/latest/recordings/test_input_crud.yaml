@@ -1,0 +1,737 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics job create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -n -g --data-locale --output-error-policy --out-of-order-policy --order-max-delay
+        --arrival-max-delay
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001?api-version=2024-11-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001","name":"cli_test_stream_analytics_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","test":"test_input_crud","date":"2026-06-23T04:42:38Z","module":"stream-analytics"},"properties":{"provisioningState":"Succeeded"}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '395'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:11 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: F32B8711564145D7A66F5B56F7A892A2 Ref B: SG2AA1040512062 Ref C: 2026-06-23T04:43:11Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"location": "westus", "properties": {"sku": {"name": "Standard"}, "eventsOutOfOrderPolicy":
+      "Drop", "outputErrorPolicy": "Drop", "eventsOutOfOrderMaxDelayInSeconds": 0,
+      "eventsLateArrivalMaxDelayInSeconds": 5, "dataLocale": "en-US"}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics job create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '234'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - -n -g --data-locale --output-error-policy --out-of-order-policy --order-max-delay
+        --arrival-max-delay
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job?api-version=2020-03-01
+  response:
+    body:
+      string: "{\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job\",\r\n
+        \ \"name\": \"job\",\r\n  \"type\": \"Microsoft.StreamAnalytics/streamingjobs\",\r\n
+        \ \"location\": \"West US\",\r\n  \"properties\": {\r\n    \"sku\": {\r\n
+        \     \"name\": \"Standard\"\r\n    },\r\n    \"jobId\": \"3374aa8c-a4a1-4c2f-9e06-37820d63d252\",\r\n
+        \   \"provisioningState\": \"Succeeded\",\r\n    \"jobState\": \"Created\",\r\n
+        \   \"eventsOutOfOrderPolicy\": \"Drop\",\r\n    \"outputErrorPolicy\": \"Drop\",\r\n
+        \   \"eventsOutOfOrderMaxDelayInSeconds\": 0,\r\n    \"eventsLateArrivalMaxDelayInSeconds\":
+        5,\r\n    \"dataLocale\": \"en-US\",\r\n    \"createdDate\": \"2026-06-23T04:43:13.623Z\",\r\n
+        \   \"compatibilityLevel\": \"1.0\",\r\n    \"jobStorageAccount\": null,\r\n
+        \   \"contentStoragePolicy\": \"SystemAccount\",\r\n    \"inputs\": [],\r\n
+        \   \"functions\": [],\r\n    \"outputs\": [],\r\n    \"jobType\": \"Cloud\",\r\n
+        \   \"cluster\": null\r\n  }\r\n}"
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '920'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:13 GMT
+      etag:
+      - 3463ffb4-22d0-4fcf-ab5a-476d4b42d646
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/1742214b-45c8-4013-9968-4d54aabf304e
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: 6E000628F1C742268169724DB5158E60 Ref B: SG2AA1070304036 Ref C: 2026-06-23T04:43:12Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - storage account keys list
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - --account-name
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Storage/storageAccounts?api-version=2025-08-01
+  response:
+    body:
+      string: '{"value":[{"sku":{"name":"Standard_LRS","tier":"Standard"},"kind":"StorageV2","id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/AI-Copilot/providers/Microsoft.Storage/storageAccounts/copilotml3327409876","name":"copilotml3327409876","type":"Microsoft.Storage/storageAccounts","location":"eastus","tags":{},"properties":{"allowCrossTenantDelegationSas":false,"keyCreationTime":{"key1":"2026-06-11T12:26:15.4550383Z","key2":"2026-06-11T12:26:15.4550383Z"},"allowCrossTenantReplication":false,"privateEndpointConnections":[],"minimumTlsVersion":"TLS1_2","allowBlobPublicAccess":false,"allowSharedKeyAccess":true,"isHnsEnabled":false,"networkAcls":{"ipv6Rules":[],"bypass":"AzureServices","virtualNetworkRules":[],"ipRules":[],"defaultAction":"Allow"},"supportsHttpsTrafficOnly":true,"encryption":{"services":{"file":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-06-11T12:26:15.4651668Z"},"blob":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-06-11T12:26:15.4651668Z"}},"keySource":"Microsoft.Storage"},"accessTier":"Hot","provisioningState":"Succeeded","creationTime":"2026-06-11T12:26:14.9662448Z","primaryEndpoints":{"dfs":"https://copilotml3327409876.dfs.core.windows.net/","web":"https://copilotml3327409876.z13.web.core.windows.net/","blob":"https://copilotml3327409876.blob.core.windows.net/","queue":"https://copilotml3327409876.queue.core.windows.net/","table":"https://copilotml3327409876.table.core.windows.net/","file":"https://copilotml3327409876.file.core.windows.net/"},"primaryLocation":"eastus","statusOfPrimary":"available"}},{"sku":{"name":"Standard_LRS","tier":"Standard"},"kind":"StorageV2","id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rgd4wf2lh2vcpuchg5oqrut2fldznkgx3lwtg33diryiyd4fb5p52hnun7rudmd3uk4/providers/Microsoft.Storage/storageAccounts/clitestjkop2ht7e442s7e3q","name":"clitestjkop2ht7e442s7e3q","type":"Microsoft.Storage/storageAccounts","location":"eastus2","tags":{},"properties":{"allowCrossTenantDelegationSas":false,"keyCreationTime":{"key1":"2026-05-17T13:37:08.1468663Z","key2":"2026-05-17T13:37:08.1468663Z"},"allowCrossTenantReplication":false,"privateEndpointConnections":[],"minimumTlsVersion":"TLS1_0","allowBlobPublicAccess":false,"networkAcls":{"ipv6Rules":[],"bypass":"AzureServices","virtualNetworkRules":[],"ipRules":[],"defaultAction":"Allow"},"supportsHttpsTrafficOnly":true,"encryption":{"services":{"file":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-17T13:37:08.1590998Z"},"blob":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-17T13:37:08.1590998Z"}},"keySource":"Microsoft.Storage"},"accessTier":"Hot","provisioningState":"Succeeded","creationTime":"2026-05-17T13:37:07.7301439Z","primaryEndpoints":{"dfs":"https://clitestjkop2ht7e442s7e3q.dfs.core.windows.net/","web":"https://clitestjkop2ht7e442s7e3q.z20.web.core.windows.net/","blob":"https://clitestjkop2ht7e442s7e3q.blob.core.windows.net/","queue":"https://clitestjkop2ht7e442s7e3q.queue.core.windows.net/","table":"https://clitestjkop2ht7e442s7e3q.table.core.windows.net/","file":"https://clitestjkop2ht7e442s7e3q.file.core.windows.net/"},"primaryLocation":"eastus2","statusOfPrimary":"available"}},{"sku":{"name":"Standard_LRS","tier":"Standard"},"kind":"StorageV2","id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rg6popetqa65ngf3ncl7r64v4qj36zaxyqfkjyfy552jxtbyh5enjghnj4dykhq4p5s/providers/Microsoft.Storage/storageAccounts/clitesto5pg37rxm32ho4n5d","name":"clitesto5pg37rxm32ho4n5d","type":"Microsoft.Storage/storageAccounts","location":"westus","tags":{},"properties":{"allowCrossTenantDelegationSas":false,"keyCreationTime":{"key1":"2026-05-17T13:30:10.1367359Z","key2":"2026-05-17T13:30:10.1367359Z"},"allowCrossTenantReplication":false,"privateEndpointConnections":[],"minimumTlsVersion":"TLS1_0","allowBlobPublicAccess":false,"networkAcls":{"ipv6Rules":[],"bypass":"AzureServices","virtualNetworkRules":[],"ipRules":[],"defaultAction":"Allow"},"supportsHttpsTrafficOnly":true,"encryption":{"services":{"file":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-17T13:30:10.1453818Z"},"blob":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-17T13:30:10.1453818Z"}},"keySource":"Microsoft.Storage"},"accessTier":"Hot","provisioningState":"Succeeded","creationTime":"2026-05-17T13:30:09.8821624Z","primaryEndpoints":{"dfs":"https://clitesto5pg37rxm32ho4n5d.dfs.core.windows.net/","web":"https://clitesto5pg37rxm32ho4n5d.z22.web.core.windows.net/","blob":"https://clitesto5pg37rxm32ho4n5d.blob.core.windows.net/","queue":"https://clitesto5pg37rxm32ho4n5d.queue.core.windows.net/","table":"https://clitesto5pg37rxm32ho4n5d.table.core.windows.net/","file":"https://clitesto5pg37rxm32ho4n5d.file.core.windows.net/"},"primaryLocation":"westus","statusOfPrimary":"available"}},{"sku":{"name":"Standard_LRS","tier":"Standard"},"kind":"Storage","id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.Storage/storageAccounts/clitest000002","name":"clitest000002","type":"Microsoft.Storage/storageAccounts","location":"westus","tags":{},"properties":{"allowCrossTenantDelegationSas":false,"keyCreationTime":{"key1":"2026-06-23T04:42:46.7684733Z","key2":"2026-06-23T04:42:46.7684733Z"},"allowCrossTenantReplication":false,"privateEndpointConnections":[],"minimumTlsVersion":"TLS1_0","allowBlobPublicAccess":false,"networkAcls":{"ipv6Rules":[],"bypass":"AzureServices","virtualNetworkRules":[],"ipRules":[],"defaultAction":"Allow"},"supportsHttpsTrafficOnly":true,"encryption":{"services":{"file":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-06-23T04:42:46.7786167Z"},"blob":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-06-23T04:42:46.7786167Z"}},"keySource":"Microsoft.Storage"},"provisioningState":"Succeeded","creationTime":"2026-06-23T04:42:46.5343840Z","primaryEndpoints":{"blob":"https://clitest000002.blob.core.windows.net/","queue":"https://clitest000002.queue.core.windows.net/","table":"https://clitest000002.table.core.windows.net/","file":"https://clitest000002.file.core.windows.net/"},"primaryLocation":"westus","statusOfPrimary":"available"}},{"sku":{"name":"Standard_LRS","tier":"Standard"},"kind":"StorageV2","id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitestsyuyxgeo2kqu2n2djwrtgf4qmyymwhbvushxwi4toyhmxhy4jbibstgo73sq7kbi7pvb/providers/Microsoft.Storage/storageAccounts/clitest4pyypwf2usmkkdsgr","name":"clitest4pyypwf2usmkkdsgr","type":"Microsoft.Storage/storageAccounts","location":"centralus","tags":{},"properties":{"allowCrossTenantDelegationSas":false,"keyCreationTime":{"key1":"2026-05-17T13:35:30.9660663Z","key2":"2026-05-17T13:35:30.9660663Z"},"allowCrossTenantReplication":false,"privateEndpointConnections":[],"minimumTlsVersion":"TLS1_0","allowBlobPublicAccess":false,"networkAcls":{"ipv6Rules":[],"bypass":"AzureServices","virtualNetworkRules":[],"ipRules":[],"defaultAction":"Allow"},"supportsHttpsTrafficOnly":true,"encryption":{"services":{"file":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-17T13:35:30.9744586Z"},"blob":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-17T13:35:30.9744586Z"}},"keySource":"Microsoft.Storage"},"accessTier":"Hot","provisioningState":"Succeeded","creationTime":"2026-05-17T13:35:30.6607976Z","primaryEndpoints":{"dfs":"https://clitest4pyypwf2usmkkdsgr.dfs.core.windows.net/","blob":"https://clitest4pyypwf2usmkkdsgr.blob.core.windows.net/","queue":"https://clitest4pyypwf2usmkkdsgr.queue.core.windows.net/","table":"https://clitest4pyypwf2usmkkdsgr.table.core.windows.net/","file":"https://clitest4pyypwf2usmkkdsgr.file.core.windows.net/"},"primaryLocation":"centralus","statusOfPrimary":"available"}},{"sku":{"name":"Standard_LRS","tier":"Standard"},"kind":"StorageV2","id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/tr-devtest-lab-sandbox/providers/Microsoft.Storage/storageAccounts/atrdevtestlabsandb6499","name":"atrdevtestlabsandb6499","type":"Microsoft.Storage/storageAccounts","location":"australiacentral","tags":{"hidden-DevTestLabs-LabUId":"e1cae8c0-8dce-4c09-a6ce-67581d5c7fd8"},"properties":{"allowCrossTenantDelegationSas":false,"defaultToOAuthAuthentication":false,"keyCreationTime":{"key1":"2026-05-20T20:30:08.6795443Z","key2":"2026-05-20T20:30:08.6795443Z"},"allowCrossTenantReplication":false,"privateEndpointConnections":[],"minimumTlsVersion":"TLS1_2","allowBlobPublicAccess":false,"allowSharedKeyAccess":true,"networkAcls":{"ipv6Rules":[],"bypass":"AzureServices","virtualNetworkRules":[],"ipRules":[],"defaultAction":"Allow"},"supportsHttpsTrafficOnly":true,"encryption":{"services":{"file":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-20T20:30:08.6953212Z"},"blob":{"keyType":"Account","enabled":true,"lastEnabledTime":"2026-05-20T20:30:08.6953212Z"}},"keySource":"Microsoft.Storage"},"accessTier":"Hot","provisioningState":"Succeeded","creationTime":"2026-05-20T20:30:08.6062652Z","primaryEndpoints":{"dfs":"https://atrdevtestlabsandb6499.dfs.core.windows.net/","web":"https://atrdevtestlabsandb6499.z24.web.core.windows.net/","blob":"https://atrdevtestlabsandb6499.blob.core.windows.net/","queue":"https://atrdevtestlabsandb6499.queue.core.windows.net/","table":"https://atrdevtestlabsandb6499.table.core.windows.net/","file":"https://atrdevtestlabsandb6499.file.core.windows.net/"},"primaryLocation":"australiacentral","statusOfPrimary":"available"}}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '9534'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:15 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-original-request-ids:
+      - 7f228053-4a08-4fe0-9076-48298ce92b96
+      - 202c4f91-596f-4450-92b8-44b05427c118
+      - 62f028a7-5e46-48a5-89a8-b5ab3d58d6ce
+      - 5d885a3e-ea53-40b2-a18f-7aadb6bcfd9f
+      - 1569394e-199a-4eb6-833d-f9c368acf27c
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 1FF7A86D32DC4CE599BB11C20240E3BE Ref B: SG2AA1070303025 Ref C: 2026-06-23T04:43:14Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - storage account keys list
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - --account-name
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.Storage/storageAccounts/clitest000002/listKeys?api-version=2025-08-01&$expand=kerb
+  response:
+    body:
+      string: '{"keys":[{"creationTime":"2026-06-23T04:42:46.7684733Z","keyName":"key1","value":"veryFakedStorageAccountKey==","permissions":"FULL"},{"creationTime":"2026-06-23T04:42:46.7684733Z","keyName":"key2","value":"veryFakedStorageAccountKey==","permissions":"FULL"}]}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '260'
+      content-type:
+      - application/json
+      date:
+      - Tue, 23 Jun 2026 04:43:16 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/f4412a62-24c8-493a-af9a-6257f4e9b197
+      x-ms-ratelimit-remaining-subscription-resource-requests:
+      - '799'
+      x-msedge-ref:
+      - 'Ref A: F5A82C6B39564100A5C074A3AF5E749B Ref B: SG2AA1040513060 Ref C: 2026-06-23T04:43:16Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - storage container create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - -n --account-name --account-key
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-storage-blob/12.29.0b1 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+      x-ms-date:
+      - Tue, 23 Jun 2026 04:43:17 GMT
+      x-ms-version:
+      - '2026-04-06'
+    method: PUT
+    uri: https://clitest000002.blob.core.windows.net/container?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Tue, 23 Jun 2026 04:43:17 GMT
+      etag:
+      - '"0x8DED0E1F240F66F"'
+      last-modified:
+      - Tue, 23 Jun 2026 04:43:18 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2026-04-06'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"name": "input", "properties": {"serialization": {"type": "Csv", "properties":
+      {"encoding": "UTF8", "fieldDelimiter": ","}}, "type": "Reference", "datasource":
+      {"type": "Microsoft.Storage/Blob", "properties": {"container": "container",
+      "dateFormat": "yyyy/MM/dd", "pathPattern": "{date}/{time}", "storageAccounts":
+      [{"accountKey": "veryFakedStorageAccountKey==", "accountName": "clitest000002"}],
+      "timeFormat": "HH"}}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '420'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - -n -g --job-name --properties
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input?api-version=2021-10-01-preview
+  response:
+    body:
+      string: "{\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input\",\r\n
+        \ \"name\": \"input\",\r\n  \"type\": \"Microsoft.StreamAnalytics/streamingjobs/inputs\",\r\n
+        \ \"properties\": {\r\n    \"type\": \"Reference\",\r\n    \"datasource\":
+        {\r\n      \"type\": \"Microsoft.Storage/Blob\",\r\n      \"properties\":
+        {\r\n        \"storageAccounts\": [\r\n          {\r\n            \"accountName\":
+        \"clitest000002\"\r\n          }\r\n        ],\r\n        \"container\": \"container\",\r\n
+        \       \"pathPattern\": \"{date}/{time}\",\r\n        \"dateFormat\": \"yyyy/MM/dd\",\r\n
+        \       \"timeFormat\": \"HH\",\r\n        \"authenticationMode\": \"ConnectionString\"\r\n
+        \     }\r\n    },\r\n    \"compression\": {\r\n      \"type\": \"None\"\r\n
+        \   },\r\n    \"schemaRegistry\": null,\r\n    \"serialization\": {\r\n      \"type\":
+        \"Csv\",\r\n      \"properties\": {\r\n        \"fieldDelimiter\": \",\",\r\n
+        \       \"encoding\": \"UTF8\",\r\n        \"format\": \"WithHeaders\"\r\n
+        \     }\r\n    },\r\n    \"messagingCatalogConfiguration\": null\r\n  }\r\n}"
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '1024'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:20 GMT
+      etag:
+      - 57ee7c3d-91c1-4f0a-8da5-f1f5aa891551
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/9559a195-6b1b-4284-ba45-e4fc44c1a78d
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: EC9FB33EC37F41008664BCE7DC718FA7 Ref B: SG2AA1070304023 Ref C: 2026-06-23T04:43:19Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"properties": {"serialization": {"type": "Csv", "properties": {"encoding":
+      "UTF8", "fieldDelimiter": ","}}, "type": "Reference", "datasource": {"type":
+      "Microsoft.Storage/Blob", "properties": {"container": "container", "dateFormat":
+      "yyyy/MM/dd", "pathPattern": "{date}/{time}", "storageAccounts": [{"accountKey":
+      "veryFakedStorageAccountKey==", "accountName": "clitest000002"}], "timeFormat":
+      "HH"}}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input test
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '403'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - -n -g --job-name --properties
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: POST
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input/test?api-version=2021-10-01-preview
+  response:
+    body:
+      string: ''
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '0'
+      date:
+      - Tue, 23 Jun 2026 04:43:21 GMT
+      location:
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input/OperationResults/0639177696000000000.9aed0f00-1e00-4536-a865-36290101c710?api-version=2021-10-01-preview&t=639177866016468473&c=MIIHlDCCBnygAwIBAgIQezb8rseFMm1IRs195n9vVzANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBXVVMyIENBIDAxMB4XDTI2MDQwNzIzNDE1NFoXDTI2MTAwMzA1NDE1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyN0RC1toIy0MUjNqRPJLB51RUbtwBvAu6pgWK5gw2lmci7lE7U6jMxMh_8ljqwlXFY90FwPHzKHdcfHD4M0Ma3DRUVgE-v0S1aUDhKodisph39p7biWkApcSmxbkzmQMB2D0u2Zm0IhszNnwquCfvJuftV7em4_XCA_NbUt5EYUpfjv1sYzkLLAA8_2geRJLmDRfZGZvSHhgN-bsErNiX7v-BdmAyt_5jYpEcuAWuKp_6DUtXPY_mbwCm-qkLcoXGR39z9dHcyaldZUrJJ6JYcAEG5QNboi3gR2R7bY7pVtxUqbJ9Gx2tDy1qzosxOu0hXflZnevb68ylv7B68Wu9AgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBQNw-Elcx5N6tZ9jh67WrWJYZxlnzAfBgNVHSMEGDAWgBSs43L6A7Jznj2VyO-HW67dG6HtaDCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdHVzMi9jcmxzL2NjbWV3ZXN0dXMycGtpL2NjbWV3ZXN0dXMyaWNhMDEvMzQvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L3dlc3R1czIvY3Jscy9jY21ld2VzdHVzMnBraS9jY21ld2VzdHVzMmljYTAxLzM0L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vd2VzdHVzMi9jcmxzL2NjbWV3ZXN0dXMycGtpL2NjbWV3ZXN0dXMyaWNhMDEvMzQvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21ld2VzdHVzMnBraS53ZXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZXdlc3R1czJpY2EwMS8zNC9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC93ZXN0dXMyL2NhY2VydHMvY2NtZXdlc3R1czJwa2kvY2NtZXdlc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdHVzMi9jYWNlcnRzL2NjbWV3ZXN0dXMycGtpL2NjbWV3ZXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS93ZXN0dXMyL2NhY2VydHMvY2NtZXdlc3R1czJwa2kvY2NtZXdlc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWV3ZXN0dXMycGtpLndlc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21ld2VzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQBOslPK0kujtTlyxe5WOtpNbQRYZ8iSxYHILxKtavGf63w2nf7l5nX07MzYQqUYkw1ZLV81KZUWrAqmYoK0fTLgq7S_ePVqJ0Bi0EefpAOxc4Q7FtrTXk-2n80mtrwbcDH_jHtUGHd5gGv7MEFSu5Wa2iI3mNDsNSZrscWUqrBhKiZ2zF0slf8YMpHWflHomPT5wBh2LQC9ub-GLJKfkVDFxokxP2roGR1np3ATyRygILitspiTUM4Bcia0TOmYoYUqpLZTBiVNI-ehKyCyQXxR9eeBX0xmiPRji8kPKfC97Q_8KsB0icYO2jpcYUsIggTmm6Rz61nAEqF34O6kWVt8&s=Ml6bysO5nhsXn7_rOKovi3ntqTjakcRiLbMzmunlNOXdf6YykoWJP2tqffXkmS04C0zpjVjZTHm1A4vlHVVF9V1uXYKFUN22NGEa5tEKeG7v-rGX6kphM49X3COAAWZpPLXILlM8z3MkLXaagltnooe-YqAnJB4BP7jEYRSg83NFwJlez9ow_Wzrc3b3IwcEPEmHFLtYSKAbO-F5RssKu6Vv4wpZs9Ut2P3Rxtf8U1CWhdzqQ-tIcqwF_cm4bPH0cHZNK4fK4ff0POGjL1yoDroFyrNQNEWA9baSNESYqqIa8DvBr84HXH0nodTZrAFNPOaXAG4aqZxNEqHBTTO8Hg&h=K15dsxFIDKOz1MzftoRuemKcSFhl0xx35oQCH1c9FKI
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/2ea9229a-edb7-4f87-869d-538aa9421226
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: BA8ACA28B8244BC8B06B3D509CB5125A Ref B: SG2AA1070305034 Ref C: 2026-06-23T04:43:21Z'
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input test
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -n -g --job-name --properties
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input/OperationResults/0639177696000000000.9aed0f00-1e00-4536-a865-36290101c710?api-version=2021-10-01-preview&t=639177866016468473&c=MIIHlDCCBnygAwIBAgIQezb8rseFMm1IRs195n9vVzANBgkqhkiG9w0BAQsFADA2MTQwMgYDVQQDEytDQ01FIEcxIFRMUyBSU0EgMjA0OCBTSEEyNTYgMjA0OSBXVVMyIENBIDAxMB4XDTI2MDQwNzIzNDE1NFoXDTI2MTAwMzA1NDE1NFowQDE-MDwGA1UEAxM1YXN5bmNvcGVyYXRpb25zaWduaW5nY2VydGlmaWNhdGUubWFuYWdlbWVudC5henVyZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyN0RC1toIy0MUjNqRPJLB51RUbtwBvAu6pgWK5gw2lmci7lE7U6jMxMh_8ljqwlXFY90FwPHzKHdcfHD4M0Ma3DRUVgE-v0S1aUDhKodisph39p7biWkApcSmxbkzmQMB2D0u2Zm0IhszNnwquCfvJuftV7em4_XCA_NbUt5EYUpfjv1sYzkLLAA8_2geRJLmDRfZGZvSHhgN-bsErNiX7v-BdmAyt_5jYpEcuAWuKp_6DUtXPY_mbwCm-qkLcoXGR39z9dHcyaldZUrJJ6JYcAEG5QNboi3gR2R7bY7pVtxUqbJ9Gx2tDy1qzosxOu0hXflZnevb68ylv7B68Wu9AgMBAAGjggSSMIIEjjCBnQYDVR0gBIGVMIGSMAwGCisGAQQBgjd7AQEwZgYKKwYBBAGCN3sCAjBYMFYGCCsGAQUFBwICMEoeSAAzADMAZQAwADEAOQAyADEALQA0AGQANgA0AC0ANABmADgAYwAtAGEAMAA1ADUALQA1AGIAZABhAGYAZgBkADUAZQAzADMAZDAMBgorBgEEAYI3ewMCMAwGCisGAQQBgjd7BAIwDAYDVR0TAQH_BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDgYDVR0PAQH_BAQDAgWgMB0GA1UdDgQWBBQNw-Elcx5N6tZ9jh67WrWJYZxlnzAfBgNVHSMEGDAWgBSs43L6A7Jznj2VyO-HW67dG6HtaDCCAbIGA1UdHwSCAakwggGlMGmgZ6BlhmNodHRwOi8vcHJpbWFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdHVzMi9jcmxzL2NjbWV3ZXN0dXMycGtpL2NjbWV3ZXN0dXMyaWNhMDEvMzQvY3VycmVudC5jcmwwa6BpoGeGZWh0dHA6Ly9zZWNvbmRhcnktY2RuLnBraS5jb3JlLndpbmRvd3MubmV0L3dlc3R1czIvY3Jscy9jY21ld2VzdHVzMnBraS9jY21ld2VzdHVzMmljYTAxLzM0L2N1cnJlbnQuY3JsMFqgWKBWhlRodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vd2VzdHVzMi9jcmxzL2NjbWV3ZXN0dXMycGtpL2NjbWV3ZXN0dXMyaWNhMDEvMzQvY3VycmVudC5jcmwwb6BtoGuGaWh0dHA6Ly9jY21ld2VzdHVzMnBraS53ZXN0dXMyLnBraS5jb3JlLndpbmRvd3MubmV0L2NlcnRpZmljYXRlQXV0aG9yaXRpZXMvY2NtZXdlc3R1czJpY2EwMS8zNC9jdXJyZW50LmNybDCCAbcGCCsGAQUFBwEBBIIBqTCCAaUwbAYIKwYBBQUHMAKGYGh0dHA6Ly9wcmltYXJ5LWNkbi5wa2kuY29yZS53aW5kb3dzLm5ldC93ZXN0dXMyL2NhY2VydHMvY2NtZXdlc3R1czJwa2kvY2NtZXdlc3R1czJpY2EwMS9jZXJ0LmNlcjBuBggrBgEFBQcwAoZiaHR0cDovL3NlY29uZGFyeS1jZG4ucGtpLmNvcmUud2luZG93cy5uZXQvd2VzdHVzMi9jYWNlcnRzL2NjbWV3ZXN0dXMycGtpL2NjbWV3ZXN0dXMyaWNhMDEvY2VydC5jZXIwXQYIKwYBBQUHMAKGUWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS93ZXN0dXMyL2NhY2VydHMvY2NtZXdlc3R1czJwa2kvY2NtZXdlc3R1czJpY2EwMS9jZXJ0LmNlcjBmBggrBgEFBQcwAoZaaHR0cDovL2NjbWV3ZXN0dXMycGtpLndlc3R1czIucGtpLmNvcmUud2luZG93cy5uZXQvY2VydGlmaWNhdGVBdXRob3JpdGllcy9jY21ld2VzdHVzMmljYTAxMA0GCSqGSIb3DQEBCwUAA4IBAQBOslPK0kujtTlyxe5WOtpNbQRYZ8iSxYHILxKtavGf63w2nf7l5nX07MzYQqUYkw1ZLV81KZUWrAqmYoK0fTLgq7S_ePVqJ0Bi0EefpAOxc4Q7FtrTXk-2n80mtrwbcDH_jHtUGHd5gGv7MEFSu5Wa2iI3mNDsNSZrscWUqrBhKiZ2zF0slf8YMpHWflHomPT5wBh2LQC9ub-GLJKfkVDFxokxP2roGR1np3ATyRygILitspiTUM4Bcia0TOmYoYUqpLZTBiVNI-ehKyCyQXxR9eeBX0xmiPRji8kPKfC97Q_8KsB0icYO2jpcYUsIggTmm6Rz61nAEqF34O6kWVt8&s=Ml6bysO5nhsXn7_rOKovi3ntqTjakcRiLbMzmunlNOXdf6YykoWJP2tqffXkmS04C0zpjVjZTHm1A4vlHVVF9V1uXYKFUN22NGEa5tEKeG7v-rGX6kphM49X3COAAWZpPLXILlM8z3MkLXaagltnooe-YqAnJB4BP7jEYRSg83NFwJlez9ow_Wzrc3b3IwcEPEmHFLtYSKAbO-F5RssKu6Vv4wpZs9Ut2P3Rxtf8U1CWhdzqQ-tIcqwF_cm4bPH0cHZNK4fK4ff0POGjL1yoDroFyrNQNEWA9baSNESYqqIa8DvBr84HXH0nodTZrAFNPOaXAG4aqZxNEqHBTTO8Hg&h=K15dsxFIDKOz1MzftoRuemKcSFhl0xx35oQCH1c9FKI
+  response:
+    body:
+      string: '{"status":"TestSucceeded","error":null,"diagnostics":null}'
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '58'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:22 GMT
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/0b725793-9534-4cb2-a2b7-f69d1e55f841
+      x-ms-ratelimit-remaining-subscription-global-reads:
+      - '3749'
+      x-msedge-ref:
+      - 'Ref A: 27E0539AC71E40B2B2A1F9657E583950 Ref B: SG2AA1070306031 Ref C: 2026-06-23T04:43:22Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input list
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -g --job-name
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs?api-version=2021-10-01-preview
+  response:
+    body:
+      string: "{\r\n  \"value\": [\r\n    {\r\n      \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input\",\r\n
+        \     \"name\": \"input\",\r\n      \"type\": \"Microsoft.StreamAnalytics/streamingjobs/inputs\",\r\n
+        \     \"properties\": {\r\n        \"type\": \"Reference\",\r\n        \"datasource\":
+        {\r\n          \"type\": \"Microsoft.Storage/Blob\",\r\n          \"properties\":
+        {\r\n            \"storageAccounts\": [\r\n              {\r\n                \"accountName\":
+        \"clitest000002\"\r\n              }\r\n            ],\r\n            \"container\":
+        \"container\",\r\n            \"pathPattern\": \"{date}/{time}\",\r\n            \"dateFormat\":
+        \"yyyy/MM/dd\",\r\n            \"timeFormat\": \"HH\",\r\n            \"authenticationMode\":
+        \"ConnectionString\"\r\n          }\r\n        },\r\n        \"compression\":
+        {\r\n          \"type\": \"None\"\r\n        },\r\n        \"schemaRegistry\":
+        null,\r\n        \"serialization\": {\r\n          \"type\": \"Csv\",\r\n
+        \         \"properties\": {\r\n            \"fieldDelimiter\": \",\",\r\n
+        \           \"encoding\": \"UTF8\",\r\n            \"format\": \"WithHeaders\"\r\n
+        \         }\r\n        },\r\n        \"messagingCatalogConfiguration\": null,\r\n
+        \       \"etag\": \"57ee7c3d-91c1-4f0a-8da5-f1f5aa891551\"\r\n      }\r\n
+        \   }\r\n  ],\r\n  \"nextLink\": null\r\n}"
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '1271'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:23 GMT
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/28714740-6042-4d38-aa61-64340838c620
+      x-ms-ratelimit-remaining-subscription-resource-requests:
+      - '1099'
+      x-msedge-ref:
+      - 'Ref A: E53A816E0E7A4E8A9268E9E7C47D7A8A Ref B: SG2AA1070302054 Ref C: 2026-06-23T04:43:24Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input update
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -n -g --job-name --properties
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input?api-version=2021-10-01-preview
+  response:
+    body:
+      string: "{\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input\",\r\n
+        \ \"name\": \"input\",\r\n  \"type\": \"Microsoft.StreamAnalytics/streamingjobs/inputs\",\r\n
+        \ \"properties\": {\r\n    \"type\": \"Reference\",\r\n    \"datasource\":
+        {\r\n      \"type\": \"Microsoft.Storage/Blob\",\r\n      \"properties\":
+        {\r\n        \"storageAccounts\": [\r\n          {\r\n            \"accountName\":
+        \"clitest000002\"\r\n          }\r\n        ],\r\n        \"container\": \"container\",\r\n
+        \       \"pathPattern\": \"{date}/{time}\",\r\n        \"dateFormat\": \"yyyy/MM/dd\",\r\n
+        \       \"timeFormat\": \"HH\",\r\n        \"authenticationMode\": \"ConnectionString\"\r\n
+        \     }\r\n    },\r\n    \"compression\": {\r\n      \"type\": \"None\"\r\n
+        \   },\r\n    \"schemaRegistry\": null,\r\n    \"serialization\": {\r\n      \"type\":
+        \"Csv\",\r\n      \"properties\": {\r\n        \"fieldDelimiter\": \",\",\r\n
+        \       \"encoding\": \"UTF8\",\r\n        \"format\": \"WithHeaders\"\r\n
+        \     }\r\n    },\r\n    \"messagingCatalogConfiguration\": null\r\n  }\r\n}"
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '1024'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:26 GMT
+      etag:
+      - 57ee7c3d-91c1-4f0a-8da5-f1f5aa891551
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/southeastasia/fb562480-5b99-49b1-b611-7adf4f2ec0bc
+      x-ms-ratelimit-remaining-subscription-resource-requests:
+      - '1099'
+      x-msedge-ref:
+      - 'Ref A: BC0FDDFFC6454739B2C7BE73EE82E38E Ref B: SG2AA1040516023 Ref C: 2026-06-23T04:43:25Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name": "input", "properties": {"compression": {"type": "None"}, "serialization":
+      {"type": "Csv", "properties": {"encoding": "UTF8", "fieldDelimiter": ","}},
+      "type": "Reference", "datasource": {"type": "Microsoft.Storage/Blob", "properties":
+      {"container": "container", "dateFormat": "MM/dd/yyyy", "pathPattern": "{date}/{time}",
+      "storageAccounts": [{"accountKey": "veryFakedStorageAccountKey==", "accountName":
+      "clitest000002"}], "timeFormat": "HH"}}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input update
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '453'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - -n -g --job-name --properties
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input?api-version=2021-10-01-preview
+  response:
+    body:
+      string: "{\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input\",\r\n
+        \ \"name\": \"input\",\r\n  \"type\": \"Microsoft.StreamAnalytics/streamingjobs/inputs\",\r\n
+        \ \"properties\": {\r\n    \"type\": \"Reference\",\r\n    \"datasource\":
+        {\r\n      \"type\": \"Microsoft.Storage/Blob\",\r\n      \"properties\":
+        {\r\n        \"storageAccounts\": [\r\n          {\r\n            \"accountName\":
+        \"clitest000002\"\r\n          }\r\n        ],\r\n        \"container\": \"container\",\r\n
+        \       \"pathPattern\": \"{date}/{time}\",\r\n        \"dateFormat\": \"MM/dd/yyyy\",\r\n
+        \       \"timeFormat\": \"HH\",\r\n        \"authenticationMode\": \"ConnectionString\"\r\n
+        \     }\r\n    },\r\n    \"compression\": {\r\n      \"type\": \"None\"\r\n
+        \   },\r\n    \"schemaRegistry\": null,\r\n    \"serialization\": {\r\n      \"type\":
+        \"Csv\",\r\n      \"properties\": {\r\n        \"fieldDelimiter\": \",\",\r\n
+        \       \"encoding\": \"UTF8\",\r\n        \"format\": \"WithHeaders\"\r\n
+        \     }\r\n    },\r\n    \"messagingCatalogConfiguration\": null\r\n  }\r\n}"
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '1024'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:28 GMT
+      etag:
+      - c03f0e57-566f-4fbd-b451-41ebd1208817
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/southeastasia/b384f788-f209-49ea-999c-f4d147277381
+      x-ms-ratelimit-remaining-subscription-global-writes:
+      - '2999'
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '199'
+      x-msedge-ref:
+      - 'Ref A: D8A4BFFBFFA74708AAEE562C4DA12336 Ref B: SG2AA1040519031 Ref C: 2026-06-23T04:43:27Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input show
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -n -g --job-name
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input?api-version=2021-10-01-preview
+  response:
+    body:
+      string: "{\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input\",\r\n
+        \ \"name\": \"input\",\r\n  \"type\": \"Microsoft.StreamAnalytics/streamingjobs/inputs\",\r\n
+        \ \"properties\": {\r\n    \"type\": \"Reference\",\r\n    \"datasource\":
+        {\r\n      \"type\": \"Microsoft.Storage/Blob\",\r\n      \"properties\":
+        {\r\n        \"storageAccounts\": [\r\n          {\r\n            \"accountName\":
+        \"clitest000002\"\r\n          }\r\n        ],\r\n        \"container\": \"container\",\r\n
+        \       \"pathPattern\": \"{date}/{time}\",\r\n        \"dateFormat\": \"MM/dd/yyyy\",\r\n
+        \       \"timeFormat\": \"HH\",\r\n        \"authenticationMode\": \"ConnectionString\"\r\n
+        \     }\r\n    },\r\n    \"compression\": {\r\n      \"type\": \"None\"\r\n
+        \   },\r\n    \"schemaRegistry\": null,\r\n    \"serialization\": {\r\n      \"type\":
+        \"Csv\",\r\n      \"properties\": {\r\n        \"fieldDelimiter\": \",\",\r\n
+        \       \"encoding\": \"UTF8\",\r\n        \"format\": \"WithHeaders\"\r\n
+        \     }\r\n    },\r\n    \"messagingCatalogConfiguration\": null\r\n  }\r\n}"
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '1024'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:29 GMT
+      etag:
+      - c03f0e57-566f-4fbd-b451-41ebd1208817
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/dc8f4b1b-b9f7-4eef-81fd-0f5cf2a78df2
+      x-ms-ratelimit-remaining-subscription-resource-requests:
+      - '1099'
+      x-msedge-ref:
+      - 'Ref A: 23BDF6268B144E47B22F0917A067B863 Ref B: SG2AA1040520052 Ref C: 2026-06-23T04:43:29Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - stream-analytics input delete
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      ParameterSetName:
+      - -n -g --job-name --yes
+      User-Agent:
+      - AZURECLI/2.87.0 azsdk-python-core/1.39.0 Python/3.12.10 (Windows-11-10.0.26200-SP0)
+    method: DELETE
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_stream_analytics_000001/providers/Microsoft.StreamAnalytics/streamingjobs/job/inputs/input?api-version=2021-10-01-preview
+  response:
+    body:
+      string: ''
+    headers:
+      cache-control:
+      - no-store, no-cache
+      content-length:
+      - '0'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 23 Jun 2026 04:43:30 GMT
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-operation-identifier:
+      - tenantId=544a7a2e-697f-487c-b2b0-a13df7f346b6,objectId=73deb370-6e80-42b7-bab4-943c887d3e3c/westus/1711f75b-8577-4df8-b890-94faf41a0c8d
+      x-ms-ratelimit-remaining-subscription-deletes:
+      - '199'
+      x-ms-ratelimit-remaining-subscription-global-deletes:
+      - '2999'
+      x-msedge-ref:
+      - 'Ref A: BF08830EFFD34981A70F3BD6C8574B02 Ref B: SG2AA1040517040 Ref C: 2026-06-23T04:43:31Z'
+    status:
+      code: 200
+      message: OK
+version: 1
