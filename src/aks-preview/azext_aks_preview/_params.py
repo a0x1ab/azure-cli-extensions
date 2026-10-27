@@ -33,6 +33,7 @@ from azure.cli.core.commands.parameters import (
     tags_type,
     zones_type,
 )
+from azure.cli.core.commands.validators import validate_file_or_dict
 from azext_aks_preview._validators import (
     validate_nat_gateway_managed_outbound_ipv6_count,
     validate_nat_gateway_v2_params,
@@ -1279,6 +1280,35 @@ def load_arguments(self, _):
             is_preview=True,
             help="Enable continuous control plane and addon monitor for the cluster.",
         )
+        # Backup (delegates to the dataprotection extension)
+        c.argument(
+            "enable_backup",
+            action="store_true",
+            is_preview=True,
+            help="Enable Azure Backup for this AKS cluster. Orchestrates the same flow as "
+                 "'az dataprotection enable-backup trigger' (requires the 'dataprotection' extension). "
+                 "Implicitly waits for cluster creation to complete (ignores --no-wait).",
+        )
+        c.argument(
+            "backup_strategy",
+            # NOTE: must mirror CONST_AKS_BACKUP_STRATEGIES in azext_dataprotection.manual._consts.
+            arg_type=get_enum_type(["Week", "Month", "DisasterRecovery", "Custom"]),
+            is_preview=True,
+            help="Backup strategy preset. Week (default, 7-day operational retention), Month "
+                 "(30-day operational retention), DisasterRecovery (7-day operational + 90-day vault "
+                 "retention), Custom (bring your own vault and policy via --backup-configuration). "
+                 "Only valid with --enable-backup.",
+        )
+        c.argument(
+            "backup_configuration_file",
+            options_list=["--backup-configuration"],
+            type=validate_file_or_dict,
+            is_preview=True,
+            help="Backup configuration as inline JSON string or @file.json. "
+                 "Supports storageAccountResourceId, blobContainerName, backupResourceGroupId, "
+                 "backupVaultId, backupPolicyId, tags. backupVaultId and backupPolicyId are required "
+                 "for Custom strategy. Only valid with --enable-backup.",
+        )
 
     with self.argument_context("aks update") as c:
         # managed cluster paramerters
@@ -1917,6 +1947,34 @@ def load_arguments(self, _):
             action="store_true",
             is_preview=True,
             help="Disable continuous control plane and addon monitor for the cluster.",
+        )
+        # Backup (delegates to the dataprotection extension)
+        c.argument(
+            "enable_backup",
+            action="store_true",
+            is_preview=True,
+            help="Enable Azure Backup for this AKS cluster. Orchestrates the same flow as "
+                 "'az dataprotection enable-backup trigger' (requires the 'dataprotection' extension).",
+        )
+        c.argument(
+            "backup_strategy",
+            # NOTE: must mirror CONST_AKS_BACKUP_STRATEGIES in azext_dataprotection.manual._consts.
+            arg_type=get_enum_type(["Week", "Month", "DisasterRecovery", "Custom"]),
+            is_preview=True,
+            help="Backup strategy preset. Week (default, 7-day operational retention), Month "
+                 "(30-day operational retention), DisasterRecovery (7-day operational + 90-day vault "
+                 "retention), Custom (bring your own vault and policy via --backup-configuration). "
+                 "Only valid with --enable-backup.",
+        )
+        c.argument(
+            "backup_configuration_file",
+            options_list=["--backup-configuration"],
+            type=validate_file_or_dict,
+            is_preview=True,
+            help="Backup configuration as inline JSON string or @file.json. "
+                 "Supports storageAccountResourceId, blobContainerName, backupResourceGroupId, "
+                 "backupVaultId, backupPolicyId, tags. backupVaultId and backupPolicyId are required "
+                 "for Custom strategy. Only valid with --enable-backup.",
         )
 
     with self.argument_context("aks delete") as c:
