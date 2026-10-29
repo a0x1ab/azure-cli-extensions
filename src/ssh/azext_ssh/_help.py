@@ -48,7 +48,7 @@ helps['ssh vm'] = """
           text: |
             az ssh vm --local-user username --resource-group myResourceGroup --name myArcServer
 
-        - name: Give a SSH Client Folder to use the ssh executables in that folder, like ssh-keygen.exe and ssh.exe. If not provided, the extension attempt to use pre-installed OpenSSH client (in that case, ensure OpenSSH client is installed and the Path environment variable is set correctly).
+        - name: Give a SSH Client Folder to use the ssh executables in that folder, like ssh-keygen.exe and ssh.exe. If not provided, the extension attempts to use pre-installed OpenSSH client (on Windows, extension looks for pre-installed executables under C:\\Windows\\System32\\OpenSSH).
           text: |
             az ssh vm --resource-group myResourceGroup --name myVM --ssh-client-folder "C:\\Program Files\\OpenSSH"
 """
@@ -91,9 +91,9 @@ helps['ssh config'] = """
             rsync -e 'ssh -F ./sshconfig' -avP directory/ myvm:~/directory
             GIT_SSH_COMMAND="ssh -F ./sshconfig" git clone myvm:~/gitrepo
 
-        - name: Give SSH Client Folder to use the ssh executables in that folder. If not provided, the extension attempt to use pre-installed OpenSSH client (in that case, ensure OpenSSH client is installed and the Path environment variable is set correctly).
+        - name: Give a SSH Client Folder to use the ssh executables in that folder, like ssh-keygen.exe. If not provided, the extension attempts to use pre-installed OpenSSH client (on Windows, extension looks for pre-installed executables under C:\\Windows\\System32\\OpenSSH).
           text: |
-            az ssh config --file ./sshconfig --resource-group myResourceGroup --name myMachine --ssh-client-folder "C:\\Program Files\\OpenSSH"
+            az ssh config --file ./myconfig --resource-group myResourceGroup --name myVM --ssh-client-folder "C:\\Program Files\\OpenSSH"
 
         - name: Give the Resource Type of the target. Useful when there is an Azure VM and an Arc Server with the same name in the same resource group. Resource type can be either "Microsoft.HybridCompute" for Arc Servers or "Microsoft.Compute" for Azure Virtual Machines.
           text: |
@@ -107,6 +107,9 @@ helps['ssh cert'] = """
         - name: Create a short lived ssh certificate signed by AAD
           text: |
             az ssh cert --public-key-file ./id_rsa.pub --file ./id_rsa-aadcert.pub
+        - name: Give a SSH Client Folder to use the ssh executables in that folder, like ssh-keygen.exe. If not provided, the extension attempts to use pre-installed OpenSSH client (on Windows, extension looks for pre-installed executables under C:\\Windows\\System32\\OpenSSH).
+          text: |
+            az ssh cert --file ./id_rsa-aadcert.pub --ssh-client-folder "C:\\Program Files\\OpenSSH"
 """
 
 helps['ssh arc'] = """
@@ -138,7 +141,7 @@ helps['ssh arc'] = """
           text: |
             az ssh arc --local-user username --resource-group myResourceGroup --name myMachine
 
-        - name: Give a SSH Client Folder to use the ssh executables in that folder, like ssh-keygen.exe and ssh.exe. If not provided, the extension attempt to use pre-installed OpenSSH client (ensure OpenSSH client is installed and the Path environment variable is set correctly).
+        - name: Give a SSH Client Folder to use the ssh executables in that folder, like ssh-keygen.exe and ssh.exe. If not provided, the extension attempts to use pre-installed OpenSSH client (on Windows, extension looks for pre-installed executables under C:\\Windows\\System32\\OpenSSH).
           text: |
             az ssh arc --resource-group myResourceGroup --name myMachine --ssh-client-folder "C:\\Program Files\\OpenSSH"
 """
