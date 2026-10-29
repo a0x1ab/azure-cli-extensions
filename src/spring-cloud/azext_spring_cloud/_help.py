@@ -147,6 +147,26 @@ helps['spring-cloud app log tail'] = """
     short-summary: Show logs of an app instance, logs will be streamed when setting '-f/--follow'.
 """
 
+helps['spring-cloud app identity'] = """
+    type: group
+    short-summary: manage an app's managed service identity
+"""
+
+helps['spring-cloud app identity assign'] = """
+    type: command
+    short-summary: Enable managed service identity on an app.
+"""
+
+helps['spring-cloud app identity remove'] = """
+    type: command
+    short-summary: Remove managed service identity from a app.
+"""
+
+helps['spring-cloud app identity show'] = """
+    type: command
+    short-summary: Display app's managed identity info.
+"""
+
 helps['spring-cloud app set-deployment'] = """
     type: command
     short-summary: Set production deployment of an app.
