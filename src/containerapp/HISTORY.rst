@@ -3,7 +3,9 @@
 Release History
 ===============
 0.3.28
-++++++
++++++++
+* 'az containerapp hostname bind': fix bug where the prompt for validation method didn't take value in
+* Make --validation-method parameter case insensitive for 'az containerapp hostname bind' and 'az containerapp env certificate create'
 * 'az containerapp secret set': fix help typo
 * 'az containerapp secret set': add more format validation for key vault secrets
 * 'az containerapp up': fix --location comparison logic
