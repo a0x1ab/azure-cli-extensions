@@ -101,6 +101,7 @@ from ._consts import (
     CONST_SPOT_EVICTION_POLICY_DELETE,
     CONST_VIRTUAL_NODE_ADDON_NAME,
     CONST_VIRTUAL_NODE_SUBNET_NAME,
+    CONST_WEB_APPLICATION_ROUTING_ADDON_NAME,
 )
 from ._helpers import (
     _trim_fqdn_name_containing_hcp,
@@ -147,6 +148,8 @@ from .vendored_sdks.azure_mgmt_preview_aks.v2022_04_02_preview.models import (
     ManagedClusterSnapshot,
     SysctlConfig,
     UserAssignedIdentity,
+    ManagedClusterIngressProfile,
+    ManagedClusterIngressProfileWebAppRouting,
 )
 
 logger = get_logger(__name__)
@@ -802,6 +805,7 @@ def aks_create(cmd,
                azure_keyvault_kms_key_id=None,
                enable_apiserver_vnet_integration=False,
                apiserver_subnet_id=None,
+               dns_zone_resource_id=None,
                yes=False):
     # DO NOT MOVE: get all the original parameters and save them as a dictionary
     raw_parameters = locals()
@@ -1357,6 +1361,7 @@ def _handle_addons_args(cmd,  # pylint: disable=too-many-statements
                         aci_subnet_name=None,
                         vnet_subnet_id=None,
                         enable_secret_rotation=False,
+                        dns_zone_resource_id=None,
                         rotation_poll_interval=None,):
     if not addon_profiles:
         addon_profiles = {}
@@ -2044,13 +2049,15 @@ def aks_addon_enable(cmd, client, resource_group_name, name, addon, workspace_re
                      subnet_name=None, appgw_name=None, appgw_subnet_prefix=None, appgw_subnet_cidr=None, appgw_id=None,
                      appgw_subnet_id=None,
                      appgw_watch_namespace=None, enable_sgxquotehelper=False, enable_secret_rotation=False, rotation_poll_interval=None,
-                     no_wait=False, enable_msi_auth_for_monitoring=False):
+                     no_wait=False, enable_msi_auth_for_monitoring=False,
+                     dns_zone_resource_id=None):
     return enable_addons(cmd, client, resource_group_name, name, addon, workspace_resource_id=workspace_resource_id,
                          subnet_name=subnet_name, appgw_name=appgw_name, appgw_subnet_prefix=appgw_subnet_prefix,
                          appgw_subnet_cidr=appgw_subnet_cidr, appgw_id=appgw_id, appgw_subnet_id=appgw_subnet_id,
                          appgw_watch_namespace=appgw_watch_namespace, enable_sgxquotehelper=enable_sgxquotehelper,
                          enable_secret_rotation=enable_secret_rotation, rotation_poll_interval=rotation_poll_interval, no_wait=no_wait,
-                         enable_msi_auth_for_monitoring=enable_msi_auth_for_monitoring)
+                         enable_msi_auth_for_monitoring=enable_msi_auth_for_monitoring,
+                         dns_zone_resource_id=dns_zone_resource_id)
 
 
 def aks_addon_disable(cmd, client, resource_group_name, name, addon, no_wait=False):
@@ -2061,12 +2068,18 @@ def aks_addon_update(cmd, client, resource_group_name, name, addon, workspace_re
                      subnet_name=None, appgw_name=None, appgw_subnet_prefix=None, appgw_subnet_cidr=None, appgw_id=None,
                      appgw_subnet_id=None,
                      appgw_watch_namespace=None, enable_sgxquotehelper=False, enable_secret_rotation=False, rotation_poll_interval=None,
-                     no_wait=False, enable_msi_auth_for_monitoring=False):
-    addon_profiles = client.get(resource_group_name, name).addon_profiles
+                     no_wait=False, enable_msi_auth_for_monitoring=False,
+                     dns_zone_resource_id=None):
+    instance = client.get(resource_group_name, name)
+    addon_profiles = instance.addon_profiles
     addon_key = ADDONS[addon]
 
-    if not addon_profiles or addon_key not in addon_profiles or not addon_profiles[addon_key].enabled:
-        raise CLIError(f'Addon "{addon}" is not enabled in this cluster.')
+    if addon_key == CONST_WEB_APPLICATION_ROUTING_ADDON_NAME:
+        if (instance.ingress_profile is None) or (instance.ingress_profile.web_app_routing is None) or not instance.ingress_profile.web_app_routing.enabled:
+            raise CLIError(f'Addon "{addon}" is not enabled in this cluster.')
+    else:
+        if not addon_profiles or addon_key not in addon_profiles or not addon_profiles[addon_key].enabled:
+            raise CLIError(f'Addon "{addon}" is not enabled in this cluster.')
 
     return enable_addons(cmd, client, resource_group_name, name, addon, check_enabled=False,
                          workspace_resource_id=workspace_resource_id,
@@ -2074,7 +2087,8 @@ def aks_addon_update(cmd, client, resource_group_name, name, addon, workspace_re
                          appgw_subnet_cidr=appgw_subnet_cidr, appgw_id=appgw_id, appgw_subnet_id=appgw_subnet_id,
                          appgw_watch_namespace=appgw_watch_namespace, enable_sgxquotehelper=enable_sgxquotehelper,
                          enable_secret_rotation=enable_secret_rotation, rotation_poll_interval=rotation_poll_interval, no_wait=no_wait,
-                         enable_msi_auth_for_monitoring=enable_msi_auth_for_monitoring)
+                         enable_msi_auth_for_monitoring=enable_msi_auth_for_monitoring,
+                         dns_zone_resource_id=dns_zone_resource_id)
 
 
 def aks_disable_addons(cmd, client, resource_group_name, name, addons, no_wait=False):
@@ -2119,7 +2133,8 @@ def aks_disable_addons(cmd, client, resource_group_name, name, addons, no_wait=F
 
 def aks_enable_addons(cmd, client, resource_group_name, name, addons, workspace_resource_id=None,
                       subnet_name=None, appgw_name=None, appgw_subnet_prefix=None, appgw_subnet_cidr=None, appgw_id=None, appgw_subnet_id=None,
-                      appgw_watch_namespace=None, enable_sgxquotehelper=False, enable_secret_rotation=False, rotation_poll_interval=None, no_wait=False, enable_msi_auth_for_monitoring=False):
+                      appgw_watch_namespace=None, enable_sgxquotehelper=False, enable_secret_rotation=False, rotation_poll_interval=None, no_wait=False, enable_msi_auth_for_monitoring=False,
+                      dns_zone_resource_id=None):
 
     instance = client.get(resource_group_name, name)
     # this is overwritten by _update_addons(), so the value needs to be recorded here
@@ -2129,7 +2144,8 @@ def aks_enable_addons(cmd, client, resource_group_name, name, addons, workspace_
     instance = _update_addons(cmd, instance, subscription_id, resource_group_name, name, addons, enable=True,
                               workspace_resource_id=workspace_resource_id, enable_msi_auth_for_monitoring=enable_msi_auth_for_monitoring, subnet_name=subnet_name,
                               appgw_name=appgw_name, appgw_subnet_prefix=appgw_subnet_prefix, appgw_subnet_cidr=appgw_subnet_cidr, appgw_id=appgw_id, appgw_subnet_id=appgw_subnet_id, appgw_watch_namespace=appgw_watch_namespace,
-                              enable_sgxquotehelper=enable_sgxquotehelper, enable_secret_rotation=enable_secret_rotation, rotation_poll_interval=rotation_poll_interval, no_wait=no_wait)
+                              enable_sgxquotehelper=enable_sgxquotehelper, enable_secret_rotation=enable_secret_rotation, rotation_poll_interval=rotation_poll_interval, no_wait=no_wait,
+                              dns_zone_resource_id=dns_zone_resource_id)
 
     if CONST_MONITORING_ADDON_NAME in instance.addon_profiles and instance.addon_profiles[CONST_MONITORING_ADDON_NAME].enabled:
         if CONST_MONITORING_USING_AAD_MSI_AUTH in instance.addon_profiles[CONST_MONITORING_ADDON_NAME].config and \
@@ -2214,6 +2230,7 @@ def _update_addons(cmd,  # pylint: disable=too-many-branches,too-many-statements
                    enable_secret_rotation=False,
                    disable_secret_rotation=False,
                    rotation_poll_interval=None,
+                   dns_zone_resource_id=None,
                    no_wait=False):  # pylint: disable=unused-argument
 
     # parse the comma-separated addons argument
@@ -2237,103 +2254,115 @@ def _update_addons(cmd,  # pylint: disable=too-many-branches,too-many-statements
             if key.lower() == addon.lower() and key != addon:
                 addon_profiles[addon] = addon_profiles.pop(key)
 
-        if enable:
-            # add new addons or update existing ones and enable them
-            addon_profile = addon_profiles.get(
-                addon, ManagedClusterAddonProfile(enabled=False))
-            # special config handling for certain addons
-            if addon == CONST_MONITORING_ADDON_NAME:
-                logAnalyticsConstName = CONST_MONITORING_LOG_ANALYTICS_WORKSPACE_RESOURCE_ID
-                if addon_profile.enabled:
-                    raise CLIError('The monitoring addon is already enabled for this managed cluster.\n'
-                                   'To change monitoring configuration, run "az aks disable-addons -a monitoring"'
-                                   'before enabling it again.')
-                if not workspace_resource_id:
-                    workspace_resource_id = ensure_default_log_analytics_workspace_for_monitoring(
-                        cmd,
-                        subscription_id,
-                        resource_group_name)
-                workspace_resource_id = sanitize_loganalytics_ws_resource_id(
-                    workspace_resource_id)
+        if addon == CONST_WEB_APPLICATION_ROUTING_ADDON_NAME:
+            # web app routing settings are in ingress profile, not addon profile, so deal
+            # with it separately
+            if instance.ingress_profile is None:
+                instance.ingress_profile = ManagedClusterIngressProfile()
+            if instance.ingress_profile.web_app_routing is None:
+                instance.ingress_profile.web_app_routing = ManagedClusterIngressProfileWebAppRouting()
+            instance.ingress_profile.web_app_routing.enabled = enable
 
-                addon_profile.config = {
-                    logAnalyticsConstName: workspace_resource_id}
-                addon_profile.config[CONST_MONITORING_USING_AAD_MSI_AUTH] = enable_msi_auth_for_monitoring
-            elif addon == (CONST_VIRTUAL_NODE_ADDON_NAME + os_type):
-                if addon_profile.enabled:
-                    raise CLIError('The virtual-node addon is already enabled for this managed cluster.\n'
-                                   'To change virtual-node configuration, run '
-                                   '"az aks disable-addons -a virtual-node -g {resource_group_name}" '
-                                   'before enabling it again.')
-                if not subnet_name:
-                    raise CLIError(
-                        'The aci-connector addon requires setting a subnet name.')
-                addon_profile.config = {
-                    CONST_VIRTUAL_NODE_SUBNET_NAME: subnet_name}
-            elif addon == CONST_INGRESS_APPGW_ADDON_NAME:
-                if addon_profile.enabled:
-                    raise CLIError('The ingress-appgw addon is already enabled for this managed cluster.\n'
-                                   'To change ingress-appgw configuration, run '
-                                   f'"az aks disable-addons -a ingress-appgw -n {name} -g {resource_group_name}" '
-                                   'before enabling it again.')
-                addon_profile = ManagedClusterAddonProfile(
-                    enabled=True, config={})
-                if appgw_name is not None:
-                    addon_profile.config[CONST_INGRESS_APPGW_APPLICATION_GATEWAY_NAME] = appgw_name
-                if appgw_subnet_prefix is not None:
-                    addon_profile.config[CONST_INGRESS_APPGW_SUBNET_CIDR] = appgw_subnet_prefix
-                if appgw_subnet_cidr is not None:
-                    addon_profile.config[CONST_INGRESS_APPGW_SUBNET_CIDR] = appgw_subnet_cidr
-                if appgw_id is not None:
-                    addon_profile.config[CONST_INGRESS_APPGW_APPLICATION_GATEWAY_ID] = appgw_id
-                if appgw_subnet_id is not None:
-                    addon_profile.config[CONST_INGRESS_APPGW_SUBNET_ID] = appgw_subnet_id
-                if appgw_watch_namespace is not None:
-                    addon_profile.config[CONST_INGRESS_APPGW_WATCH_NAMESPACE] = appgw_watch_namespace
-            elif addon == CONST_OPEN_SERVICE_MESH_ADDON_NAME:
-                if addon_profile.enabled:
-                    raise CLIError('The open-service-mesh addon is already enabled for this managed cluster.\n'
-                                   'To change open-service-mesh configuration, run '
-                                   f'"az aks disable-addons -a open-service-mesh -n {name} -g {resource_group_name}" '
-                                   'before enabling it again.')
-                addon_profile = ManagedClusterAddonProfile(
-                    enabled=True, config={})
-            elif addon == CONST_CONFCOM_ADDON_NAME:
-                if addon_profile.enabled:
-                    raise CLIError('The confcom addon is already enabled for this managed cluster.\n'
-                                   'To change confcom configuration, run '
-                                   f'"az aks disable-addons -a confcom -n {name} -g {resource_group_name}" '
-                                   'before enabling it again.')
-                addon_profile = ManagedClusterAddonProfile(
-                    enabled=True, config={CONST_ACC_SGX_QUOTE_HELPER_ENABLED: "false"})
-                if enable_sgxquotehelper:
-                    addon_profile.config[CONST_ACC_SGX_QUOTE_HELPER_ENABLED] = "true"
-            elif addon == CONST_AZURE_KEYVAULT_SECRETS_PROVIDER_ADDON_NAME:
-                if addon_profile.enabled:
-                    raise CLIError('The azure-keyvault-secrets-provider addon is already enabled for this managed cluster.\n'
-                                   'To change azure-keyvault-secrets-provider configuration, run '
-                                   f'"az aks disable-addons -a azure-keyvault-secrets-provider -n {name} -g {resource_group_name}" '
-                                   'before enabling it again.')
-                addon_profile = ManagedClusterAddonProfile(
-                    enabled=True, config={CONST_SECRET_ROTATION_ENABLED: "false", CONST_ROTATION_POLL_INTERVAL: "2m"})
-                if enable_secret_rotation:
-                    addon_profile.config[CONST_SECRET_ROTATION_ENABLED] = "true"
-                if disable_secret_rotation:
-                    addon_profile.config[CONST_SECRET_ROTATION_ENABLED] = "false"
-                if rotation_poll_interval is not None:
-                    addon_profile.config[CONST_ROTATION_POLL_INTERVAL] = rotation_poll_interval
-                addon_profiles[CONST_AZURE_KEYVAULT_SECRETS_PROVIDER_ADDON_NAME] = addon_profile
-            addon_profiles[addon] = addon_profile
+            if dns_zone_resource_id is not None:
+                instance.ingress_profile.web_app_routing.dns_zone_resource_id = dns_zone_resource_id
         else:
-            if addon not in addon_profiles:
-                if addon == CONST_KUBE_DASHBOARD_ADDON_NAME:
-                    addon_profiles[addon] = ManagedClusterAddonProfile(
-                        enabled=False)
-                else:
-                    raise CLIError(
-                        "The addon {} is not installed.".format(addon))
-            addon_profiles[addon].config = None
-        addon_profiles[addon].enabled = enable
+            if enable:
+                # add new addons or update existing ones and enable them
+                addon_profile = addon_profiles.get(
+                    addon, ManagedClusterAddonProfile(enabled=False))
+                # special config handling for certain addons
+                if addon == CONST_MONITORING_ADDON_NAME:
+                    logAnalyticsConstName = CONST_MONITORING_LOG_ANALYTICS_WORKSPACE_RESOURCE_ID
+                    if addon_profile.enabled:
+                        raise CLIError('The monitoring addon is already enabled for this managed cluster.\n'
+                                       'To change monitoring configuration, run "az aks disable-addons -a monitoring"'
+                                       'before enabling it again.')
+                    if not workspace_resource_id:
+                        workspace_resource_id = ensure_default_log_analytics_workspace_for_monitoring(
+                            cmd,
+                            subscription_id,
+                            resource_group_name)
+                    workspace_resource_id = sanitize_loganalytics_ws_resource_id(
+                        workspace_resource_id)
+
+                    addon_profile.config = {
+                        logAnalyticsConstName: workspace_resource_id}
+                    addon_profile.config[CONST_MONITORING_USING_AAD_MSI_AUTH] = enable_msi_auth_for_monitoring
+                elif addon == (CONST_VIRTUAL_NODE_ADDON_NAME + os_type):
+                    if addon_profile.enabled:
+                        raise CLIError('The virtual-node addon is already enabled for this managed cluster.\n'
+                                       'To change virtual-node configuration, run '
+                                       '"az aks disable-addons -a virtual-node -g {resource_group_name}" '
+                                       'before enabling it again.')
+                    if not subnet_name:
+                        raise CLIError(
+                            'The aci-connector addon requires setting a subnet name.')
+                    addon_profile.config = {
+                        CONST_VIRTUAL_NODE_SUBNET_NAME: subnet_name}
+                elif addon == CONST_INGRESS_APPGW_ADDON_NAME:
+                    if addon_profile.enabled:
+                        raise CLIError('The ingress-appgw addon is already enabled for this managed cluster.\n'
+                                       'To change ingress-appgw configuration, run '
+                                       f'"az aks disable-addons -a ingress-appgw -n {name} -g {resource_group_name}" '
+                                       'before enabling it again.')
+                    addon_profile = ManagedClusterAddonProfile(
+                        enabled=True, config={})
+                    if appgw_name is not None:
+                        addon_profile.config[CONST_INGRESS_APPGW_APPLICATION_GATEWAY_NAME] = appgw_name
+                    if appgw_subnet_prefix is not None:
+                        addon_profile.config[CONST_INGRESS_APPGW_SUBNET_CIDR] = appgw_subnet_prefix
+                    if appgw_subnet_cidr is not None:
+                        addon_profile.config[CONST_INGRESS_APPGW_SUBNET_CIDR] = appgw_subnet_cidr
+                    if appgw_id is not None:
+                        addon_profile.config[CONST_INGRESS_APPGW_APPLICATION_GATEWAY_ID] = appgw_id
+                    if appgw_subnet_id is not None:
+                        addon_profile.config[CONST_INGRESS_APPGW_SUBNET_ID] = appgw_subnet_id
+                    if appgw_watch_namespace is not None:
+                        addon_profile.config[CONST_INGRESS_APPGW_WATCH_NAMESPACE] = appgw_watch_namespace
+                elif addon == CONST_OPEN_SERVICE_MESH_ADDON_NAME:
+                    if addon_profile.enabled:
+                        raise CLIError('The open-service-mesh addon is already enabled for this managed cluster.\n'
+                                       'To change open-service-mesh configuration, run '
+                                       f'"az aks disable-addons -a open-service-mesh -n {name} -g {resource_group_name}" '
+                                       'before enabling it again.')
+                    addon_profile = ManagedClusterAddonProfile(
+                        enabled=True, config={})
+                elif addon == CONST_CONFCOM_ADDON_NAME:
+                    if addon_profile.enabled:
+                        raise CLIError('The confcom addon is already enabled for this managed cluster.\n'
+                                       'To change confcom configuration, run '
+                                       f'"az aks disable-addons -a confcom -n {name} -g {resource_group_name}" '
+                                       'before enabling it again.')
+                    addon_profile = ManagedClusterAddonProfile(
+                        enabled=True, config={CONST_ACC_SGX_QUOTE_HELPER_ENABLED: "false"})
+                    if enable_sgxquotehelper:
+                        addon_profile.config[CONST_ACC_SGX_QUOTE_HELPER_ENABLED] = "true"
+                elif addon == CONST_AZURE_KEYVAULT_SECRETS_PROVIDER_ADDON_NAME:
+                    if addon_profile.enabled:
+                        raise CLIError('The azure-keyvault-secrets-provider addon is already enabled for this managed cluster.\n'
+                                       'To change azure-keyvault-secrets-provider configuration, run '
+                                       f'"az aks disable-addons -a azure-keyvault-secrets-provider -n {name} -g {resource_group_name}" '
+                                       'before enabling it again.')
+                    addon_profile = ManagedClusterAddonProfile(
+                        enabled=True, config={CONST_SECRET_ROTATION_ENABLED: "false", CONST_ROTATION_POLL_INTERVAL: "2m"})
+                    if enable_secret_rotation:
+                        addon_profile.config[CONST_SECRET_ROTATION_ENABLED] = "true"
+                    if disable_secret_rotation:
+                        addon_profile.config[CONST_SECRET_ROTATION_ENABLED] = "false"
+                    if rotation_poll_interval is not None:
+                        addon_profile.config[CONST_ROTATION_POLL_INTERVAL] = rotation_poll_interval
+                    addon_profiles[CONST_AZURE_KEYVAULT_SECRETS_PROVIDER_ADDON_NAME] = addon_profile
+                addon_profiles[addon] = addon_profile
+            else:
+                if addon not in addon_profiles:
+                    if addon == CONST_KUBE_DASHBOARD_ADDON_NAME:
+                        addon_profiles[addon] = ManagedClusterAddonProfile(
+                            enabled=False)
+                    else:
+                        raise CLIError(
+                            "The addon {} is not installed.".format(addon))
+                addon_profiles[addon].config = None
+            addon_profiles[addon].enabled = enable
 
     instance.addon_profiles = addon_profiles
 
