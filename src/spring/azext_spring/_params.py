@@ -44,7 +44,7 @@ from ._app_managed_identity_validator import (validate_create_app_with_user_iden
                                               validate_app_force_set_system_identity_or_warning,
                                               validate_app_force_set_user_identity_or_warning)
 from ._utils import ApiType
-from .vendored_sdks.appplatform.v2024_01_01_preview.models._app_platform_management_client_enums import (CustomizedAcceleratorType, ConfigurationServiceGeneration, SupportedRuntimeValue, TestKeyType, BackendProtocol, SessionAffinity, ApmType, BindingType)
+from .vendored_sdks.appplatform.v2024_05_01_preview.models._app_platform_management_client_enums import (CustomizedAcceleratorType, ConfigurationServiceGeneration, SupportedRuntimeValue, TestKeyType, BackendProtocol, SessionAffinity, ApmType, BindingType)
 
 
 name_type = CLIArgumentType(options_list=[
@@ -91,6 +91,11 @@ def load_arguments(self, _):
         c.argument('outbound_type', arg_group='VNet Injection',
                    help='The outbound type of Azure Spring Apps VNet instance.',
                    validator=validate_vnet, default="loadBalancer")
+        c.argument('enable_private_storage_access',
+                   arg_group='VNet Injection',
+                   arg_type=get_three_state_flag(),
+                   is_preview=True,
+                   help='If true, set private network access to underlying storage in vnet injection instance.')
         c.argument('enable_log_stream_public_endpoint',
                    arg_type=get_three_state_flag(),
                    validator=validate_dataplane_public_endpoint,
@@ -256,6 +261,12 @@ def load_arguments(self, _):
                    validator=validate_dataplane_public_endpoint,
                    options_list=['--enable-dataplane-public-endpoint', '--enable-dppa'],
                    help='If true, assign public endpoint for log streaming, remote debugging, app connect in vnet injection instance which could be accessed out of virtual network.')
+
+        c.argument('enable_private_storage_access',
+                   arg_group='VNet Injection',
+                   arg_type=get_three_state_flag(),
+                   is_preview=True,
+                   help='If true, set private network access to underlying storage in vnet injection instance.')
 
         c.argument('enable_planned_maintenance',
                    arg_group='Planned Maintenance',
