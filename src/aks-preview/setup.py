@@ -9,7 +9,7 @@ from codecs import open as open1
 
 from setuptools import setup, find_packages
 
-VERSION = "9.0.0b7"
+VERSION = "9.0.0b8"
 
 CLASSIFIERS = [
     "Development Status :: 4 - Beta",
@@ -23,7 +23,9 @@ CLASSIFIERS = [
     "License :: OSI Approved :: MIT License",
 ]
 
-DEPENDENCIES = []
+DEPENDENCIES = [
+    'cachetools~=5.5.0'
+]
 
 with open1("README.rst", "r", encoding="utf-8") as f:
     README = f.read()
