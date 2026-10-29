@@ -85,6 +85,9 @@ def validate_create(cmd, namespace):
         _prompt_repair_password(namespace)
     # Validate vm password
     validate_vm_password(namespace.repair_password, is_linux)
+    # Prompt input for public ip usage
+    if not namespace.associate_public_ip:
+        _prompt_public_ip(namespace)
 
 
 def validate_restore(cmd, namespace):
@@ -199,6 +202,18 @@ def _prompt_repair_password(namespace):
         namespace.repair_password = prompt_pass('Repair VM admin password: ', confirm=True)
     except NoTTYException:
         raise CLIError('Please specify the password parameter in non-interactive mode.')
+
+
+def _prompt_public_ip(namespace):
+    from knack.prompting import prompt_y_n, NoTTYException
+    try:
+        if prompt_y_n('Does repair vm requires public ip?'):
+            namespace.associate_public_ip = "yes"
+        else:
+            namespace.associate_public_ip = '""'
+
+    except NoTTYException:
+        raise CLIError('Please specify the associate-public-ip parameter in non-interactive mode.')
 
 
 def _classic_vm_exists(cmd, resource_group_name, vm_name):
