@@ -1,5 +1,9 @@
 Release History
 ===============
+1.20.2
+---
+* Command `az spring create` and `az spring update` include a new argument "--enable-private-storage-access" to set whether private network access to underlying storage in vnet injection instance.
+
 1.20.1
 ---
 * Add command to show the configurations pulled by Application Configuration Service from upstream Git repositories. `az spring application-configuration-service config show`.

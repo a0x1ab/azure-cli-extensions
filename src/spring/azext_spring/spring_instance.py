@@ -6,7 +6,7 @@
 # pylint: disable=wrong-import-order
 # pylint: disable=unused-argument, logging-format-interpolation, protected-access, wrong-import-order, too-many-lines
 from ._utils import (wait_till_end, _get_rg_location, register_provider_if_needed)
-from .vendored_sdks.appplatform.v2024_01_01_preview import models
+from .vendored_sdks.appplatform.v2024_05_01_preview import models
 from .custom import (_warn_enable_java_agent, _update_application_insights_asc_create)
 from ._build_service import _update_default_build_agent_pool, create_build_service
 from .buildpack_binding import create_default_buildpack_binding_for_application_insights
@@ -64,6 +64,7 @@ class DefaultSpringCloud:
                        outbound_type=None,
                        enable_log_stream_public_endpoint=None,
                        enable_dataplane_public_endpoint=None,
+                       enable_private_storage_access=None,
                        zone_redundant=False,
                        sku=None,
                        tags=None,
@@ -77,14 +78,18 @@ class DefaultSpringCloud:
         )
 
         if enable_log_stream_public_endpoint is not None or enable_dataplane_public_endpoint is not None:
+            if properties.vnet_addons is None:
+                properties.vnet_addons = models.ServiceVNetAddons()
             val = enable_log_stream_public_endpoint if enable_log_stream_public_endpoint is not None else \
                 enable_dataplane_public_endpoint
-            properties.vnet_addons = models.ServiceVNetAddons(
-                data_plane_public_endpoint=val,
-                log_stream_public_endpoint=val
-            )
-        else:
-            properties.vnet_addons = None
+            properties.vnet_addons.data_plane_public_endpoint=val
+            properties.vnet_addons.log_stream_public_endpoint=val
+
+        if enable_private_storage_access is not None:
+            if properties.vnet_addons is None:
+                properties.vnet_addons = models.ServiceVNetAddons()
+            val = "Enabled" if enable_private_storage_access else "Disabled"
+            properties.vnet_addons.private_storage_access = val
 
         if marketplace_plan_id:
             properties.marketplace_resource = models.MarketplaceResource(
@@ -191,6 +196,7 @@ def spring_create(cmd, client, resource_group, name,
                   enable_application_accelerator=False,
                   enable_log_stream_public_endpoint=None,
                   enable_dataplane_public_endpoint=None,
+                  enable_private_storage_access=None,
                   ingress_read_timeout=None,
                   marketplace_plan_id=None,
                   managed_environment=None,
@@ -233,6 +239,7 @@ def spring_create(cmd, client, resource_group, name,
         'enable_application_accelerator': enable_application_accelerator,
         'enable_log_stream_public_endpoint': enable_log_stream_public_endpoint,
         'enable_dataplane_public_endpoint': enable_dataplane_public_endpoint,
+        'enable_private_storage_access': enable_private_storage_access,
         'marketplace_plan_id': marketplace_plan_id,
         'managed_environment': managed_environment,
         'infra_resource_group': infra_resource_group,
