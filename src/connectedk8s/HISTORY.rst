@@ -2,6 +2,11 @@
 
 Release History
 ===============
+1.3.7
+++++++
+
+* Added heuristics change - Remove detection of Distro and infra
+
 1.3.6
 ++++++
 
