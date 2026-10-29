@@ -1,0 +1,127 @@
+resources:
+- repo: self
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+
+jobs:
+- job: CredScan
+  displayName: "Credential Scan"
+
+  pool:
+    vmImage: "windows-2019"
+  steps:
+  - task: CredScan@2
+    inputs:
+      toolMajorVersion: 'V2'
+
+  - task: PostAnalysis@1
+    inputs:
+      AllTools: false
+      APIScan: false
+      BinSkim: false
+      CodesignValidation: false
+      CredScan: true
+      FortifySCA: false
+      FxCop: false
+      ModernCop: false
+      PoliCheck: false
+      RoslynAnalyzers: false
+      SDLNativeRules: false
+      Semmle: false
+      TSLint: false
+      ToolLogsNotFoundAction: 'Standard'
+
+- job: StaticAnalysis
+  displayName: "Static Analysis"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python 3.6'
+      inputs:
+        versionSpec: 3.6
+    - bash: pip install wheel==0.30.0 pylint==1.9.5 flake8==3.5.0 requests
+      displayName: 'Install wheel, pylint, flake8, requests'
+    - bash: python scripts/ci/source_code_static_analysis.py
+      displayName: "Static Analysis"
+
+- job: IndexVerify
+  displayName: "Verify Extensions Index"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python 3.7'
+    inputs:
+      versionSpec: 3.7
+  - bash: |
+      #!/usr/bin/env bash
+      set -ev
+      pip install wheel==0.30.0 requests
+      export CI="ADO"
+      python ./scripts/ci/test_index.py -v
+    displayName: "Verify Extensions Index"
+
+# - job: TestsPython27
+#   displayName: "Tests Python 2.7"
+#   pool:
+#     vmImage: 'ubuntu-16.04'
+#   steps:
+#   - task: UsePythonVersion@0
+#     displayName: 'Use Python 2.7'
+#     inputs:
+#       versionSpec: 2.7
+#   - task: Bash@3
+#     displayName: "Tests Python 2.7"
+#     inputs:
+#       targetType: 'filePath'
+#       filePath: scripts/ci/test_source.sh
+
+# - job: TestsPython37
+#   displayName: "Tests Python 3.7"
+#   pool:
+#     vmImage: 'ubuntu-16.04'
+#   steps:
+#   - task: UsePythonVersion@0
+#     displayName: 'Use Python 3.7'
+#     inputs:
+#       versionSpec: 3.7
+#   - task: Bash@3
+#     displayName: "Tests Python 3.7"
+#     inputs:
+#       targetType: 'filePath'
+#       filePath: scripts/ci/test_source.sh
+
+# - job: LintModifiedExtensions
+#   displayName: "CLI Linter on Modified Extensions"
+#   pool:
+#     vmImage: 'ubuntu-16.04'
+#   steps:
+#   - task: UsePythonVersion@0
+#     displayName: 'Use Python 3.7'
+#     inputs:
+#       versionSpec: 3.7
+#   - task: Bash@3
+#     displayName: "CLI Linter on Modified Extension"
+#     inputs:
+#       targetType: 'filePath'
+#       filePath: scripts/ci/verify_modified_index.sh
+
+- job: IndexRefDocVerify
+  displayName: "Verify Ref Docs"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python 3.7'
+    inputs:
+      versionSpec: 3.7
+  - task: Bash@3
+    displayName: "Verify Extension Ref Docs"
+    inputs:
+      targetType: 'filePath'
+      filePath: scripts/ci/test_index_ref_doc.sh
