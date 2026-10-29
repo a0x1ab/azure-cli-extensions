@@ -27,8 +27,12 @@ def load_arguments(self, _):
                    help='Will use a private IP if available. By default only public IPs are used.')
         c.argument('overwrite', action='store_true', options_list=['--overwrite'],
                    help='Overwrites the config file if this flag is set')
+        c.argument('credentials_folder', options_list=['--keys-destination-folder'],
+                   help='Folder where new generated keys will be stored.')
 
     with self.argument_context('ssh cert') as c:
         c.argument('cert_path', options_list=['--file', '-f'],
                    help='The file path to write the SSH cert to, defaults to public key path with -aadcert.pub appened')
-        c.argument('public_key_file', options_list=['--public-key-file', '-p'], help='The RSA public key file path')
+        c.argument('public_key_file', options_list=['--public-key-file', '-p'],
+                   help='The RSA public key file path. If not provided, '
+                   'generated key pair is stored in the same directory as --file')
