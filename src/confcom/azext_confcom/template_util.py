@@ -395,12 +395,35 @@ def change_key_names(dictionary) -> Dict:
     return dictionary
 
 
+def get_diff_size(diff: dict) -> int:
+    """Utility function: get the size of the diff dictionary"""
+    size = 0
+    for key in diff:
+        if isinstance(diff[key], dict):
+            size += get_diff_size_helper(diff[key])
+        else:
+            size += 1
+    return size
+
+
+def get_diff_size_helper(diff: dict) -> int:
+    size = 0
+    for key in diff:
+        if isinstance(diff[key], dict):
+            size += get_diff_size_helper(diff[key])
+        elif isinstance(diff[key], list) and key == "env_rules":
+            size += len(diff[key])
+        else:
+            size += 1
+    return size
+
+
 def replace_params_and_vars(params: dict, vars_dict: dict, attribute):
     out = None
     if isinstance(attribute, (int, float, bool)):
         out = attribute
     elif isinstance(attribute, str):
-        out = find_value_in_params_and_vars(params, vars_dict, attribute)
+        out = find_value_in_params_and_vars(params, vars_dict, attribute, ignore_undefined_parameters=True)
         param_name = re.finditer(WHOLE_PARAMETER_AND_VARIABLE, attribute)
 
         # there should only be one match
