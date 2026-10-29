@@ -306,6 +306,11 @@ def load_arguments(self, _):
         c.argument('managed_env', validator=validate_env_name_or_id, options_list=['--environment'], help="Name or resource ID of the container app's environment.")
         c.argument('environment_type', arg_type=get_enum_type(["managed", "connected"]), help="Type of environment.", is_preview=True)
 
+    # scale
+    with self.argument_context('containerapp', arg_group='Scale') as c:
+        c.argument('scale_rule_identity', options_list=['--scale-rule-identity', '--sri'], 
+                   help='Resource ID of a managed identity to authenticate with Azure scaler resource(storage account/eventhub or else), or System to use a system-assigned identity.', is_preview=True)
+
     with self.argument_context('containerapp connected-env') as c:
         c.argument('name', name_type, help='Name of the Container Apps connected environment.')
         c.argument('resource_group_name', arg_type=resource_group_name_type)
