@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
-from knack.help_files import helps
+from knack.help_files import helps  # pylint: disable=unused-import
 
 # pylint: disable=line-too-long
 
