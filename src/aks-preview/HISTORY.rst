@@ -12,6 +12,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 
+2.0.0b8
++++++++
+* Remove support for nodeSelector for egress gateway for `az aks mesh` command.
+
 2.0.0b7
 +++++++
 * Support reset default value for loadbalancer profile and natgateway profile
