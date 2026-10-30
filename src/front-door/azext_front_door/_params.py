@@ -49,6 +49,11 @@ def load_arguments(self, _):
     with self.argument_context('network front-door', arg_group='Frontend Endpoint') as c:
         c.argument('frontend_host_name', help='Domain name of the frontend endpoint.')
 
+    with self.argument_context('network front-door', arg_group='HTTPS') as c:
+        c.argument('secret_name', help='The name of the Key Vault secret representing the full certificate PFX')
+        c.argument('secret_version', help='The version of the Key Vault secret representing the full certificate PFX')
+        c.argument('vault_id', help='The resource id of the Key Vault containing the SSL certificate')
+
     with self.argument_context('network front-door', arg_group='Backend') as c:
         c.argument('backend_address', help='FQDN of the backend endpoint.')
         c.argument('backend_host_header', help='Host header sent to the backend.')
