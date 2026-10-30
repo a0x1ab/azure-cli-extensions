@@ -12,6 +12,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 
+5.0.0b4
+++++++++
+* Add additional unit test cases for mutable fips flags in agentpool update.
+
 5.0.0b3
 ++++++++
 * Add support for mutable fips in agentpool update. (enable/disable flags)
