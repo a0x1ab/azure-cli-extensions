@@ -11,6 +11,7 @@ upcoming
 * 'az containerapp env telemetry otlp remove': Support remove environment otlp configuration with --otlp-name
 * 'az containerapp env telemetry otlp show': Support show environment otlp configuration with --otlp-name
 * 'az containerapp env telemetry otlp list': Support show environment otlp configurations
+* Wait long time for logstream of Cloud Build to the 'az containerapp up'/'az containerapp create' and 'az containerapp update' commands
 
 0.3.49
 ++++++
