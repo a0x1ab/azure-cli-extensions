@@ -1,0 +1,214 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - network firewall create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -g -n --sku --tier
+      User-Agent:
+      - AZURECLI/2.47.0 azsdk-python-azure-mgmt-resource/22.0.0 Python/3.9.5 (Windows-10-10.0.22621-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_azure_firewall_tier000001?api-version=2022-09-01
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_azure_firewall_tier000001","name":"test_azure_firewall_tier000001","type":"Microsoft.Resources/resourceGroups","location":"eastus2euap","tags":{"product":"azurecli","cause":"automation","date":"2023-04-06T06:37:40Z"},"properties":{"provisioningState":"Succeeded"}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '343'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 06 Apr 2023 06:37:49 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Accept-Encoding
+      x-content-type-options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"location": "eastus2euap", "properties": {"additionalProperties": {},
+      "sku": {"name": "AZFW_VNet", "tier": "Premium"}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - network firewall create
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '120'
+      Content-Type:
+      - application/json
+      ParameterSetName:
+      - -g -n --sku --tier
+      User-Agent:
+      - AZURECLI/2.47.0 (AAZ) azsdk-python-core/1.24.0 Python/3.9.5 (Windows-10-10.0.22621-SP0)
+    method: PUT
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_azure_firewall_tier000001/providers/Microsoft.Network/azureFirewalls/af?api-version=2022-01-01
+  response:
+    body:
+      string: "{\r\n  \"name\": \"af\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_azure_firewall_tier000001/providers/Microsoft.Network/azureFirewalls/af\",\r\n
+        \ \"etag\": \"W/\\\"338f42c8-6591-4235-a689-3fdfe8077399\\\"\",\r\n  \"type\":
+        \"Microsoft.Network/azureFirewalls\",\r\n  \"location\": \"eastus2euap\",\r\n
+        \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"sku\":
+        {\r\n      \"name\": \"AZFW_VNet\",\r\n      \"tier\": \"Premium\"\r\n    },\r\n
+        \   \"threatIntelMode\": \"Alert\",\r\n    \"additionalProperties\": {},\r\n
+        \   \"ipConfigurations\": [],\r\n    \"networkRuleCollections\": [],\r\n    \"applicationRuleCollections\":
+        [],\r\n    \"natRuleCollections\": []\r\n  }\r\n}"
+    headers:
+      azure-asyncnotification:
+      - Enabled
+      azure-asyncoperation:
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/eastus2euap/operations/13e76644-aeb7-46fa-b6ec-bc0a5a8daab8?api-version=2022-01-01
+      cache-control:
+      - no-cache
+      content-length:
+      - '647'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 06 Apr 2023 06:37:59 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      server:
+      - Microsoft-HTTPAPI/2.0
+      - Microsoft-HTTPAPI/2.0
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-content-type-options:
+      - nosniff
+      x-ms-arm-service-request-id:
+      - f921da56-f294-470c-b7e1-72cdb6316e9b
+      x-ms-ratelimit-remaining-subscription-writes:
+      - '1199'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - network firewall create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -g -n --sku --tier
+      User-Agent:
+      - AZURECLI/2.47.0 (AAZ) azsdk-python-core/1.24.0 Python/3.9.5 (Windows-10-10.0.22621-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/eastus2euap/operations/13e76644-aeb7-46fa-b6ec-bc0a5a8daab8?api-version=2022-01-01
+  response:
+    body:
+      string: "{\r\n  \"status\": \"Succeeded\"\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '29'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 06 Apr 2023 06:38:09 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      server:
+      - Microsoft-HTTPAPI/2.0
+      - Microsoft-HTTPAPI/2.0
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-ms-arm-service-request-id:
+      - a5d3d9fb-6cf7-4caf-9d20-ae01760fc434
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - network firewall create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -g -n --sku --tier
+      User-Agent:
+      - AZURECLI/2.47.0 (AAZ) azsdk-python-core/1.24.0 Python/3.9.5 (Windows-10-10.0.22621-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_azure_firewall_tier000001/providers/Microsoft.Network/azureFirewalls/af?api-version=2022-01-01
+  response:
+    body:
+      string: "{\r\n  \"name\": \"af\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_azure_firewall_tier000001/providers/Microsoft.Network/azureFirewalls/af\",\r\n
+        \ \"etag\": \"W/\\\"2af4868d-5151-4054-9965-89db45bcfac6\\\"\",\r\n  \"type\":
+        \"Microsoft.Network/azureFirewalls\",\r\n  \"location\": \"eastus2euap\",\r\n
+        \ \"properties\": {\r\n    \"provisioningState\": \"Succeeded\",\r\n    \"sku\":
+        {\r\n      \"name\": \"AZFW_VNet\",\r\n      \"tier\": \"Premium\"\r\n    },\r\n
+        \   \"threatIntelMode\": \"Alert\",\r\n    \"additionalProperties\": {},\r\n
+        \   \"ipConfigurations\": [],\r\n    \"networkRuleCollections\": [],\r\n    \"applicationRuleCollections\":
+        [],\r\n    \"natRuleCollections\": []\r\n  }\r\n}"
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '648'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 06 Apr 2023 06:38:09 GMT
+      etag:
+      - W/"2af4868d-5151-4054-9965-89db45bcfac6"
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      server:
+      - Microsoft-HTTPAPI/2.0
+      - Microsoft-HTTPAPI/2.0
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-ms-arm-service-request-id:
+      - 77f52044-3d5f-48e4-960c-15cf5638301b
+    status:
+      code: 200
+      message: OK
+version: 1
