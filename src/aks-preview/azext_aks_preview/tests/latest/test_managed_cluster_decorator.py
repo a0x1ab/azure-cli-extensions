@@ -73,6 +73,8 @@ from azure.cli.core.azclierror import (
     UnknownError,
 )
 
+from azure.cli.core.util import read_file_content
+
 
 class AKSPreviewManagedClusterModelsTestCase(unittest.TestCase):
     def setUp(self):
@@ -4000,6 +4002,38 @@ class AKSPreviewManagedClusterCreateDecoratorTestCase(unittest.TestCase):
         ground_truth_mc_1 = self.models.ManagedCluster(location="test_location", storage_profile=storage_profile_1)
         self.assertEqual(dec_mc_1, ground_truth_mc_1)
 
+    def test_set_up_custom_ca_trust_certificates(self):
+        dec_1 = AKSPreviewManagedClusterCreateDecorator(
+            self.cmd,
+            self.client,
+            {"custom_ca_trust_certificates": get_test_data_file_path("certs.txt")},
+            CUSTOM_MGMT_AKS_PREVIEW,
+        )
+        mc_1 = self.models.ManagedCluster(location="test_location")
+        dec_1.context.attach_mc(mc_1)
+        dec_mc_1 = dec_1.set_up_custom_ca_trust_certificates(mc_1)
+        test_cert_string = '-----BEGIN CERTIFICATE-----\n' \
+                           'MIICljCCAX4CCQC9zUAgqqqrWzANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJQ\n' \
+                           'TDAeFw0yMjA5MTQwNjIzMjdaFw0yMjA5MTUwNjIzMjdaMA0xCzAJBgNVBAYTAlBM\n' \
+                           'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAopKNIIbvvcPCw9fc4KLX\n' \
+                           'KDtRZobp5L+/1hCN+3OGhk5NvSTpSUrFifxqc0o3IF7YkO3K1n2jAvCMXO16Bf9b\n' \
+                           'OAR7VkCrwGFVkXNjM4wvXAX8CNNvjqd1zDPXSKdE7Wd8k3fTzx6nGUM0UgljIPhH\n' \
+                           'yh4a4Zujd5Ig2P/ZSX0pGJm47JTtMu7MDFHVM5wRWcCrN/H0TCYPIvEOs0B8AZxc\n' \
+                           'p3TF7A6veT5U9pVhQ3Xl9JN6LvvLqPxG3ea10rdv9DYzaiXmSY3ujI3Ri1Q11uWC\n' \
+                           'dtrFIpFu5cHW2OBW+jBXxL0v8xQmkxTLik4BR/PLCl30wxKQNsq3pjDgu0mutKuu\n' \
+                           '5wIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQAVEAIs/hLwTVCwpEXdoXR24LelNNuB\n' \
+                           '/8ptK6lyjE11XwfMN3yy7F2oB1lrA4rI3j9obpDsHDJBNB13bi/lKgvAcbIn/Tyu\n' \
+                           'RKThtUdPgxNnqDUyxnb3OofMF3gB8ePTu+jZpd3zrlEuxdl40ByATCSyOgR6DHMt\n' \
+                           'SDd+joypnOHFAeSM+V0AaTelXSCK9OAWSAp5e6S76a6lRx+D5Xl3hBedBI0tX59h\n' \
+                           'tEYNEGZaRElFU79WcEF0cH+ZW0+jJ95xE3thZffRz6QI6yF63m8aC9l9bbdJS2zg\n' \
+                           'Yv8W+lCZi//ODeOBUugr++z9uj+vGk47JDSpV0n4JOun3ALUDJ0gqmcS\n' \
+                           '-----END CERTIFICATE-----'
+        sec_profile = self.models.ManagedClusterSecurityProfile(
+            custom_ca_trust_certificates=[str.encode(test_cert_string) for _ in range(2)]
+        )
+        ground_truth_mc_1 = self.models.ManagedCluster(location="test_location", security_profile=sec_profile)
+        self.assertEqual(dec_mc_1, ground_truth_mc_1)
+
     def test_set_up_ingress_web_app_routing(self):
         dec_1 = AKSPreviewManagedClusterCreateDecorator(
             self.cmd,
@@ -5663,6 +5697,76 @@ class AKSPreviewManagedClusterUpdateDecoratorTestCase(unittest.TestCase):
                         enabled=False
                     ),
                 )
+            ),
+        )
+        self.assertEqual(dec_mc_2, ground_truth_mc_2)
+
+    def test_update_custom_ca_certificates(self):
+        # set to non-empty
+        dec_1 = AKSPreviewManagedClusterUpdateDecorator(
+            self.cmd,
+            self.client,
+            {
+                "custom_ca_trust_certificates": get_test_data_file_path("certs.txt"),
+            },
+            CUSTOM_MGMT_AKS_PREVIEW,
+        )
+        mc_1 = self.models.ManagedCluster(location="test_location")
+        dec_1.context.attach_mc(mc_1)
+        dec_1.context.set_intermediate(
+            "subscription_id", "test_subscription_id"
+        )
+
+        dec_mc_1 = dec_1.update_custom_ca_trust_certificates(mc_1)
+
+        test_cert_string = '-----BEGIN CERTIFICATE-----\n' \
+                           'MIICljCCAX4CCQC9zUAgqqqrWzANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJQ\n' \
+                           'TDAeFw0yMjA5MTQwNjIzMjdaFw0yMjA5MTUwNjIzMjdaMA0xCzAJBgNVBAYTAlBM\n' \
+                           'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAopKNIIbvvcPCw9fc4KLX\n' \
+                           'KDtRZobp5L+/1hCN+3OGhk5NvSTpSUrFifxqc0o3IF7YkO3K1n2jAvCMXO16Bf9b\n' \
+                           'OAR7VkCrwGFVkXNjM4wvXAX8CNNvjqd1zDPXSKdE7Wd8k3fTzx6nGUM0UgljIPhH\n' \
+                           'yh4a4Zujd5Ig2P/ZSX0pGJm47JTtMu7MDFHVM5wRWcCrN/H0TCYPIvEOs0B8AZxc\n' \
+                           'p3TF7A6veT5U9pVhQ3Xl9JN6LvvLqPxG3ea10rdv9DYzaiXmSY3ujI3Ri1Q11uWC\n' \
+                           'dtrFIpFu5cHW2OBW+jBXxL0v8xQmkxTLik4BR/PLCl30wxKQNsq3pjDgu0mutKuu\n' \
+                           '5wIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQAVEAIs/hLwTVCwpEXdoXR24LelNNuB\n' \
+                           '/8ptK6lyjE11XwfMN3yy7F2oB1lrA4rI3j9obpDsHDJBNB13bi/lKgvAcbIn/Tyu\n' \
+                           'RKThtUdPgxNnqDUyxnb3OofMF3gB8ePTu+jZpd3zrlEuxdl40ByATCSyOgR6DHMt\n' \
+                           'SDd+joypnOHFAeSM+V0AaTelXSCK9OAWSAp5e6S76a6lRx+D5Xl3hBedBI0tX59h\n' \
+                           'tEYNEGZaRElFU79WcEF0cH+ZW0+jJ95xE3thZffRz6QI6yF63m8aC9l9bbdJS2zg\n' \
+                           'Yv8W+lCZi//ODeOBUugr++z9uj+vGk47JDSpV0n4JOun3ALUDJ0gqmcS\n' \
+                           '-----END CERTIFICATE-----'
+        ground_truth_mc_1 = self.models.ManagedCluster(
+            location="test_location",
+            security_profile=self.models.ManagedClusterSecurityProfile(
+                custom_ca_trust_certificates=[str.encode(test_cert_string) for _ in range(2)]
+            ),
+        )
+        self.assertEqual(dec_mc_1, ground_truth_mc_1)
+
+        # set to empty
+        dec_2 = AKSPreviewManagedClusterUpdateDecorator(
+            self.cmd,
+            self.client,
+            {"custom_ca_trust_certificates": None},
+            CUSTOM_MGMT_AKS_PREVIEW,
+        )
+        mc_2 = self.models.ManagedCluster(
+            location="test_location",
+            security_profile=self.models.ManagedClusterSecurityProfile(
+                custom_ca_trust_certificates=None
+            ),
+        )
+        dec_2.context.attach_mc(mc_2)
+        dec_2.context.set_intermediate(
+            "subscription_id", "test_subscription_id"
+        )
+
+        dec_mc_2 = dec_2.update_custom_ca_trust_certificates(mc_2)
+
+        ground_truth_mc_2 = self.models.ManagedCluster(
+            location="test_location",
+            security_profile=self.models.ManagedClusterSecurityProfile(
+                custom_ca_trust_certificates=None
             ),
         )
         self.assertEqual(dec_mc_2, ground_truth_mc_2)
