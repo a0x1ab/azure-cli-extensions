@@ -1,0 +1,99 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - quantum workspace set
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -g -w -l
+      User-Agent:
+      - AZURECLI/2.57.0 azsdk-python-mgmt-quantum/1.0.0b1 Python/3.11.4 (Windows-10-10.0.22621-SP0)
+        az-cli-ext/1.0.0b1
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/e2e-scenarios/providers/Microsoft.Quantum/workspaces/e2e-qsharp-tests?api-version=2022-01-10-preview
+  response:
+    body:
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/e2e-scenarios/providers/Microsoft.Quantum/Workspaces/e2e-qsharp-tests","name":"e2e-qsharp-tests","type":"microsoft.quantum/workspaces","location":"westus2","tags":{},"systemData":{"createdBy":"guyi@microsoft.com","createdByType":"User","createdAt":"2024-02-28T23:57:34.8620887Z","lastModifiedBy":"guyi@microsoft.com","lastModifiedByType":"User","lastModifiedAt":"2024-02-29T00:01:19.7980673Z"},"identity":{"principalId":"7adef34c-123b-4949-afde-67c176d634f3","tenantId":"72f988bf-86f1-41af-91ab-2d7cd011db47","type":"SystemAssigned"},"properties":{"providers":[{"providerId":"microsoft-qc","providerSku":"learn-and-develop","applicationName":"e2e-qsharp-tests-microsoft-qc","provisioningState":"Succeeded"},{"providerId":"ionq","providerSku":"aq-internal-testing","applicationName":"e2e-qsharp-tests-ionq","provisioningState":"Succeeded","resourceUsageId":"244a1146-6f12-47ab-9d8d-8ebf8aaabf35"}],"provisioningState":"Succeeded","usable":"Yes","storageAccount":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/e2e-scenarios/providers/Microsoft.Storage/storageAccounts/e2etests","endpointUri":"https://e2e-qsharp-tests.westus2.quantum.azure.com"}}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '1239'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 29 Feb 2024 00:04:17 GMT
+      etag:
+      - '"0902b636-0000-0800-0000-65dfc9bd0000"'
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-cache:
+      - CONFIG_NOCACHE
+      x-content-type-options:
+      - nosniff
+      x-ms-providerhub-traffic:
+      - 'True'
+      x-msedge-ref:
+      - 'Ref A: 44B5B071E8C4439598C8EBF0AD6EECF0 Ref B: CO6AA3150219045 Ref C: 2024-02-29T00:04:17Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - az-cli-ext/1.0.0b1 azsdk-python-quantum/0.0.0.1 Python/3.11.4 (Windows-10-10.0.22621-SP0)
+    method: GET
+    uri: https://westus2.quantum.azure.com/v1.0/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/e2e-scenarios/providers/Microsoft.Quantum/workspaces/e2e-qsharp-tests/providerStatus
+  response:
+    body:
+      string: '{"value":[{"id":"microsoft-qc","currentAvailability":"Available","targets":[{"id":"microsoft.estimator","currentAvailability":"Available","averageQueueTime":0,"statusPage":null}]},{"id":"ionq","currentAvailability":"Degraded","targets":[{"id":"ionq.qpu","currentAvailability":"Unavailable","averageQueueTime":6093491,"statusPage":"https://status.ionq.co"},{"id":"ionq.qpu.aria-1","currentAvailability":"Available","averageQueueTime":6083110,"statusPage":"https://status.ionq.co"},{"id":"ionq.qpu.aria-2","currentAvailability":"Unavailable","averageQueueTime":9153479,"statusPage":"https://status.ionq.co"},{"id":"ionq.simulator","currentAvailability":"Available","averageQueueTime":9,"statusPage":"https://status.ionq.co"}]}],"nextLink":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '742'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 29 Feb 2024 00:04:19 GMT
+      mise-correlation-id:
+      - 5a17ec03-49ca-4728-8a71-f39bb68e480e
+      request-context:
+      - appId=cid-v1:4d6ac272-7369-45c6-9036-63d733c8519f
+      server:
+      - Microsoft-IIS/10.0
+      set-cookie:
+      - ApplicationGatewayAffinityCORS=f41f4d84e6de1cfe7357bf648ccde6bc; Path=/; SameSite=None;
+        Secure
+      - ApplicationGatewayAffinity=f41f4d84e6de1cfe7357bf648ccde6bc; Path=/
+      - ARRAffinity=f08099ddc6d1b5b480ee26565f489b862c28fda9abd95391f75b0cea107d6318;Path=/;HttpOnly;Secure;Domain=app-jobscheduler-westus2-003.ase-jobscheduler-westus2-003.appserviceenvironment.net
+      - ARRAffinitySameSite=f08099ddc6d1b5b480ee26565f489b862c28fda9abd95391f75b0cea107d6318;Path=/;HttpOnly;SameSite=None;Secure;Domain=app-jobscheduler-westus2-003.ase-jobscheduler-westus2-003.appserviceenvironment.net
+      strict-transport-security:
+      - max-age=2592000; includeSubDomains
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
+      x-powered-by:
+      - ASP.NET
+    status:
+      code: 200
+      message: OK
+version: 1
