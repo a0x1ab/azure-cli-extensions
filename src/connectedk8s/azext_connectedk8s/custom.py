@@ -801,7 +801,7 @@ def update_agents(cmd, client, resource_group_name, cluster_name, https_proxy=""
     if https_proxy == "" and http_proxy == "" and no_proxy == "" and proxy_cert == "" and not disable_proxy and not auto_upgrade:
         raise RequiredArgumentMissingError(consts.No_Param_Error)
 
-    if (https_proxy or http_proxy or no_proxy or proxy_cert) and disable_proxy:
+    if (https_proxy or http_proxy or no_proxy) and disable_proxy:
         raise MutuallyExclusiveArgumentError(consts.EnableProxy_Conflict_Error)
 
     # Checking whether optional extra values file has been provided.
@@ -879,9 +879,25 @@ def update_agents(cmd, client, resource_group_name, cluster_name, https_proxy=""
     # Get Helm chart path
     chart_path = utils.get_chart_path(registry_path, kube_config, kube_context, helm_client_location)
 
+    cmd_helm_values = [helm_client_location, "get", "values", "azure-arc", "--namespace", release_namespace]
+    if kube_config:
+        cmd_helm_values.extend(["--kubeconfig", kube_config])
+    if kube_context:
+        cmd_helm_values.extend(["--kube-context", kube_context])
+    
+    existing_user_values = open('userValues.txt', 'w+')
+    response_helm_values_get = Popen(cmd_helm_values, stdout=existing_user_values, stderr=PIPE)
+    _, error_helm_get_values = response_helm_values_get.communicate()
+    if response_helm_values_get.returncode != 0:
+        if ('forbidden' in error_helm_get_values.decode("ascii") or 'timed out waiting for the condition' in error_helm_get_values.decode("ascii")):
+            telemetry.set_user_fault()
+        telemetry.set_exception(exception=error_helm_get_values.decode("ascii"), fault_type=consts.Get_Helm_Values_Failed,
+                                summary='Error while doing helm get values azure-arc')
+        raise CLIInternalError(str.format(consts.Update_Agent_Failure, error_helm_get_values.decode("ascii")))
+    
     cmd_helm_upgrade = [helm_client_location, "upgrade", "azure-arc", chart_path, "--namespace", release_namespace,
-                        "--reuse-values",
-                        "--wait", "--output", "json"]
+                        "-f",
+                        "userValues.txt", "--wait", "--output", "json"]
     if values_file_provided:
         cmd_helm_upgrade.extend(["-f", values_file])
     if auto_upgrade is not None:
@@ -898,6 +914,7 @@ def update_agents(cmd, client, resource_group_name, cluster_name, https_proxy=""
         cmd_helm_upgrade.extend(["--set", "global.isProxyEnabled={}".format(False)])
     if proxy_cert:
         cmd_helm_upgrade.extend(["--set-file", "global.proxyCert={}".format(proxy_cert)])
+        cmd_helm_upgrade.extend(["--set", "global.isCustomCert={}".format(True)])
     if kube_config:
         cmd_helm_upgrade.extend(["--kubeconfig", kube_config])
     if kube_context:
@@ -909,8 +926,15 @@ def update_agents(cmd, client, resource_group_name, cluster_name, https_proxy=""
             telemetry.set_user_fault()
         telemetry.set_exception(exception=error_helm_upgrade.decode("ascii"), fault_type=consts.Install_HelmRelease_Fault_Type,
                                 summary='Unable to install helm release')
+        try:
+           os.remove(existing_user_values.name)
+        except OSError:
+           pass
         raise CLIInternalError(str.format(consts.Update_Agent_Failure, error_helm_upgrade.decode("ascii")))
-
+    try:
+        os.remove(existing_user_values.name)
+    except OSError:
+        pass
     return str.format(consts.Update_Agent_Success, connected_cluster.name)
 
 
