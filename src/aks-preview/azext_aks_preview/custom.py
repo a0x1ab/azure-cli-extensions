@@ -2524,6 +2524,65 @@ def aks_mesh_disable_egress_gateway(
         egx_gtw_nodeselector=None)
 
 
+def aks_mesh_get_revisions(
+        cmd,
+        client,
+        location
+):
+    return client.list_mesh_revision_profiles(location)
+
+
+def aks_mesh_get_upgrades(
+        cmd,
+        client,
+        resource_group_name,
+        name
+):
+    return client.list_mesh_upgrade_profiles(resource_group_name, name)
+
+
+def aks_mesh_upgrade_start(
+        cmd,
+        client,
+        resource_group_name,
+        name,
+        revision
+):
+    return _aks_mesh_update(
+        cmd,
+        client,
+        resource_group_name,
+        name,
+        revision=revision)
+
+
+def aks_mesh_upgrade_complete(
+        cmd,
+        client,
+        resource_group_name,
+        name):
+    return _aks_mesh_update(
+        cmd,
+        client,
+        resource_group_name,
+        name,
+        mesh_upgrade_command="complete")
+
+
+def aks_mesh_upgrade_rollback(
+        cmd,
+        client,
+        resource_group_name,
+        name
+):
+    return _aks_mesh_update(
+        cmd,
+        client,
+        resource_group_name,
+        name,
+        mesh_upgrade_command="rollback")
+
+
 def _aks_mesh_update(
         cmd,
         client,
@@ -2542,6 +2601,8 @@ def _aks_mesh_update(
         enable_egress_gateway=None,
         egx_gtw_nodeselector=None,
         disable_egress_gateway=None,
+        revision=None,
+        mesh_upgrade_command=None,
 ):
     raw_parameters = locals()
 

@@ -32,8 +32,6 @@ from azext_aks_preview._consts import (
     CONST_ABSOLUTEMONTHLY_MAINTENANCE_SCHEDULE,
     CONST_AZURE_KEYVAULT_NETWORK_ACCESS_PRIVATE,
     CONST_AZURE_KEYVAULT_NETWORK_ACCESS_PUBLIC,
-    CONST_AZURE_SERVICE_MESH_INGRESS_MODE_EXTERNAL,
-    CONST_AZURE_SERVICE_MESH_INGRESS_MODE_INTERNAL,
     CONST_CREDENTIAL_FORMAT_AZURE,
     CONST_CREDENTIAL_FORMAT_EXEC,
     CONST_DAILY_MAINTENANCE_SCHEDULE,
@@ -929,6 +927,11 @@ def load_arguments(self, _):
         c.argument('root_cert_object_name')
         c.argument('cert_chain_object_name')
 
+    with self.argument_context('aks mesh get-revisions') as c:
+        c.argument('location', required=True, help='Location in which to discover available Azure Service Mesh revisions.')
+
+    with self.argument_context('aks mesh upgrade start') as c:
+        c.argument('revision', required=True)
 
 def _get_default_install_location(exe_name):
     system = platform.system()
