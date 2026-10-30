@@ -50,7 +50,7 @@ class Update(AAZCommand):
             required=True,
             id_part="name",
             fmt=AAZStrArgFormat(
-                pattern="^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$",
+                pattern="^[A-Za-z0-9]{1,60}$",
             ),
         )
         _args_schema.resource_group = AAZResourceGroupNameArg(
@@ -102,7 +102,7 @@ class Update(AAZCommand):
         _args_schema.user_assigned_identity_resource_id = AAZStrArg(
             options=["--identity-resource-id", "--user-assigned-identity-resource-id"],
             arg_group="KeyEncryptionKeyIdentity",
-            help="User assigned identity to use for accessing key encryption key Url. Ex: /subscriptions/<sub uuid>/resourceGroups/<resource group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId.",
+            help="User assigned identity to use for accessing key encryption key Url. Ex: `/subscriptions/<sub uuid>/resourceGroups/<resource group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId`.",
             nullable=True,
         )
 
@@ -139,7 +139,6 @@ class Update(AAZCommand):
             options=["--high-availability"],
             arg_group="Properties",
             help="Enabled by default. If highAvailability is disabled, the data set is not replicated. This affects the availability SLA, and increases the risk of data loss.",
-            is_preview=True,
             nullable=True,
             enum={"Disabled": "Disabled", "Enabled": "Enabled"},
         )
@@ -157,7 +156,7 @@ class Update(AAZCommand):
         _args_schema.capacity = AAZIntArg(
             options=["--capacity"],
             arg_group="Sku",
-            help="The size of the RedisEnterprise cluster. Defaults to 2 or 3 or not applicable depending on SKU. Valid values are (2, 4, 6, ...) for Enterprise_* SKUs and (3, 9, 15, ...) for EnterpriseFlash_* SKUs. For other SKUs capacity argument is not supported.",
+            help="The size of the RedisEnterprise cluster. Defaults to 2 or 3 depending on SKU. Valid values are (2, 4, 6, ...) for Enterprise SKUs and (3, 9, 15, ...) for Flash SKUs.",
             nullable=True,
         )
         _args_schema.sku = AAZStrArg(
@@ -403,7 +402,7 @@ class Update(AAZCommand):
                 value=instance,
                 typ=AAZObjectType
             )
-            _builder.set_prop("identity", AAZObjectType)
+            _builder.set_prop("identity", AAZIdentityObjectType)
             _builder.set_prop("properties", AAZObjectType, typ_kwargs={"flags": {"client_flatten": True}})
             _builder.set_prop("sku", AAZObjectType, ".", typ_kwargs={"flags": {"required": True}})
             _builder.set_prop("tags", AAZDictType, ".tags")
@@ -472,6 +471,7 @@ class _UpdateHelper:
         if cls._schema_cluster_read is not None:
             _schema.id = cls._schema_cluster_read.id
             _schema.identity = cls._schema_cluster_read.identity
+            _schema.kind = cls._schema_cluster_read.kind
             _schema.location = cls._schema_cluster_read.location
             _schema.name = cls._schema_cluster_read.name
             _schema.properties = cls._schema_cluster_read.properties
@@ -487,7 +487,10 @@ class _UpdateHelper:
         cluster_read.id = AAZStrType(
             flags={"read_only": True},
         )
-        cluster_read.identity = AAZObjectType()
+        cluster_read.identity = AAZIdentityObjectType()
+        cluster_read.kind = AAZStrType(
+            flags={"read_only": True},
+        )
         cluster_read.location = AAZStrType(
             flags={"required": True},
         )
@@ -645,6 +648,7 @@ class _UpdateHelper:
 
         _schema.id = cls._schema_cluster_read.id
         _schema.identity = cls._schema_cluster_read.identity
+        _schema.kind = cls._schema_cluster_read.kind
         _schema.location = cls._schema_cluster_read.location
         _schema.name = cls._schema_cluster_read.name
         _schema.properties = cls._schema_cluster_read.properties

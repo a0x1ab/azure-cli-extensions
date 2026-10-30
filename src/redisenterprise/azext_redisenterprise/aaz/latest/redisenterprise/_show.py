@@ -47,7 +47,7 @@ class Show(AAZCommand):
             required=True,
             id_part="name",
             fmt=AAZStrArgFormat(
-                pattern="^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$",
+                pattern="^[A-Za-z0-9]{1,60}$",
             ),
         )
         _args_schema.resource_group = AAZResourceGroupNameArg(
@@ -156,7 +156,10 @@ class Show(AAZCommand):
             _schema_on_200.id = AAZStrType(
                 flags={"read_only": True},
             )
-            _schema_on_200.identity = AAZObjectType()
+            _schema_on_200.identity = AAZIdentityObjectType()
+            _schema_on_200.kind = AAZStrType(
+                flags={"read_only": True},
+            )
             _schema_on_200.location = AAZStrType(
                 flags={"required": True},
             )

@@ -132,7 +132,7 @@ class Redisenterprisescenario1Test(ScenarioTest):
         super(Redisenterprisescenario1Test, self).__init__(*args, **kwargs)
 
         self.kwargs.update({
-            'cluster': self.create_random_name(prefix='clitest-cache1-', length=21)
+            'cluster': self.create_random_name(prefix='testcache1', length=21)
         })
 
     @AllowLargeResponse(size_kb=9999)
@@ -228,7 +228,7 @@ class Redisenterprisescenario2Test(ScenarioTest):
         super(Redisenterprisescenario2Test, self).__init__(*args, **kwargs)
 
         self.kwargs.update({
-            'cluster': self.create_random_name(prefix='clitest-cache2-', length=21),
+            'cluster': self.create_random_name(prefix='testcache2', length=21),
             'no_database': True
         })
 
@@ -290,8 +290,8 @@ class Redisenterprisescenario3Test(ScenarioTest):
 
         self.kwargs.update({
             'subscription': self.get_subscription_id(),
-            'cluster31': self.create_random_name(prefix='clitest-cache31-', length=21),
-            'cluster32': self.create_random_name(prefix='clitest-cache32-', length=21),
+            'cluster31': self.create_random_name(prefix='testcache31', length=21),
+            'cluster32': self.create_random_name(prefix='testcache32', length=21),
             'geo-replication': True,
             'database': 'default',
         }) 
@@ -385,7 +385,7 @@ class Redisenterprisescenario4Test(ScenarioTest):
         super(Redisenterprisescenario4Test, self).__init__(*args, **kwargs)
 
         self.kwargs.update({
-            'cluster': self.create_random_name(prefix='clitest-cache4-', length=21),
+            'cluster': self.create_random_name(prefix='testcache4', length=21),
             'access-policy-assignment': True,
         })
 
@@ -485,7 +485,7 @@ class Redisenterprisescenario5Test(ScenarioTest):
         super(Redisenterprisescenario5Test, self).__init__(*args, **kwargs)
 
         self.kwargs.update({
-            'cluster': self.create_random_name(prefix='clitest-cache5-', length=21),
+            'cluster': self.create_random_name(prefix='testcache5', length=21),
             'access-key-authentication': True,
         })
 
