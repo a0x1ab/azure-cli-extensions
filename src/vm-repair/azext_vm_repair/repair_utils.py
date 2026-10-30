@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
+from logging import Logger, log
 import subprocess
 import shlex
 import os
@@ -16,7 +17,8 @@ from knack.prompting import prompt_y_n, NoTTYException
 
 from .encryption_types import Encryption
 
-from .exceptions import AzCommandError, WindowsOsNotAvailableError, RunScriptNotFoundForIdError, SkuDoesNotSupportHyperV
+from .exceptions import (AzCommandError, WindowsOsNotAvailableError,
+    RunScriptNotFoundForIdError, SkuDoesNotSupportHyperV, SuseNotAvailableError)
 # pylint: disable=line-too-long, deprecated-method
 
 REPAIR_MAP_URL = 'https://raw.githubusercontent.com/Azure/repair-script-library/master/map.json'
@@ -306,6 +308,26 @@ def _check_hyperV_gen(source_vm):
         raise SkuDoesNotSupportHyperV('Cannot support V2 HyperV generation. Please run command without --enabled-nested')
 
 
+def _check_linux_hyperV_gen(source_vm):
+    disk_id = source_vm.storage_profile.os_disk.managed_disk.id
+    show_disk_command = 'az disk show --id {i} --query [hyperVgeneration] -o json' \
+                        .format(i=disk_id)
+    hyperVGen = loads(_call_az_command(show_disk_command))
+    if hyperVGen != 'V2':
+        logger.info('Trying to check on the source VM if it has the parameter of gen2')
+        # if image is created from Marketplace gen2 image , the disk will not have the mark for gen2
+        fetch_hypervgen_command = 'az vm get-instance-view --ids {id} --query "[instanceView.hyperVGeneration]" -o json'.format(id=source_vm.id)
+        hyperVGen_list = loads(_call_az_command(fetch_hypervgen_command))
+        hyperVGen = hyperVGen_list[0]
+        if hyperVGen == 'V2':
+            return hyperVGen
+        else:
+            hyperVGen = 'V1'
+            return hyperVGen
+    else:
+        return hyperVGen
+
+
 def _secret_tag_check(resource_group_name, copy_disk_name, secreturl):
     DEFAULT_LINUXPASSPHRASE_FILENAME = 'LinuxPassPhraseFileName'
     show_disk_command = 'az disk show -g {g} -n {n} --query encryptionSettingsCollection.encryptionSettings[].diskEncryptionKey.secretUrl -o json' \
@@ -405,6 +427,116 @@ def _fetch_compatible_windows_os_urn(source_vm):
         return urns[1]
     logger.debug('Returning Urn 0: %s', urns[0])
     return urns[0]
+
+
+def _suse_image_selector(distro):
+    fetch_urn_command = 'az vm image list --publisher SUSE --offer {offer} --sku gen1 --verbose --all --query "[].urn | reverse(sort(@))" -o json'.format(offer=distro)
+    logger.info('Fetching compatible SUSE OS images from gallery...')
+    urns = loads(_call_az_command(fetch_urn_command))
+
+    # Raise exception when not finding SUSE image
+    if not urns:
+        raise SuseNotAvailableError()
+
+    logger.debug('Fetched urns: \n%s', urns)
+    # Returning the first URN as it is the latest image with no special use like HPC or SAP
+    logger.debug('Return the first URN : %s', urns[0])
+    return urns[0]
+
+
+def _suse_image_selector_gen2(distro):
+    fetch_urn_command = 'az vm image list --publisher SUSE --offer {offer} --sku gen2 --verbose --all --query "[].urn | reverse(sort(@))" -o json'.format(offer=distro)
+    logger.info('Fetching compatible SUSE OS images from gallery...')
+    urns = loads(_call_az_command(fetch_urn_command))
+
+    # Raise exception when not finding SUSE image
+    if not urns:
+        raise SuseNotAvailableError()
+
+    logger.debug('Fetched urns: \n%s', urns)
+    # Returning the first URN as it is the latest image with no special use like HPC or SAP
+    logger.debug('Return the first URN : %s', urns[0])
+    return urns[0]
+
+
+def _select_distro_linux(distro):
+    if distro == 'rhel6':
+        os_image_urn = 'RedHat:RHEL:6.10:latest'
+    elif distro == 'rhel7':
+        os_image_urn = 'RedHat:rhel-raw:7-raw:latest'
+    elif distro == 'rhel8':
+        os_image_urn = 'RedHat:rhel-raw:8-raw:latest'
+    elif distro == 'ubuntu18':
+        os_image_urn = 'Canonical:UbuntuServer:18.04-LTS:latest'
+    elif distro == 'ubuntu20':
+        os_image_urn = "Canonical:0001-com-ubuntu-server-focal:20_04-lts:latest"
+    elif distro == 'centos6':
+        os_image_urn = 'OpenLogic:CentOS:6.10:latest'
+    elif distro == 'centos7':
+        os_image_urn = 'OpenLogic:CentOS:7_9:latest'
+    elif distro == 'centos8':
+        os_image_urn = 'OpenLogic:CentOS:8_4:latest'
+    elif distro == 'oracle6':
+        os_image_urn = 'Oracle:Oracle-Linux:6.10:latest'
+    elif distro == 'oracle7':
+        os_image_urn = 'Oracle:Oracle-Linux:ol79:latest'
+    elif distro == 'oracle8':
+        os_image_urn = 'Oracle:Oracle-Linux:ol82:latest'
+    elif distro == 'sles12':
+        os_image_urn = _suse_image_selector('sles-12')
+    elif distro == 'sles15':
+        os_image_urn = _suse_image_selector('sles-15')
+    else:
+        if distro.count(":") == 3:
+            logger.info('A custom URN was provided , will be used as distro for the recovery VM')
+            os_image_urn = distro
+        else:
+            logger.info('No specific distro was provided , using the default Ubuntu distro')
+            os_image_urn = "UbuntuLTS"
+    return os_image_urn
+
+
+def _select_distro_linux_gen2(distro):
+    # base on the document : https://docs.microsoft.com/en-us/azure/virtual-machines/generation-2#generation-2-vm-images-in-azure-marketplace
+    # RHEL/Centos/Oracle 6 are not supported for Gen 2
+    if distro == 'rhel6':
+        os_image_urn = 'RedHat:rhel-raw:7-raw-gen2:latest'
+    elif distro == 'rhel7':
+        os_image_urn = 'RedHat:rhel-raw:7-raw-gen2:latest'
+    elif distro == 'rhel8':
+        os_image_urn = 'RedHat:rhel-raw:8-raw-gen2:latest'
+    elif distro == 'ubuntu18':
+        os_image_urn = 'Canonical:UbuntuServer:18_04-lts-gen2:latest'
+    elif distro == 'ubuntu20':
+        os_image_urn = "Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest"
+    elif distro == 'centos6':
+        os_image_urn = 'OpenLogic:CentOS:7_9-gen2:latest'
+    elif distro == 'centos7':
+        os_image_urn = 'OpenLogic:CentOS:7_9-gen2:latest'
+    elif distro == 'centos8':
+        os_image_urn = 'OpenLogic:CentOS:8_4-gen2:latest'
+    elif distro == 'oracle6':
+        os_image_urn = 'Oracle:Oracle-Linux:ol79-gen2:latest'
+    elif distro == 'oracle7':
+        os_image_urn = 'Oracle:Oracle-Linux:ol79-gen2:latest'
+    elif distro == 'oracle8':
+        os_image_urn = 'Oracle:Oracle-Linux:ol82-gen2:latest'
+    elif distro == 'sles12':
+        os_image_urn = _suse_image_selector_gen2('sles-12')
+    elif distro == 'sles15':
+        os_image_urn = _suse_image_selector_gen2('sles-15')
+    else:
+        if distro.count(":") == 3:
+            logger.info('A custom URN was provided , will be used as distro for the recovery VM')
+            if distro.find('gen2'):
+                os_image_urn = distro
+            else:
+                logger.info('The provided URN does not contain Gen2 in it and this VM is a gen2 , dropping to default image')
+                os_image_urn = "Canonical:UbuntuServer:18_04-lts-gen2:latest"
+        else:
+            logger.info('No specific distro was provided , using the default Ubuntu distro')
+            os_image_urn = "Canonical:UbuntuServer:18_04-lts-gen2:latest"
+    return os_image_urn
 
 
 def _resolve_api_version(rcf, resource_provider_namespace, parent_resource_path, resource_type):
