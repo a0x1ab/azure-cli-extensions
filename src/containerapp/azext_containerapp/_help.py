@@ -1271,3 +1271,42 @@ helps['containerapp compose create'] = """
               --environment MyContainerappEnv \\
               --compose-file-path "path/to/docker-compose.yml"
 """
+
+# Patch commands
+helps['containerapp patch'] = """
+    type: group
+    short-summary: Patch Azure Container Apps. Patching is only available for the apps built using the source to cloud feature. See https://aka.ms/aca-local-source-to-cloud
+"""
+
+helps['containerapp patch list'] = """
+    type: command
+    short-summary: List container apps that can be patched. Patching is only available for the apps built using the source to cloud feature. See https://aka.ms/aca-local-source-to-cloud
+    examples:
+    - name: List container apps that can be patched.
+      text: |
+          az containerapp patch list -g MyResourceGroup --environment MyContainerAppEnv
+    - name: List patchable and unpatchable container apps.
+      text: |
+          az containerapp patch list -g MyResourceGroup --environment MyContainerAppEnv --show-all
+"""
+
+helps['containerapp patch apply'] = """
+    type: command
+    short-summary: List and apply container apps to be patched. Patching is only available for the apps built using the source to cloud feature. See https://aka.ms/aca-local-source-to-cloud
+    examples:
+    - name: List container apps that can be patched and apply patch.
+      text: |
+          az containerapp patch apply -g MyResourceGroup --environment MyContainerAppEnv
+"""
+
+helps['containerapp patch interactive'] = """
+    type: command
+    short-summary: List and select container apps to be patched in an interactive way. Patching is only available for the apps built using the source to cloud feature. See https://aka.ms/aca-local-source-to-cloud
+    examples:
+    - name: List container apps that can be patched and apply patch.
+      text: |
+          az containerapp patch interactive -g MyResourceGroup --environment MyContainerAppEnv
+    - name: List patchable and unpatchable container apps and apply patch to the patchable ones.
+      text: |
+          az containerapp patch interactive -g MyResourceGroup --environment MyContainerAppEnv --show-all
+"""
