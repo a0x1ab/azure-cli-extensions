@@ -61,6 +61,13 @@ def load_model_params(self):
                  "The default type is custom_model.",
         )
         add_description_param(c, help_message="Description of the model.")
+        c.argument(
+            "default_deployment_template",
+            options_list=["--default-deployment-template", "-d"],
+            help="Default deployment template for the model. Can be overridden using --set with the format: "
+                 "--set default_deployment_template.asset_id="
+                 "\"azureml://registries/my-registry/deploymenttemplates/template-name/versions/version\"",
+        )
 
     with self.argument_context("ml model show") as c:
         add_common_params(c)
