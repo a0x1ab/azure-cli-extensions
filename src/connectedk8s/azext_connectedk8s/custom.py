@@ -10,6 +10,7 @@ import json
 import tempfile
 import time
 import base64
+import subprocess
 from subprocess import Popen, PIPE, run, STDOUT, call, DEVNULL
 from base64 import b64encode, b64decode
 import stat
@@ -42,6 +43,7 @@ from azext_connectedk8s._client_factory import get_graph_client_service_principa
 import azext_connectedk8s._constants as consts
 import azext_connectedk8s._utils as utils
 import azext_connectedk8s._clientproxyutils as clientproxyutils
+import azext_connectedk8s._troubleshootutils as troubleshootutils
 from glob import glob
 from .vendored_sdks.models import ConnectedCluster, ConnectedClusterIdentity, ListClusterUserCredentialProperties
 from threading import Timer, Thread
@@ -54,6 +56,180 @@ logger = get_logger(__name__)
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-statements
 # pylint: disable=line-too-long
+# pylint:disable=unused-argument
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
+# pylint: disable=line-too-long
+
+
+def troubleshoot(cmd, client, resource_group_name, cluster_name, kube_config=None, kube_context=None, no_wait=False, tags=None):
+
+    try:
+        logger.warning("\nDiagnoser running. This may take a while ...\n")
+
+        # Setting default values for all checks as True
+        msi_cert_expiry_check = True
+        kap_security_policy_check = True
+        kap_cert_check = True
+        diagnoser_check = True
+        msi_cert_check = True
+        agent_version_check = True
+        arc_agent_state_check = True
+
+        # Setting kube_config
+        kube_config = set_kube_config(kube_config)
+
+        # Loading the kubeconfig file in kubernetes client configuration
+        load_kube_config(kube_config, kube_context)
+        configuration = kube_client.Configuration()
+
+        # Checking the connection to kubernetes cluster.
+        # This check was added to avoid large timeouts when connecting to AAD Enabled AKS clusters
+        # if the user had not logged in.
+        check_kube_connection(configuration)
+        utils.try_list_node_fix()
+
+        # Fetch Connected Cluster for agent version
+        connected_cluster = get_connectedk8s(cmd, client, resource_group_name, cluster_name)
+
+        # To check for internet connectivity
+        for counter in range(3):
+            if troubleshootutils.check_internet_connectivity():
+                break
+            elif(counter == 3 and troubleshootutils.check_internet_connectivity() is False):
+                print("Error: There is problem with the internet connection. Please check it and then try again.\n")
+                return
+            else:
+                time.sleep(2)
+
+        # Creating timestamp folder to store all the diagnoser logs
+        current_time = time.ctime(time.time())
+        time_stamp = ""
+        for elements in current_time:
+            if(elements == ' '):
+                time_stamp += '-'
+                continue
+            elif(elements == ':'):
+                time_stamp += '.'
+                continue
+            time_stamp += elements
+
+        # Generate the diagnostic folder in a given location
+        troubleshootutils.create_folder_diagnosticlogs(time_stamp)
+
+        with open("C:\\Users\\t-svagadia\\diagnostic_logs\ " + time_stamp + "\\Connected_cluster_resource.txt", 'w+') as cc:
+            cc.write(str(connected_cluster))
+
+        corev1_api_instance = kube_client.CoreV1Api(kube_client.ApiClient(configuration))
+
+        # Check if agents have been added to the cluster
+        arc_agents_pod_list = corev1_api_instance.list_namespaced_pod(namespace="azure-arc")
+
+        # To verify if arc agents have been added to the cluster
+        if arc_agents_pod_list.items:
+
+            # For storing all the agent logs using the CoreV1Api
+            troubleshootutils.arc_agents_logger(corev1_api_instance, time_stamp)
+
+            # For storing all the deployments logs using the AppsV1Api
+            appv1_api_instance = kube_client.AppsV1Api(kube_client.ApiClient(configuration))
+            utils.validate_node_api_response(appv1_api_instance, None)
+            troubleshootutils.deployments_logger(appv1_api_instance, time_stamp)
+
+            # Check for the azure arc agent states
+            arc_agent_state_check = troubleshootutils.check_agent_state(corev1_api_instance, time_stamp)
+
+            # Check for msi certificate
+            msi_cert_check = troubleshootutils.check_msi_certificate(corev1_api_instance)
+
+            # If msi certificate present then only we will perform msi certificate expiry check
+            if msi_cert_check:
+                msi_cert_expiry_check = troubleshootutils.check_msi_expiry(connected_cluster)
+
+            # If msi certificate present then only we will do Kube aad proxy checks
+            if msi_cert_check:
+                kap_security_policy_check = troubleshootutils.check_cluster_security_policy(corev1_api_instance)
+
+                # If no security policy is present in cluster then we can check for the Kube aad proxy certificate
+                if(kap_security_policy_check):
+                    kap_cert_check = troubleshootutils.check_kap_cert(corev1_api_instance)
+
+            helm_client_location = install_helm_client()
+
+            # Checking whether optional extra values file has been provided.
+            values_file_provided, values_file = utils.get_values_file()
+
+            # Validate the helm environment file for Dogfood.
+            dp_endpoint_dogfood = None
+            release_train_dogfood = None
+            if cmd.cli_ctx.cloud.endpoints.resource_manager == consts.Dogfood_RMEndpoint:
+                consts.Azure_DogfoodCloudName
+                dp_endpoint_dogfood, release_train_dogfood = validate_env_file_dogfood(values_file, values_file_provided)
+
+            # Adding helm repo
+            if os.getenv('HELMREPONAME') and os.getenv('HELMREPOURL'):
+                utils.add_helm_repo(kube_config, kube_context, helm_client_location)
+
+            # Setting the config dataplane endpoint
+            config_dp_endpoint = get_config_dp_endpoint(cmd, connected_cluster.location)
+
+            # Retrieving Helm chart OCI Artifact location
+            registry_path = os.getenv('HELMREGISTRY') if os.getenv('HELMREGISTRY') else utils.get_helm_registry(cmd, config_dp_endpoint, dp_endpoint_dogfood, release_train_dogfood)
+
+            # Get azure-arc agent version for telemetry
+            azure_arc_agent_version = registry_path.split(':')[1]
+
+            # Check for agent verison comaptibility
+            agent_version_check = troubleshootutils.check_agent_version(connected_cluster, azure_arc_agent_version)
+        else:
+            print("Error : Arc Agents have not been added to cluster. Please delete and reconnect the Kubernetes Cluster\n")
+
+        batchv1_api_instance = kube_client.BatchV1Api(kube_client.ApiClient(configuration))
+        utils.validate_node_api_response(batchv1_api_instance, None)
+
+        # Fetching the current kubernetes namespace to deploy the job
+        try:
+            k8s_contexts = config.list_kube_config_contexts()  # returns tuple of (all_contexts, current_context)
+            if kube_context:  # if custom kube-context is specified
+                if k8s_contexts[1].get('name') == kube_context:
+                    current_k8s_context = k8s_contexts[1]
+                else:
+                    for context in k8s_contexts[0]:
+                        if context.get('name') == kube_context:
+                            current_k8s_context = context
+                            break
+            else:
+                current_k8s_context = k8s_contexts[1]
+
+            current_k8s_namespace = current_k8s_context.get('context').get('namespace', "default")  # Take "default" namespace, if not specified in the kube-config
+            namespace_exists = False
+            k8s_v1 = kube_client.CoreV1Api()
+            k8s_ns = k8s_v1.list_namespace()
+            for ns in k8s_ns.items:
+                if ns.metadata.name == current_k8s_namespace:
+                    namespace_exists = True
+                    break
+            if namespace_exists is False:
+                telemetry.set_exception(exception="Namespace doesn't exist", fault_type=consts.Default_Namespace_Does_Not_Exist_Fault_Type,
+                                        summary="The default namespace defined in the kubeconfig doesn't exist on the kubernetes cluster.")
+                raise ValidationError("The default namespace '{}' defined in the kubeconfig doesn't exist on the kubernetes cluster.".format(current_k8s_namespace))
+        except ValidationError as e:
+            raise e
+        except Exception as e:
+            logger.warning("Failed to validate if the active namespace exists on the kubernetes cluster. Exception: {}".format(str(e)))
+
+        # Executing the Diagnoser job check in the given namespace
+        diagnoser_check = troubleshootutils.diagnoser_container_check(corev1_api_instance, batchv1_api_instance, time_stamp, current_k8s_namespace)
+
+        # Depending on whether all tests passes we will give the output
+        if (diagnoser_check and msi_cert_check and agent_version_check and arc_agent_state_check and msi_cert_expiry_check and kap_cert_check and kap_security_policy_check):
+            logger.warning("Diagnoser could not find any issues with the cluster. \nFor more results from the diagnoser refer to the logs collected at \"C:\\Users\\t-svagadia\\DiagnosticLogs\". These logs can be attached while filing a support ticket for further assistance.\n")
+        else:
+            logger.warning("For more results from the diagnoser refer to the logs collected at \"C:\\Users\\t-svagadia\\DiagnosticLogs\". \nThese logs can be attached while filing a support ticket for further assistance.\n")
+
+    except KeyboardInterrupt:
+        raise ManualInterrupt('Process terminated externally.')
 
 
 def create_connectedk8s(cmd, client, resource_group_name, cluster_name, https_proxy="", http_proxy="", no_proxy="", proxy_cert="", location=None,
@@ -252,7 +428,6 @@ def create_connectedk8s(cmd, client, resource_group_name, cluster_name, https_pr
 
     # Retrieving Helm chart OCI Artifact location
     registry_path = os.getenv('HELMREGISTRY') if os.getenv('HELMREGISTRY') else utils.get_helm_registry(cmd, config_dp_endpoint, dp_endpoint_dogfood, release_train_dogfood)
-
     # Get azure-arc agent version for telemetry
     azure_arc_agent_version = registry_path.split(':')[1]
     telemetry.add_extension_event('connectedk8s', {'Context.Default.AzureCLI.AgentVersion': azure_arc_agent_version})
