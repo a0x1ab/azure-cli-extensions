@@ -23,6 +23,14 @@ def create_fleet(cmd,
                  dns_name_prefix=None,
                  location=None,
                  tags=None,
+                 enable_private_cluster=None,
+                 enable_vnet_integration=None,
+                 apiserver_subnet_id=None,
+                 agent_subnet_id=None,
+                 type=None,
+                 tenant_id=None,
+                 principal_id=None,
+                 client_id=None,
                  no_wait=False):
     fleet_hub_profile_model = cmd.get_models(
         "FleetHubProfile",
@@ -34,6 +42,27 @@ def create_fleet(cmd,
         resource_type=CUSTOM_MGMT_FLEET,
         operation_group="fleets"
     )
+    api_server_access_profile_model = cmd.get_models(
+        "APIServerAccessProfile",
+        resource_type=CUSTOM_MGMT_FLEET,
+        operation_group="fleets"
+    )
+    agent_profile_model = cmd.get_models(
+        "AgentProfile",
+        resource_type=CUSTOM_MGMT_FLEET,
+        operation_group="fleets"
+    )
+    fleet_managed_service_identity_model = cmd.get_models(
+        "ManagedServiceIdentity",
+        resource_type=CUSTOM_MGMT_FLEET,
+        operation_group="fleets"
+    )
+    user_assigned_identity_model = cmd.get_models(
+        "UserAssignedIdentity",
+        resource_type=CUSTOM_MGMT_FLEET,
+        operation_group="fleets"
+    )
+
     if dns_name_prefix is None:
         subscription_id = get_subscription_id(cmd.cli_ctx)
         # Use subscription id to provide uniqueness and prevent DNS name clashes
@@ -43,11 +72,36 @@ def create_fleet(cmd,
         resource_group_part = re.sub('[^A-Za-z0-9-]', '', resource_group_name)[0:16]
         dns_name_prefix = f'{name_part}-{resource_group_part}-{subscription_id[0:6]}'
 
-    fleet_hub_profile = fleet_hub_profile_model(dns_prefix=dns_name_prefix)
+    api_server_access_profile = api_server_access_profile_model(
+            enable_private_cluster=enable_private_cluster,
+            enable_vnet_integration=enable_vnet_integration,
+            apiserver_subnet_id=apiserver_subnet_id
+        )
+    agent_profile = agent_profile_model(
+        subnet_id=agent_subnet_id
+    )
+    fleet_hub_profile = fleet_hub_profile_model(
+        dns_prefix=dns_name_prefix,
+        api_server_access_profile=api_server_access_profile,
+        agent_profile=agent_profile)
+
+    user_assigned_identity = user_assigned_identity_model(
+        principal_id=principal_id,
+        client_id=client_id
+    )
+
+    managed_service_identity = fleet_managed_service_identity_model(
+        type=type,
+        tenant_id=tenant_id,
+        principal_id=principal_id,
+        user_assigned_identities=user_assigned_identity
+    )
+
     fleet = fleet_model(
         location=location,
         tags=tags,
-        hub_profile=fleet_hub_profile
+        hub_profile=fleet_hub_profile,
+        identity=managed_service_identity
     )
 
     return sdk_no_wait(no_wait, client.begin_create_or_update, resource_group_name, name, fleet)
@@ -57,12 +111,44 @@ def update_fleet(cmd,
                  client,
                  resource_group_name,
                  name,
+                 type=None,
+                 tenant_id=None,
+                 principal_id=None,
+                 client_id=None,
                  tags=None):
     fleet_patch_model = cmd.get_models(
         "FleetPatch",
         resource_type=CUSTOM_MGMT_FLEET,
         operation_group="fleets"
     )
+    fleet_managed_service_identity_model = cmd.get_models(
+        "ManagedServiceIdentity",
+        resource_type=CUSTOM_MGMT_FLEET,
+        operation_group="fleets"
+    )
+    user_assigned_identity_model = cmd.get_models(
+        "UserAssignedIdentity",
+        resource_type=CUSTOM_MGMT_FLEET,
+        operation_group="fleets"
+    )
+
+    user_assigned_identity = user_assigned_identity_model(
+        principal_id=principal_id,
+        client_id=client_id
+    )
+
+    managed_service_identity = fleet_managed_service_identity_model(
+        type=type,
+        tenant_id=tenant_id,
+        principal_id=principal_id,
+        user_assigned_identities=user_assigned_identity
+    )
+
+    fleet_patch = fleet_patch_model(
+        tags=tags,
+        identity=managed_service_identity
+    )
+
     fleet_patch = fleet_patch_model(tags=tags)
     return client.update(resource_group_name, name, fleet_patch)
 
