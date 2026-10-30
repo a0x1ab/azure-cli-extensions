@@ -1,0 +1,15 @@
+.. :changelog:
+
+Release History
+===============
+0.2.0
+++++++
+* Make --administration-members required for `az powerbi embedded-capacity create`.
+
+0.1.1
+++++++
+* Change --location to be required for commands.
+
+0.1.0
+++++++
+* Initial release.
