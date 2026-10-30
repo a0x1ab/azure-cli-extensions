@@ -12,6 +12,8 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 * Improve Windows OutboundNat test case by removing Windows OSSKU limitation
+* Add `az operation show` command to show the details of a specific operation.
+* Add `az operation show-latest` command to show the details of the latest operation.
 
 4.0.0b1
 +++++++
