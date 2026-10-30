@@ -12,6 +12,10 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 
+2.0.0b9
++++++++
+* Add `--nodepool-initialization-taints` to `az aks create` and `az aks update`.
+
 2.0.0b8
 +++++++
 * Add `az aks check-network outbound` command to check outbound network from nodes.
