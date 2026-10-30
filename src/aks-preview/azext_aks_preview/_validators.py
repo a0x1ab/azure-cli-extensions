@@ -228,6 +228,24 @@ def validate_load_balancer_outbound_ip_prefixes(namespace):
             raise CLIError(
                 "--load-balancer-outbound-ip-prefixes cannot contain whitespace")
 
+def validate_nodepool_taints(namespace):
+    """Validates that provided node taints is a valid format"""
+
+    if hasattr(namespace, 'nodepool_taints'):
+        taints = namespace.nodepool_taints
+    else:
+        taints = namespace.node_taints
+
+    if taints is None:
+        return
+
+    if taints is not None:
+        after_validation_taints = [x.strip() for x in (taints.split(",") if taints else [])]
+
+    if hasattr(namespace, 'nodepool_taints'):
+        namespace.nodepool_taints = after_validation_taints
+    else:
+        namespace.node_taints = after_validation_taints
 
 def validate_taints(namespace):
     """Validates that provided taint is a valid format"""
