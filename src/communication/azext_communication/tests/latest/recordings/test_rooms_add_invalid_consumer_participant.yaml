@@ -1,0 +1,115 @@
+interactions:
+- request:
+    body: '{"validFrom": null, "validUntil": null, "pstnDialOutEnabled": false}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Repeatability-First-Sent:
+      - Mon, 22 Apr 2024 16:17:09 GMT
+      Repeatability-Request-Id:
+      - c52bae10-00c3-11ef-99c3-e4fd45a09c30
+      User-Agent:
+      - AzureCli/1.10.0 azsdk-python-communication-rooms/1.1.0 Python/3.8.10 (Windows-10-10.0.22631-SP0)
+      x-ms-content-sha256:
+      - 2xVVJJKx5brgL5bSWgeu9hhccJP/PkHHEzXUfUClsMI=
+      x-ms-date:
+      - Mon, 22 Apr 2024 16:17:09 GMT
+      x-ms-return-client-request-id:
+      - 'true'
+    method: POST
+    uri: https://sanitized.communication.azure.com/rooms?api-version=2024-04-15
+  response:
+    body:
+      string: '{"id": "sanitized", "createdAt": "2024-04-22T16:17:11.2593397+00:00",
+        "validFrom": "2024-04-22T16:17:10.683526+00:00", "validUntil": "2024-10-19T16:17:10.683526+00:00",
+        "pstnDialOutEnabled": false}'
+    headers:
+      api-deprecated-versions:
+      - 2021-04-07, 2022-02-01
+      api-supported-versions:
+      - 2023-03-31-preview, 2023-06-14, 2023-10-30-preview, 2024-04-15
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 22 Apr 2024 16:17:11 GMT
+      location:
+      - '99465770235009369'
+      ms-cv:
+      - vm0s8VBNgU6UFpsfGOsJyg.0
+      repeatability-result:
+      - accepted
+      request-context:
+      - appId=
+      strict-transport-security:
+      - max-age=31536000;includeSubDomains
+      transfer-encoding:
+      - chunked
+      x-azure-ref:
+      - 0ho0mZgAAAADszgYJQZHtSZpU2JUlFZorU04xRURHRTMwMjAAOWZjN2I1MTktYThjYy00Zjg5LTkzNWUtYzkxNDhhZTA5ZTgx
+      x-cache:
+      - CONFIG_NOCACHE
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"participants": {"8:acs:123456c": {"role": "Consumer"}}}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '57'
+      Content-Type:
+      - application/merge-patch+json
+      User-Agent:
+      - AzureCli/1.10.0 azsdk-python-communication-rooms/1.1.0 Python/3.8.10 (Windows-10-10.0.22631-SP0)
+      x-ms-content-sha256:
+      - GGeywqkmwEbmvIr+M7fYvPtgLYHCAoJWqoApBN7ZlcA=
+      x-ms-date:
+      - Mon, 22 Apr 2024 16:17:11 GMT
+      x-ms-return-client-request-id:
+      - 'true'
+    method: PATCH
+    uri: https://sanitized.communication.azure.com/rooms/sanitized/participants?api-version=2024-04-15
+  response:
+    body:
+      string: '{"error": {"code": "BadRequest", "message": "Invalid value for the
+        Participants."}}'
+    headers:
+      api-deprecated-versions:
+      - '2022-02-01'
+      api-supported-versions:
+      - 2023-03-31-preview, 2023-06-14, 2023-10-30-preview, 2024-04-15
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 22 Apr 2024 16:17:11 GMT
+      ms-cv:
+      - bVzVmHFt3kSeEjgucUY5Og.0
+      request-context:
+      - appId=
+      strict-transport-security:
+      - max-age=31536000;includeSubDomains
+      transfer-encoding:
+      - chunked
+      x-azure-ref:
+      - 0h40mZgAAAAAoHKp/csChTJ6X9wCHfWpvU04xRURHRTMwMDgAOWZjN2I1MTktYThjYy00Zjg5LTkzNWUtYzkxNDhhZTA5ZTgx
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-error-code:
+      - BadRequest
+    status:
+      code: 400
+      message: Bad Request
+version: 1
