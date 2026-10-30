@@ -17,9 +17,10 @@ from . import ssh_utils
 
 
 def ssh_vm(cmd, resource_group_name=None, vm_name=None, ssh_ip=None, public_key_file=None,
-           private_key_file=None, use_private_ip=False):
+           private_key_file=None, use_private_ip=False, port=None, ssh_args=None):
+    op_call = functools.partial(ssh_utils.start_ssh_connection, port, ssh_args)
     _do_ssh_op(cmd, resource_group_name, vm_name, ssh_ip,
-               public_key_file, private_key_file, use_private_ip, ssh_utils.start_ssh_connection)
+               public_key_file, private_key_file, use_private_ip, op_call)
 
 
 def ssh_config(cmd, config_path, resource_group_name=None, vm_name=None, ssh_ip=None,
@@ -54,8 +55,17 @@ def _get_and_write_certificate(cmd, public_key_file, cert_file):
     data = _prepare_jwk_data(public_key_file)
     from azure.cli.core._profile import Profile
     profile = Profile(cli_ctx=cmd.cli_ctx)
-    # we used to use the username from the token but now we throw it away
-    _, certificate = profile.get_msal_token(scopes, data)
+
+    # We currently are using the presence of get_msal_token to detect if we are running on an older azure cli client
+    # TODO: Remove when adal has been deprecated for a while
+    if hasattr(profile, "get_msal_token"):
+        # we used to use the username from the token but now we throw it away
+        _, certificate = profile.get_msal_token(scopes, data)
+    else:
+        credential, _, _ = profile.get_login_credentials(subscription_id=profile.get_subscription()["id"])
+        certificatedata = credential.get_token(*scopes, data=data)
+        certificate = certificatedata.token
+
     if not cert_file:
         cert_file = public_key_file + "-aadcert.pub"
     _write_cert_file(certificate, cert_file)
@@ -105,7 +115,10 @@ def _check_or_create_public_private_files(public_key_file, private_key_file):
         ssh_utils.create_ssh_keyfile(private_key_file)
 
     if not public_key_file:
-        raise util.CLIError(f"Public key file not specified")
+        if private_key_file:
+            public_key_file = private_key_file + ".pub"
+        else:
+            raise util.CLIError("Public key file not specified")
 
     if not os.path.isfile(public_key_file):
         raise util.CLIError(f"Public key file {public_key_file} not found")
