@@ -594,7 +594,26 @@ def aks_create(
     enable_windows_recording_rules=False,
     # metrics profile
     enable_cost_analysis=False,
+    # azure container storage
+    enable_azure_container_storage=False,
+    storage_pool_name=None,
+    storage_pool_type=None,
+    storage_pool_size=None,
+    storage_pool_sku=None,
+    storage_pool_option=None,
 ):
+    if enable_azure_container_storage:
+        from azext_aks_preview.azurecontainerstorage._validators import validate_azure_container_storage_params
+        validate_azure_container_storage_params(
+            True,
+            None,
+            storage_pool_name,
+            storage_pool_type,
+            storage_pool_sku,
+            storage_pool_option,
+            storage_pool_size,
+        )
+
     # DO NOT MOVE: get all the original parameters and save them as a dictionary
     raw_parameters = locals()
 
@@ -630,7 +649,6 @@ def aks_create(
 
     # send request to create a real managed cluster
     return aks_create_decorator.create_mc(mc)
-
 
 # pylint: disable=too-many-locals
 def aks_update(
@@ -764,7 +782,29 @@ def aks_update(
     # metrics profile
     enable_cost_analysis=False,
     disable_cost_analysis=False,
+    # azure container storage
+    enable_azure_container_storage=False,
+    disable_azure_container_storage=False,
+    storage_pool_name=None,
+    storage_pool_type=None,
+    storage_pool_size=None,
+    storage_pool_sku=None,
+    storage_pool_option=None,
+    azure_container_storage_nodepools=None,
 ):
+
+    if enable_azure_container_storage or disable_azure_container_storage:
+        from azext_aks_preview.azurecontainerstorage._validators import validate_azure_container_storage_params
+        validate_azure_container_storage_params(
+            enable_azure_container_storage,
+            disable_azure_container_storage,
+            storage_pool_name,
+            storage_pool_type,
+            storage_pool_sku,
+            storage_pool_option,
+            storage_pool_size,
+        )
+
     # DO NOT MOVE: get all the original parameters and save them as a dictionary
     raw_parameters = locals()
 
