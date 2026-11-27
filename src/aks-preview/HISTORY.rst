@@ -15,6 +15,7 @@ Pending
 20.0.0b1
 +++++++
 * [Breaking Change] `az aks create/update`: Change `--nat-gateway-outbound-ips` and `--nat-gateway-outbound-ip-prefixes` to use comma-separated values, consistent with load balancer outbound IP parameters.
+* `az aks update`: Fix V2-only NAT gateway params (e.g. `--nat-gateway-managed-outbound-ipv6-count`) being rejected on update when `--outbound-type` is not re-specified for an already-V2 cluster.
 
 19.0.0b30
 +++++++
