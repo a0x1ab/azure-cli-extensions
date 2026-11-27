@@ -5663,6 +5663,9 @@ class ManagedCluster(TrackedResource):
     :ivar node_provisioning_profile: Node provisioning settings that apply to the whole cluster.
     :vartype node_provisioning_profile:
      ~azure.mgmt.containerservice.models.ManagedClusterNodeProvisioningProfile
+    :ivar control_plane_scaling_profile: Control plane scaling profile for the managed cluster.
+    :vartype control_plane_scaling_profile:
+     ~azure.mgmt.containerservice.models.ManagedClusterControlPlaneScalingProfile
     :ivar bootstrap_profile: Profile of the cluster bootstrap configuration.
     :vartype bootstrap_profile: ~azure.mgmt.containerservice.models.ManagedClusterBootstrapProfile
     :ivar ai_toolchain_operator_profile: AI toolchain operator settings that apply to the whole
@@ -5773,6 +5776,10 @@ class ManagedCluster(TrackedResource):
             "key": "properties.nodeProvisioningProfile",
             "type": "ManagedClusterNodeProvisioningProfile",
         },
+        "control_plane_scaling_profile": {
+            "key": "properties.controlPlaneScalingProfile",
+            "type": "ManagedClusterControlPlaneScalingProfile",
+        },
         "bootstrap_profile": {"key": "properties.bootstrapProfile", "type": "ManagedClusterBootstrapProfile"},
         "ai_toolchain_operator_profile": {
             "key": "properties.aiToolchainOperatorProfile",
@@ -5832,6 +5839,7 @@ class ManagedCluster(TrackedResource):
         service_mesh_profile: Optional["_models.ServiceMeshProfile"] = None,
         metrics_profile: Optional["_models.ManagedClusterMetricsProfile"] = None,
         node_provisioning_profile: Optional["_models.ManagedClusterNodeProvisioningProfile"] = None,
+        control_plane_scaling_profile: Optional["_models.ManagedClusterControlPlaneScalingProfile"] = None,
         bootstrap_profile: Optional["_models.ManagedClusterBootstrapProfile"] = None,
         ai_toolchain_operator_profile: Optional["_models.ManagedClusterAIToolchainOperatorProfile"] = None,
         scheduler_profile: Optional["_models.SchedulerProfile"] = None,
@@ -5970,6 +5978,10 @@ class ManagedCluster(TrackedResource):
         :keyword node_provisioning_profile: Node provisioning settings that apply to the whole cluster.
         :paramtype node_provisioning_profile:
          ~azure.mgmt.containerservice.models.ManagedClusterNodeProvisioningProfile
+        :keyword control_plane_scaling_profile: Control plane scaling profile for the managed
+         cluster.
+        :paramtype control_plane_scaling_profile:
+         ~azure.mgmt.containerservice.models.ManagedClusterControlPlaneScalingProfile
         :keyword bootstrap_profile: Profile of the cluster bootstrap configuration.
         :paramtype bootstrap_profile:
          ~azure.mgmt.containerservice.models.ManagedClusterBootstrapProfile
@@ -6039,6 +6051,7 @@ class ManagedCluster(TrackedResource):
         self.resource_uid: Optional[str] = None
         self.metrics_profile = metrics_profile
         self.node_provisioning_profile = node_provisioning_profile
+        self.control_plane_scaling_profile = control_plane_scaling_profile
         self.bootstrap_profile = bootstrap_profile
         self.ai_toolchain_operator_profile = ai_toolchain_operator_profile
         self.scheduler_profile = scheduler_profile
@@ -7618,6 +7631,31 @@ class ManagedClusterAIToolchainOperatorProfile(_serialization.Model):
         """
         super().__init__(**kwargs)
         self.enabled = enabled
+
+
+class ManagedClusterControlPlaneScalingProfile(_serialization.Model):
+    """Control plane scaling profile for a managed cluster. Provides scaled and performance-guaranteed
+    control plane capacity.
+
+    :ivar scaling_size: The scaling size for the control plane. Determines the level of guaranteed
+     API server throughput, etcd capacity, and pod scheduling rates. Known values are: "H2", "H4",
+     and "H8".
+    :vartype scaling_size: str
+    """
+
+    _attribute_map = {
+        "scaling_size": {"key": "scalingSize", "type": "str"},
+    }
+
+    def __init__(self, *, scaling_size: Optional[str] = None, **kwargs: Any) -> None:
+        """
+        :keyword scaling_size: The scaling size for the control plane. Determines the level of
+         guaranteed API server throughput, etcd capacity, and pod scheduling rates. Known values are:
+         "H2", "H4", and "H8".
+        :paramtype scaling_size: str
+        """
+        super().__init__(**kwargs)
+        self.scaling_size = scaling_size
 
 
 class ManagedClusterAPIServerAccessProfile(_serialization.Model):
