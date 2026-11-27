@@ -5224,6 +5224,42 @@ class AKSPreviewManagedClusterUpdateDecorator(AKSManagedClusterUpdateDecorator):
         error_msg = f"Please specify one or more of {' or '.join(option_names)}."
         raise RequiredArgumentMissingError(error_msg)
 
+    def update_agentpool_profile(self, mc: ManagedCluster) -> ManagedCluster:
+        """Update agentpool profile for the ManagedCluster object.
+
+        Preview override to handle empty agent_pool_profiles gracefully.
+
+        :return: the ManagedCluster object
+        """
+        self._ensure_mc(mc)
+
+        # Preview-specific change: an AKS ManagedCluster of automatic
+        # cluster with hosted system components may not have agent pools
+        if not mc.agent_pool_profiles:
+            if mc.hosted_system_profile and mc.hosted_system_profile.enabled:
+                return mc
+            raise UnknownError(
+                "Encounter an unexpected error while getting agent pool profiles from the cluster in the process of "
+                "updating agentpool profile."
+            )
+
+        # Call preview agentpool decorator method instead of default
+        agentpool_profile = self.agentpool_decorator.update_agentpool_profile_preview(mc.agent_pool_profiles)
+        mc.agent_pool_profiles[0] = agentpool_profile
+
+        # Update nodepool labels for all nodepools
+        nodepool_labels = self.context.get_nodepool_labels()
+        if nodepool_labels is not None:
+            for agent_profile in mc.agent_pool_profiles:
+                agent_profile.node_labels = nodepool_labels
+
+        # Update nodepool taints for all nodepools
+        nodepool_taints = self.context.get_nodepool_taints()
+        if nodepool_taints is not None:
+            for agent_profile in mc.agent_pool_profiles:
+                agent_profile.node_taints = nodepool_taints
+        return mc
+
     def update_network_profile(self, mc: ManagedCluster) -> ManagedCluster:
         self._ensure_mc(mc)
 
@@ -6545,15 +6581,14 @@ class AKSPreviewManagedClusterUpdateDecorator(AKSManagedClusterUpdateDecorator):
     def update_nodepool_taints_mc(self, mc: ManagedCluster) -> ManagedCluster:
         self._ensure_mc(mc)
 
-        if not mc.agent_pool_profiles:
-            raise UnknownError(
-                "Encounter an unexpected error while getting agent pool profiles from the cluster in the process of "
-                "updating agentpool profile."
-            )
-
         # update nodepool taints for all nodepools
         nodepool_taints = self.context.get_nodepool_taints()
         if nodepool_taints is not None:
+            if not mc.agent_pool_profiles:
+                raise UnknownError(
+                    "Encounter an unexpected error while getting agent pool profiles from the "
+                    "cluster in the process of updating agentpool profile."
+                )
             for agent_profile in mc.agent_pool_profiles:
                 agent_profile.node_taints = nodepool_taints
         return mc
@@ -6561,15 +6596,14 @@ class AKSPreviewManagedClusterUpdateDecorator(AKSManagedClusterUpdateDecorator):
     def update_nodepool_initialization_taints_mc(self, mc: ManagedCluster) -> ManagedCluster:
         self._ensure_mc(mc)
 
-        if not mc.agent_pool_profiles:
-            raise UnknownError(
-                "Encounter an unexpected error while getting agent pool profiles from the cluster in the process of "
-                "updating agentpool profile."
-            )
-
         # update nodepool taints for all nodepools
         nodepool_initialization_taints = self.context.get_nodepool_initialization_taints()
         if nodepool_initialization_taints is not None:
+            if not mc.agent_pool_profiles:
+                raise UnknownError(
+                    "Encounter an unexpected error while getting agent pool profiles from the "
+                    "cluster in the process of updating agentpool profile."
+                )
             for agent_profile in mc.agent_pool_profiles:
                 if agent_profile.mode is not None and agent_profile.mode.lower() == "user":
                     agent_profile.node_initialization_taints = nodepool_initialization_taints
