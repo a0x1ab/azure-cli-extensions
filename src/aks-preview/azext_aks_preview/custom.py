@@ -1179,6 +1179,9 @@ def aks_create(
     # app routing istio
     enable_app_routing_istio=False,
     enable_hosted_system=False,
+    disable_hosted_system=False,
+    system_node_vnet_subnet_id=None,
+    node_vnet_subnet_id=None,
     # health monitor
     enable_continuous_control_plane_and_addon_monitor=False,
 ):

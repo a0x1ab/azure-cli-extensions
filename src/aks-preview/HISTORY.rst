@@ -12,6 +12,7 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 * `az aks nodepool update`: Support `--node-vm-size` to resize VM size of an existing VMSS-based agent pool (preview). Requires AFEC registration `Microsoft.ContainerService/AgentPoolVMSSResize`.
+* `az aks create`: Support BYO VNet for hosted-system automatic clusters via `--system-node-vnet-subnet-id` and `--node-vnet-subnet-id`; add `--disable-hosted-system` opt-out.
 
 20.0.0b3
 ++++++
