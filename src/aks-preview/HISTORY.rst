@@ -12,6 +12,11 @@ To release a new version, please select a new version number (usually plus 1 to 
 Pending
 +++++++
 
+20.0.0b5
++++++++
+* `az aks create`: Add `--node-public-ip-prefix-ids` parameter for specifying dual-stack (IPv4/IPv6) public IP prefixes for instance-level public IPs.
+* `az aks nodepool add`: Add `--node-public-ip-prefix-ids` parameter for specifying dual-stack (IPv4/IPv6) public IP prefixes for instance-level public IPs.
+
 20.0.0b4
 +++++++
 * `az aks nodepool update`: Support `--node-vm-size` to resize VM size of an existing VMSS-based agent pool (preview). Requires AFEC registration `Microsoft.ContainerService/AgentPoolVMSSResize`.
