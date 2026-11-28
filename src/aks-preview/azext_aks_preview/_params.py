@@ -33,6 +33,9 @@ from azure.cli.core.commands.parameters import (
     tags_type,
     zones_type,
 )
+from azext_aks_preview._validators import (
+    validate_nat_gateway_managed_outbound_ipv6_count,
+)
 from azext_aks_preview._client_factory import CUSTOM_MGMT_AKS_PREVIEW
 from azext_aks_preview._completers import (
     get_k8s_upgrades_completion_list,
@@ -147,6 +150,7 @@ from azext_aks_preview._consts import (
     CONST_ARTIFACT_SOURCE_CACHE,
     CONST_OUTBOUND_TYPE_NONE,
     CONST_OUTBOUND_TYPE_BLOCK,
+    CONST_OUTBOUND_TYPE_MANAGED_NAT_GATEWAY_V2,
     CONST_APP_ROUTING_ANNOTATION_CONTROLLED_NGINX,
     CONST_APP_ROUTING_EXTERNAL_NGINX,
     CONST_APP_ROUTING_INTERNAL_NGINX,
@@ -371,6 +375,7 @@ outbound_types = [
     CONST_OUTBOUND_TYPE_LOAD_BALANCER,
     CONST_OUTBOUND_TYPE_USER_DEFINED_ROUTING,
     CONST_OUTBOUND_TYPE_MANAGED_NAT_GATEWAY,
+    CONST_OUTBOUND_TYPE_MANAGED_NAT_GATEWAY_V2,
     CONST_OUTBOUND_TYPE_USER_ASSIGNED_NAT_GATEWAY,
     CONST_OUTBOUND_TYPE_NONE,
     CONST_OUTBOUND_TYPE_BLOCK,
@@ -658,6 +663,37 @@ def load_arguments(self, _):
             "nat_gateway_idle_timeout",
             type=int,
             validator=validate_nat_gateway_idle_timeout,
+        )
+        c.argument(
+            "nat_gateway_managed_outbound_ipv6_count",
+            options_list=[
+                "--nat-gateway-managed-outbound-ipv6-count",
+                "--nat-gw-ipv6-count",
+            ],
+            type=int,
+            validator=validate_nat_gateway_managed_outbound_ipv6_count,
+            help="NAT gateway managed outbound IPv6 IP count. "
+                 "Valid only with --outbound-type managedNATGatewayV2.",
+        )
+        c.argument(
+            "nat_gateway_outbound_ip_ids",
+            options_list=[
+                "--nat-gateway-outbound-ip-ids",
+                "--nat-gw-ip-ids",
+            ],
+            nargs="+",
+            help="Space-separated public IP resource IDs for the "
+                 "cluster NAT gateway. V2 only.",
+        )
+        c.argument(
+            "nat_gateway_outbound_ip_prefix_ids",
+            options_list=[
+                "--nat-gateway-outbound-ip-prefix-ids",
+                "--nat-gw-prefix-ids",
+            ],
+            nargs="+",
+            help="Space-separated public IP prefix resource IDs "
+                 "for the cluster NAT gateway. V2 only.",
         )
         c.argument("outbound_type", arg_type=get_enum_type(outbound_types))
         c.argument("network_plugin", arg_type=get_enum_type(network_plugins))
@@ -1246,6 +1282,37 @@ def load_arguments(self, _):
             "nat_gateway_idle_timeout",
             type=int,
             validator=validate_nat_gateway_idle_timeout,
+        )
+        c.argument(
+            "nat_gateway_managed_outbound_ipv6_count",
+            options_list=[
+                "--nat-gateway-managed-outbound-ipv6-count",
+                "--nat-gw-ipv6-count",
+            ],
+            type=int,
+            validator=validate_nat_gateway_managed_outbound_ipv6_count,
+            help="NAT gateway managed outbound IPv6 IP count. "
+                 "Valid only with --outbound-type managedNATGatewayV2.",
+        )
+        c.argument(
+            "nat_gateway_outbound_ip_ids",
+            options_list=[
+                "--nat-gateway-outbound-ip-ids",
+                "--nat-gw-ip-ids",
+            ],
+            nargs="+",
+            help="Space-separated public IP resource IDs for the "
+                 "cluster NAT gateway. V2 only.",
+        )
+        c.argument(
+            "nat_gateway_outbound_ip_prefix_ids",
+            options_list=[
+                "--nat-gateway-outbound-ip-prefix-ids",
+                "--nat-gw-prefix-ids",
+            ],
+            nargs="+",
+            help="Space-separated public IP prefix resource IDs "
+                 "for the cluster NAT gateway. V2 only.",
         )
         c.argument("network_dataplane", arg_type=get_enum_type(network_dataplanes))
         c.argument("network_policy")
